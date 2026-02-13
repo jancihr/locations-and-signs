@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Circular Reveal Image</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #ffffff;
+      }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+      }
+      a {
+        text-decoration: none;
+        color: black;
+        padding: 0px 0px;
+        border: 1px solid black;
+        border-radius: 3px;
+        background-color: white;
+      }
+      a:hover {
+        border-color: aqua;
+      }
+
+      .active {
+        background-color: #fff700;
+        border-radius: 3px;
+        border: #000000 2px solid;
+        animation: blinker 1s linear infinite;
+      }
+      .active:hover {
+        border-color: aqua;
+      }
+
+      .frozen {
+        background-color: #fff700;
+        border-radius: 3px;
+        border: #000000 2px solid;
+      }
+
+      .frozen:hover {
+        border-color: aqua;
+      }
+
+      .shown {
+        border-radius: 3px;
+
+        border: #000000 2px solid;
+        background-color: #1eff00;
+      }
+
+      .shown:hover {
+        border-color: aqua;
+      }
+
+      .hidden {
+        border-radius: 3px;
+
+        border: #000000 2px solid;
+        background-color: #ffffff;
+      }
+
+      .hidden:hover {
+        border-color: aqua;
+      }
+
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
+      /* Initial state */
+      .my-region {
+        fill: transparent;
+        transition: fill 0.3s ease; /* Smooth transition */
+      }
+      /* Hover state */
+      .my-region:hover {
+        fill: #ff8c0034; /* Color change on hover */
+        transition: fill 0.3s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 0px;
+        z-index: 1000;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        padding: 5px;
+        border-radius: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+      "
+    >
+      <!-- <a
+        id="speed-link"
+        class="hidden"
+        href="#"
+        onclick="
+          setSpeed();
+          return false;
+        "
+        >FAST</a
+      >
+      -->
+
+      <a
+        id="all-link"
+        class="hidden"
+        href="#"
+        title="START/STOP ALL ON PREDEFINED REGIONS"
+        onclick="
+          randomRegions(event, false);
+          return false;
+        "
+        >ALL</a
+      >
+
+      <a
+        id="random-link"
+        class="hidden"
+        href="#"
+        title="START/STOP ALL ON RANDOM REGIONS"
+        onclick="
+          randomRegions(event, true);
+          return false;
+        "
+        >RANDOM</a
+      >
+
+      <a
+        id="freeze-link"
+        class="hidden"
+        href="#"
+        title="FREEZE ALL REGIONS"
+        onclick="
+          freezeAllRegions(event);
+          return false;
+        "
+        >FREEZE</a
+      >
+
+      <a
+        id="reset-link"
+        class="hidden"
+        href="#"
+        title="CLEAR ALL REGIONS"
+        onclick="
+          resetRegions(event);
+          return false;
+        "
+        >CLEAR</a
+      >
+
+      |
+      <a
+        id="borders-link"
+        class="hidden"
+        href="#"
+        title="SHOW/HIDE ALPHABET BORDERS"
+        onclick="
+          clickedRegion(event, 12, false);
+          return false;
+        "
+        >BORDERS</a
+      >
+      <a
+        id="colours-link"
+        class="hidden"
+        href="#"
+        title="SHOW/HIDE ALPHABET IN THEIR REGIONS"
+        onclick="
+          clickedRegion(event, 13, false);
+          return false;
+        "
+        >REGIONS</a
+      >
+      |
+      <a
+        id="arm-link"
+        class="hidden"
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        href="#"
+        onclick="
+          clickedRegion(event, 1, false);
+          return false;
+        "
+        >ARMENIAN</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="geo-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 4, false);
+          return false;
+        "
+        >GEORGIAN</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="rus-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 10, false);
+          return false;
+        "
+        >CYRILLIC</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="ara-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 0, false);
+          return false;
+        "
+        >ARABIC</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="eti-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 3, false);
+          return false;
+        "
+        >ETHIOPIAN</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="heb-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 6, false);
+          return false;
+        "
+        >HEBREW</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="gre-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 5, false);
+          return false;
+        "
+        >GREEK</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="san-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 11, false);
+          return false;
+        "
+        >BRAHMIC</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="chi-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 2, false);
+          return false;
+        "
+        >CHINESE</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="jap-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 7, false);
+          return false;
+        "
+        >JAPANESE</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="kor-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 8, false);
+          return false;
+        "
+        >KOREAN</a
+      >
+      <a
+        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+        id="lat-link"
+        class="hidden"
+        href="#"
+        onclick="
+          clickedRegion(event, 9, false);
+          return false;
+        "
+        >LATIN</a
+      >
+    </div>
+    <svg
+      viewBox="0 0 2320 1474"
+      width="100%"
+      height="100%"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style="position: absolute; left: 0; top: 0; z-index: 300"
+    >
+      <g cursor="pointer">
+        <polygon
+          points="1313,448 1317,459 1329,466 1342,468 1348,463 1327,447"
+          onclick="
+            clickedRegion(event, 1, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+          class="my-region"
+        >
+          <title>ARMENIAN</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1291,429 1299,435 1298,443 1309,447 1324,445 1332,445 1328,434 1314,427 1301,423"
+          onclick="
+            clickedRegion(event, 4, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>GEORGIAN</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1188,168 1204,235 1174,328 1172,355 1165,384 1201,392 1210,406 1213,416 1207,425 1168,428 1170,447 1190,448 1204,439 1204,430 1213,419 1213,401 1226,393 1238,416 1256,408 1290,425 1309,422 1332,435 1333,448 1357,468 1359,450 1326,411 1337,397 1368,385 1371,397 1357,404 1381,431 1392,470 1407,471 1441,482 1461,498 1480,472 1504,477 1513,466 1523,475 1540,473 1528,444 1555,429 1561,419 1547,395 1555,375 1584,348 1605,359 1622,382 1643,387 1656,395 1671,406 1705,403 1733,411 1752,402 1768,387 1766,375 1783,360 1796,346 1779,348 1770,342 1766,322 1779,318 1769,289 1799,279 1810,295 1848,315 1883,331 1894,322 1898,350 1905,372 1916,370 1927,341 1926,309 1912,294 1894,269 1878,261 1871,271 1844,263 1854,239 1849,219 1866,210 1907,209 1891,256 1957,331 1969,324 1900,256 1910,209 1925,205 1945,185 1954,224 2016,270 1987,191 2039,169 2042,110 1911,80 1854,114 1696,71 1661,69 1661,105 1575,106 1564,80 1426,39 1415,59 1479,84 1420,123 1369,119 1335,158 1330,119 1365,86 1318,39 1231,50 1305,103 1287,145 1200,163"
+          onclick="
+            clickedRegion(event, 10, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>CYRILLIC</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          id="ara-region"
+          points="915,578 939,555 950,523 974,499 1002,509 1023,488 1075,483 1087,508 1082,523 1119,533 1147,555 1158,529 1184,534 1216,542 1239,537 1251,546 1262,571 1269,561 1274,536 1273,525 1262,520 1263,503 1281,492 1324,491 1325,466 1335,471 1345,467 1363,480 1396,484 1404,474 1435,482 1451,494 1460,499 1478,477 1492,475 1504,479 1515,469 1522,478 1535,474 1518,486 1522,496 1528,493 1554,530 1549,541 1549,561 1525,571 1540,606 1523,609 1505,597 1439,596 1428,583 1420,592 1376,552 1355,551 1356,564 1374,577 1394,603 1420,606 1429,588 1443,615 1466,627 1452,658 1430,687 1349,726 1331,697 1321,668 1294,628 1263,576 1256,579 1244,561 1284,633 1292,676 1274,695 1276,721 1256,777 1279,811 1256,820 1223,810 1178,723 1190,701 1187,667 1123,626 1087,625 1034,664 946,581"
+          onclick="
+            clickedRegion(event, 0, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>ARABIC</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1292,678 1299,676 1315,701 1339,734 1332,755 1372,779 1344,811 1306,827 1281,809 1268,790 1260,778 1272,746 1279,726 1277,697"
+          onclick="
+            clickedRegion(event, 3, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>ETHIOPIAN</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1254,541 1262,567 1269,558 1268,540 1272,529 1262,522"
+          onclick="
+            clickedRegion(event, 6, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>HEBREW</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1150,463 1171,451 1184,449 1179,472 1187,478 1175,492 1195,502 1237,507 1253,499 1253,508 1238,510 1196,504 1194,511 1178,513 1162,491"
+          onclick="
+            clickedRegion(event, 5, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>GREEK</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1518,486 1542,475 1552,492 1565,493 1598,544 1651,559 1732,553 1742,562 1745,602 1760,593 1771,605 1770,619 1786,626 1791,617 1814,629 1816,646 1834,668 1853,702 1833,738 1796,710 1792,746 1825,789 1809,793 1796,781 1782,765 1766,671 1746,684 1713,617 1681,628 1629,702 1634,743 1658,785 1640,793 1627,761 1620,775 1603,755 1565,668 1559,625 1554,645 1532,626 1525,609 1544,607 1528,585 1528,570 1551,561 1551,539 1557,532 1541,504 1528,489 1523,497"
+          onclick="
+            clickedRegion(event, 11, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>BRAHMIC</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1583,353 1561,374 1548,398 1568,424 1531,444 1542,467 1554,490 1567,492 1599,544 1653,558 1692,554 1735,553 1748,562 1747,599 1759,593 1772,606 1772,619 1785,625 1787,611 1817,599 1832,618 1850,619 1843,643 1859,650 1867,628 1874,617 1913,570 1930,609 1942,586 1928,557 1920,531 1870,460 1873,436 1845,427 1850,406 1869,420 1876,409 1882,391 1904,375 1894,354 1894,324 1882,332 1810,299 1797,282 1772,289 1783,318 1771,323 1770,336 1781,346 1789,340 1799,343 1793,358 1768,375 1772,387 1767,399 1738,414 1706,407 1664,412 1642,388 1624,389 1613,370"
+          onclick="
+            clickedRegion(event, 2, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>CHINESE</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1961,338 1969,369 1984,417 1951,453 1951,476 1966,497 1983,476 2019,438 1998,371 2014,325"
+          onclick="
+            clickedRegion(event, 7, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>JAPANESE</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1905,377 1908,398 1903,409 1918,411 1942,450 1921,472 1898,432 1891,432 1878,411 1883,393"
+          onclick="
+            clickedRegion(event, 8, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>KOREAN</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1939,641 1954,705 1903,813 1826,793 1809,795 1799,783 1759,797 1861,939 1974,987 1987,1017 1872,1104 1837,1250 1966,1234 1988,1354 2130,1431 2274,1348 2320,1076 2218,887 2088,859 2014,780 2007,704 1957,636"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1787,613 1800,625 1815,629 1817,641 1844,671 1855,703 1845,726 1834,737 1834,753 1852,739 1867,726 1865,685 1848,663 1827,634 1833,621 1815,600"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+        <polygon
+          class="my-region"
+          points="977,201 945,200 922,201 931,226 963,225 980,211"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+        <polygon
+          class="my-region"
+          points="955,485 977,496 1014,476 1043,430 1062,432 1067,468 1080,468 1083,443 1109,454 1119,474 1093,479 1113,495 1125,481 1142,464 1111,437 1103,408 1134,434 1143,451 1147,461 1170,449 1169,435 1162,420 1172,426 1184,421 1199,424 1207,422 1210,409 1203,407 1199,392 1181,386 1161,385 1169,357 1172,328 1188,270 1201,235 1182,161 1149,157 1107,200 1062,242 1069,286 1089,268 1105,308 1128,295 1142,265 1125,249 1148,223 1151,205 1164,208 1151,232 1154,253 1166,265 1164,290 1154,284 1150,308 1131,311 1113,327 1105,316 1087,317 1090,292 1075,296 1073,326 1049,333 1038,350 1019,276 1000,293 968,342 994,342 1002,315 1012,330 997,355 1029,354 1011,364 990,368 1018,402 1011,425 968,418 952,471"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+        <polygon
+          class="my-region"
+          points="1241,437 1224,448 1215,446 1212,452 1199,457 1191,464 1197,476 1206,492 1223,498 1249,497 1263,489 1265,499 1279,491 1323,490 1323,461 1316,460 1314,453 1305,445 1283,447 1266,447"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+        <polygon
+          class="my-region"
+          points="1193,453 1197,442 1206,442 1209,447 1201,452 1194,459"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+        <polygon
+          class="my-region"
+          points="1346,1016 1341,1033 1345,1048 1331,1072 1335,1079 1335,1101 1344,1112 1351,1108 1362,1106 1371,1072 1385,1040 1392,1013 1399,1006 1386,970"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+        <polygon
+          class="my-region"
+          points="903,590 879,691 891,759 932,807 990,802 1019,783 1038,807 1070,812 1050,858 1084,961 1082,1031 1137,1168 1149,1207 1207,1188 1327,1005 1318,903 1397,800 1405,732 1349,749 1339,735 1335,756 1376,778 1347,809 1306,829 1282,812 1255,826 1236,817 1219,814 1212,790 1173,723 1188,701 1188,670 1125,631 1087,626 1046,663 1031,670 1002,636 947,585 918,581 918,581"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+        <polygon
+          class="my-region"
+          points="94,120 0,186 243,198 147,436 214,648 359,769 342,887 400,1019 455,1077 528,1373 638,1441 679,1383 578,1330 636,1195 703,1072 740,925 513,730 434,694 359,677 361,614 422,655 513,667 429,544 366,583 260,610 284,544 378,516 398,552 429,499 549,414 636,376 699,376 626,205 542,284 511,231 583,193 699,222 735,171 711,101 766,80 805,130 769,214 805,258 920,181 1012,53 952,22 829,22 696,31 518,55 448,106 313,80 202,87 202,87 202,87"
+          onclick="
+            clickedRegion(event, 9, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>LATIN</title>
+        </polygon>
+      </g>
+    </svg>
+
+    <canvas
+      id="canvas0"
+      style="position: absolute; left: 0; top: 0; z-index: 10"
+    >
+    </canvas>
+    <canvas
+      id="canvas1"
+      style="position: absolute; left: 0; top: 0; z-index: 20"
+    >
+    </canvas>
+    <canvas
+      id="canvas2"
+      style="position: absolute; left: 0; top: 0; z-index: 30"
+    >
+    </canvas>
+    <canvas
+      id="canvas3"
+      style="position: absolute; left: 0; top: 0; z-index: 40"
+    >
+    </canvas>
+    <canvas
+      id="canvas4"
+      style="position: absolute; left: 0; top: 0; z-index: 50"
+    >
+    </canvas>
+    <canvas
+      id="canvas5"
+      style="position: absolute; left: 0; top: 0; z-index: 60"
+    >
+    </canvas>
+    <canvas
+      id="canvas6"
+      style="position: absolute; left: 0; top: 0; z-index: 70"
+    >
+    </canvas>
+    <canvas
+      id="canvas7"
+      style="position: absolute; left: 0; top: 0; z-index: 80"
+    >
+    </canvas>
+    <canvas
+      id="canvas8"
+      style="position: absolute; left: 0; top: 0; z-index: 90"
+    >
+    </canvas>
+    <canvas
+      id="canvas9"
+      style="position: absolute; left: 0; top: 0; z-index: 100"
+    >
+    </canvas>
+    <canvas
+      id="canvas10"
+      style="position: absolute; left: 0; top: 0; z-index: 110"
+    >
+    </canvas>
+    <canvas
+      id="canvas11"
+      style="position: absolute; left: 0; top: 0; z-index: 120"
+    >
+    </canvas>
+
+    <canvas
+      id="canvasBorders"
+      style="position: absolute; left: 0; top: 0; z-index: 1"
+    >
+    </canvas>
+
+    <canvas
+      id="canvasColours"
+      style="position: absolute; left: 0; top: 0; z-index: 2"
+    >
+    </canvas>
+
+    <script>
+      // DOM Elements: Links for controlling specific regions
+      const links = [
+        document.getElementById("ara-link"),
+        document.getElementById("arm-link"),
+        document.getElementById("chi-link"),
+        document.getElementById("eti-link"),
+        document.getElementById("geo-link"),
+        document.getElementById("gre-link"),
+        document.getElementById("heb-link"),
+        document.getElementById("jap-link"),
+        document.getElementById("kor-link"),
+        document.getElementById("lat-link"),
+        document.getElementById("rus-link"),
+        document.getElementById("san-link"),
+        document.getElementById("borders-link"),
+        document.getElementById("colours-link"),
+        document.getElementById("speed-link"),
+      ];
+
+      // DOM Elements: Canvas layers for each region
+      const canvas = [
+        document.getElementById("canvas0"),
+        document.getElementById("canvas1"),
+        document.getElementById("canvas2"),
+        document.getElementById("canvas3"),
+        document.getElementById("canvas4"),
+        document.getElementById("canvas5"),
+        document.getElementById("canvas6"),
+        document.getElementById("canvas7"),
+        document.getElementById("canvas8"),
+        document.getElementById("canvas9"),
+        document.getElementById("canvas10"),
+        document.getElementById("canvas11"),
+        document.getElementById("canvasBorders"),
+        document.getElementById("canvasColours"),
+      ];
+
+      // Canvas Contexts
+      const ctx = [
+        canvas[0].getContext("2d"),
+        canvas[1].getContext("2d"),
+        canvas[2].getContext("2d"),
+        canvas[3].getContext("2d"),
+        canvas[4].getContext("2d"),
+        canvas[5].getContext("2d"),
+        canvas[6].getContext("2d"),
+        canvas[7].getContext("2d"),
+        canvas[8].getContext("2d"),
+        canvas[9].getContext("2d"),
+        canvas[10].getContext("2d"),
+        canvas[11].getContext("2d"),
+        canvas[12].getContext("2d"),
+        canvas[13].getContext("2d"),
+      ];
+
+      // Initialize canvas dimensions to full window size
+      canvas.forEach((element) => {
+        element.width = window.innerWidth;
+        element.height = window.innerHeight;
+      });
+
+      // Image Assets
+      const images = [
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+        new Image(),
+      ];
+
+      images[0].src = "img/ara_full.png";
+      images[1].src = "img/arm_full.png";
+      images[2].src = "img/cin_full.png";
+      images[3].src = "img/eti_full.png";
+      images[4].src = "img/geo_full.png";
+      images[5].src = "img/gre_full.png";
+      images[6].src = "img/heb_full.png";
+      images[7].src = "img/jap_full.png";
+      images[8].src = "img/kor_full.png";
+      images[9].src = "img/lat_full.png";
+      images[10].src = "img/rus_full.png";
+      images[11].src = "img/san_full.png";
+      images[12].src = "img/hranice.gif";
+      images[13].src = "img/farby.png";
+
+      // Set styles for images (z-index layering)
+      images.forEach((image, index) => {
+        image.style.position = "absolute";
+        image.style.left = "0";
+        image.style.top = "0";
+        index == 13
+          ? (image.style.zIndex = 1)
+          : index == 12
+            ? (image.style.zIndex = 100)
+            : (image.style.zIndex = index + 10);
+      });
+
+      // State Management: Parallel arrays for 14 regions
+      // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
+      let speed = 700;
+      let revealRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Current radius of the reveal circle
+      let clickX = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center X of the reveal
+      let clickY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center Y of the reveal
+
+      // Default center coordinates for each region (relative to original image size)
+
+      imageOriginalCodes = [
+        "0 ARABIC",
+        "1 ARMENIAN",
+        "2 CHINESE",
+        "3 ETIOPIA",
+        "4 GEORGIAN",
+        "5 GREECE",
+        "6 HEBREW",
+        "7 JAPANESE",
+        "8 KOREAN",
+        "9 LATIN",
+        "10 RUSSIAN",
+        "11 SANSKRIT",
+        "12 BORDERS",
+        "13 COLOURS",
+      ];
+      imageOriginalX = [
+        1404, 1343, 1728, 1315, 1316, 1164, 1263, 1994, 1912, 279, 1517, 1609,
+        1160, 1160,
+      ];
+      imageOriginalY = [
+        596, 455, 490, 795, 438, 476, 547, 415, 422, 336, 272, 609, 737, 737,
+      ];
+
+      // Animation States: True if expanding
+      let isRevealing = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ];
+
+      // Animation States: True if contracting
+      let isHiding = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ];
+
+      // Visibility States: True if fully invisible
+      let isHidden = [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+      ];
+
+      // Visibility States: True if fully visible
+      let isShown = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ];
+
+      // Animation States: True if paused
+      let isFrozen = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ];
+
+      let foreverRepeat = false;
+
+      let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      // Recalculates default starting coordinates based on current window size
+      function calculateStarts() {
+        for (let index = 0; index < clickX.length; index++) {
+          clickX[index] = Math.round(
+            (imageOriginalX[index] * canvas[index].width) / images[index].width,
+          );
+          clickY[index] = Math.round(
+            (imageOriginalY[index] * canvas[index].height) /
+              images[index].height,
+          );
+        }
+      }
+
+      // Pauses all currently animating regions
+      function freezeAllRegions(e) {
+        for (let index = 0; index < 12; index++) {
+          if (isRevealing[index] || isHiding[index]) {
+            if (!isFrozen[index]) {
+              isFrozen[index] = true;
+              links[index].className = "frozen";
+            }
+          }
+          paint(index);
+        }
+      }
+
+      // Resets all regions to hidden state
+      function resetRegions(e) {
+        speed = 100;
+        calculateStarts();
+        for (let index = 0; index < 12; index++) {
+          isFrozen[index] = false;
+        }
+        foreverRepeat = false;
+        for (let index = 0; index < 12; index++) {
+          if (!isHidden[index]) {
+            isHiding[index] = true;
+            isRevealing[index] = false;
+            isHidden[index] = false;
+            isShown[index] = false;
+            paint(index);
+            links[index].className = "active";
+          }
+        }
+      }
+
+      // Toggles visibility of regions, optionally with random centers
+      function randomRegions(e, randomizeStarts) {
+        //foreverRepeat = true;
+        if (!randomizeStarts) {
+          calculateStarts();
+        }
+        for (let index = 0; index < 12; index++) {
+          if (!isHiding[index] && !isRevealing[index]) {
+            if (randomizeStarts) {
+              clickX[index] = Math.round(Math.random() * canvas[index].width);
+              clickY[index] = Math.round(Math.random() * canvas[index].height);
+            }
+            isHidden[index] = false;
+            isShown[index] = false;
+            isRevealing[index] = true;
+            isHiding[index] = false;
+
+            canvas[index].width / images[index].width;
+
+            revealRadius[index] = 0;
+            maxRadius[index] = Math.sqrt(
+              Math.pow(
+                Math.max(clickX[index], window.innerWidth - clickX[index]),
+                2,
+              ) +
+                Math.pow(
+                  Math.max(clickY[index], window.innerHeight - clickY[index]),
+                  2,
+                ),
+            );
+          } else if (isRevealing[index]) {
+            if (randomizeStarts && isFrozen[index]) {
+              clickX[index] = Math.round(Math.random() * canvas[index].width);
+              clickY[index] = Math.round(Math.random() * canvas[index].height);
+            }
+
+            if (!isFrozen[index]) {
+              isHiding[index] = true;
+              isRevealing[index] = false;
+              links[index].className = "frozen";
+            }
+            isFrozen[index] = !isFrozen[index];
+          } else if (isHiding[index]) {
+            if (randomizeStarts && isFrozen[index]) {
+              clickX[index] = Math.round(Math.random() * canvas[index].width);
+              clickY[index] = Math.round(Math.random() * canvas[index].height);
+            }
+
+            if (!isFrozen[index]) {
+              isHiding[index] = false;
+              isRevealing[index] = true;
+              links[index].className = "frozen";
+            }
+            isFrozen[index] = !isFrozen[index];
+          }
+          paint(index);
+        }
+      }
+
+      // Toggles animation speed
+      function setSpeed() {
+        if (speed == 100) {
+          speed = 700;
+          links[14].className = "hidden";
+        } else {
+          speed = 100;
+          links[14].className = "shown";
+        }
+      }
+
+      // Handles user interaction (click on map or menu link)
+      // index: Region ID (0-13)
+      // getclick: If true, use mouse coordinates. If false, use default center.
+      function clickedRegion(e, index, getclick) {
+        if (index > 11) {
+          clickX[index] = Math.round(canvas[index].width / 2);
+          clickY[index] = Math.round(canvas[index].height / 2);
+        } else if (getclick) {
+          clickX[index] = e.clientX;
+          clickY[index] = e.clientY;
+        } else {
+          if (clickX[index] == 0) {
+            clickX[index] = Math.round(
+              (imageOriginalX[index] * canvas[index].width) /
+                images[index].width,
+            );
+          }
+          if (clickY[index] == 0) {
+            clickY[index] = Math.round(
+              (imageOriginalY[index] * canvas[index].height) /
+                images[index].height,
+            );
+          }
+        }
+
+        //if ( !isHiding[index]) {
+
+        for (let i = 0; i < canvas.length - 2; i++) {
+          canvas[i].style.zIndex = i + 10;
+        }
+        canvas[index].style.zIndex = 30;
+
+        if (isHidden[index]) {
+          isHidden[index] = false;
+          isRevealing[index] = true;
+        } else if (isShown[index]) {
+          isShown[index] = false;
+          isHiding[index] = true;
+        } else if (isRevealing[index]) {
+          if (!isFrozen[index]) {
+            isHiding[index] = true;
+            isRevealing[index] = false;
+            links[index].className = "frozen";
+          }
+          isFrozen[index] = !isFrozen[index];
+        } else if (isHiding[index]) {
+          if (!isFrozen[index]) {
+            isHiding[index] = false;
+            isRevealing[index] = true;
+            links[index].className = "frozen";
+          }
+          isFrozen[index] = !isFrozen[index];
+        }
+
+        maxRadius[index] = Math.sqrt(
+          Math.pow(
+            Math.max(clickX[index], window.innerWidth - clickX[index]),
+            2,
+          ) +
+            Math.pow(
+              Math.max(clickY[index], window.innerHeight - clickY[index]),
+              2,
+            ),
+        );
+
+        paint(index);
+      }
+      //}
+
+      // Main animation loop for a specific region
+      // Uses requestAnimationFrame for smooth rendering
+      function paint(region) {
+        if (!isFrozen[region]) {
+          //console.log("Drawing region:", region);
+
+          //if (image[region].complete) {
+          ctx[region].clearRect(
+            0,
+            0,
+            canvas[region].width,
+            canvas[region].height,
+          );
+          ctx[region].save();
+          ctx[region].beginPath();
+          ctx[region].arc(
+            clickX[region],
+            clickY[region],
+            revealRadius[region] < 0 ? 0 : revealRadius[region],
+            0,
+            Math.PI * 2,
+          );
+          ctx[region].clip();
+          ctx[region].drawImage(
+            images[region],
+            0,
+            0,
+            canvas[region].width,
+            canvas[region].height,
+          );
+          ctx[region].restore();
+
+          if (isRevealing[region])
+            if (revealRadius[region] < maxRadius[region]) {
+              links[region].className = "active";
+              revealRadius[region] += maxRadius[region] / speed;
+              requestAnimationFrame(() => paint(region));
+            } else {
+              //console.log("Region fully revealed:", region);
+              links[region].className = "shown";
+
+              isHidden[region] = false;
+              isHiding[region] = false;
+              isRevealing[region] = false;
+              isShown[region] = true;
+              speed = 700;
+
+              //requestAnimationFrame(() => paint(region));
+            }
+
+          if (isHiding[region])
+            if (revealRadius[region] > 0) {
+              links[region].className = "active";
+              revealRadius[region] -= maxRadius[region] / speed;
+              requestAnimationFrame(() => paint(region));
+            } else {
+              //console.log("Region hidden:", region);
+              revealRadius[region] = 0;
+              links[region].className = "hidden";
+
+              isHidden[region] = true;
+              isHiding[region] = false;
+              isRevealing[region] = false;
+              isShown[region] = false;
+              speed = 700;
+              requestAnimationFrame(() => paint(region));
+            }
+        }
+      }
+
+      // Handle window resize events
+      window.addEventListener("resize", () => {
+        images.forEach((image, index) => {
+          canvas[index].width = window.innerWidth;
+          canvas[index].height = window.innerHeight;
+          maxRadius[index] = Math.max(
+            canvas[index].width * 2,
+            canvas[index].height * 2,
+          );
+
+          if (image.complete) {
+            paint(index);
+          }
+        });
+        calculateStarts();
+      });
+    </script>
+  </body>
+</html>
