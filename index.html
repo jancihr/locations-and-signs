@@ -809,7 +809,9 @@ KEY FEATURES:
 
       // State Management: Parallel arrays for 14 regions
       // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
-      let speed = [700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 100, 100];
+      let speed = [
+        700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 100, 100,
+      ];
       let revealRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Current radius of the reveal circle
       let clickX = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center X of the reveal
       let clickY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center Y of the reveal
@@ -947,6 +949,7 @@ KEY FEATURES:
 
       // Pauses all currently animating regions
       function freezeAllRegions(e) {
+        toggleAutoPlay(e, true);
         for (let index = 0; index < 12; index++) {
           if (isRevealing[index] || isHiding[index]) {
             if (!isFrozen[index]) {
@@ -961,13 +964,16 @@ KEY FEATURES:
       // Resets all regions to hidden state
       function resetRegions(e) {
         toggleAutoPlay(e, true);
+
+        toggleRandomOrigin(e, false);
+
         calculateStarts();
         for (let index = 0; index < 12; index++) {
           isFrozen[index] = false;
         }
-        
+
         for (let index = 0; index < 12; index++) {
-          if (!isHidden[index] && ! isFrozen[index]) {
+          if (!isHidden[index] && !isFrozen[index]) {
             isHiding[index] = true;
             isRevealing[index] = false;
             isHidden[index] = false;
@@ -1037,13 +1043,10 @@ KEY FEATURES:
         }
       }
 
-
       // Handles user interaction (click on map or menu link)
       // index: Region ID (0-13)
       // getclick: If true, use mouse coordinates. If false, use default center.
       function clickedRegion(e, index, getclick) {
-
-
         if (index > 11) {
           clickX[index] = Math.round(canvas[index].width / 2);
           clickY[index] = Math.round(canvas[index].height / 2);
@@ -1052,7 +1055,7 @@ KEY FEATURES:
           clickY[index] = e.clientY;
         } else {
           if (isHidden[index]) {
-            if (randomOrigin) {
+            if (randomOrigins) {
               clickX[index] = Math.round(Math.random() * canvas[index].width);
               clickY[index] = Math.round(Math.random() * canvas[index].height);
             } else {
@@ -1070,7 +1073,8 @@ KEY FEATURES:
 
         //change z-index of canvases so active one is on top
 
-        if(true){//if (isHidden[index]) {
+        if (true) {
+          //if (isHidden[index]) {
           const regions = [];
           for (let i = 0; i < canvas.length - 2; i++) {
             regions.push({
@@ -1212,7 +1216,7 @@ KEY FEATURES:
       });
 
       let isAutoPlaying = true;
-      let randomOrigin = false;
+      let randomOrigins = false;
       let autoPlayTimeout;
 
       function autoPlay() {
@@ -1225,13 +1229,12 @@ KEY FEATURES:
       }
 
       function toggleAutoPlay(e, resetAutoplay) {
-
         if (resetAutoplay) {
           isAutoPlaying = false;
         } else {
-           isAutoPlaying = !isAutoPlaying;
+          isAutoPlaying = !isAutoPlaying;
         }
-       
+
         const link = document.getElementById("autoplay-link");
         link.className = isAutoPlaying ? "shown" : "hidden";
         if (isAutoPlaying) {
@@ -1241,14 +1244,15 @@ KEY FEATURES:
         }
       }
 
-      function toggleRandomOrigin(e, randomOriginIn) {
-        randomOrigin = randomOriginIn;
+      function toggleRandomOrigin(e, randomOriginsIn) {
+      
+          randomOrigins = randomOriginsIn;
+        
         const allLink = document.getElementById("all-link");
         const randomLink = document.getElementById("random-link");
-        allLink.className = randomOrigin ? "hidden" : "shown";
-        randomLink.className = randomOrigin ? "shown" : "hidden";
-          toggleAllRegions(e, randomOriginIn);
-      
+        allLink.className = randomOrigins ? "hidden" : "shown";
+        randomLink.className = randomOrigins ? "shown" : "hidden";
+        toggleAllRegions(e, randomOrigins);
       }
 
       window.addEventListener("load", () => {
