@@ -1,20 +1,64 @@
 <!--
 
-PROJECT: Zorka Signs and Locations Interactive Map
-AUTHORS
-- Jan Hreno
-- Zorka Lednarova
+  PROJECT: Zorka Signs and Locations Interactive Map
+  AUTHORS:
+  - Jan Hreno
+  - Zorka Lednarova
 
+  ================================================================================
 
-DESCRIPTION:
-An interactive HTML/CSS/JavaScript application displaying a world map with clickable expandable regions 
-representing different writing systems and languages. 
+  DESCRIPTION:
+  An interactive, single-page web application that presents a world map with
+  clickable regions corresponding to different global writing systems and languages.
+  When a user clicks on a map region or a corresponding menu button, a full-screen
+  image layer representing that script is revealed through a circular, animated
+  clipping mask. The application supports various interaction modes, including
+  manual control, autoplay, and different animation origin points.
 
-KEY FEATURES:
-- 12 language/writing system categories: 
-- Interactive map with clickable regions that expand to show levels of signs per language
+  ================================================================================
 
+  KEY FEATURES:
 
+  - INTERACTIVE SVG MAP: A world map rendered as an SVG with clickable <polygon>
+    elements defining the regions for each writing system.
+
+  - 12 LANGUAGE/SCRIPT REGIONS:
+    - Armenian, Georgian, Cyrillic, Arabic, Ethiopian, Hebrew, Greek, Brahmic,
+      Chinese, Japanese, Korean, and Latin.
+    - Two additional utility layers: "Borders" and "Regions".
+
+  - DYNAMIC REVEAL ANIMATION:
+    - Uses HTML <canvas> and the clipping API to create a circular reveal/hide effect.
+    - Each region has its own canvas layer.
+
+  - MULTIPLE ANIMATION STATES:
+    - isHidden: The region is completely invisible.
+    - isRevealing: The circular mask is expanding.
+    - isShown: The region is fully visible.
+    - isHiding: The circular mask is contracting.
+    - isFrozen: The animation is paused mid-reveal or mid-hide.
+
+  - Z-INDEX MANAGEMENT:
+    - When a region is activated, its canvas is brought to the highest z-index to
+      ensure it animates over other layers.
+    - The relative order of the other, inactive layers is preserved.
+
+  - COMPREHENSIVE CONTROL MENU:
+    - AUTOPLAY: Automatically reveals and hides random regions at random intervals.
+    - ORIGIN CONTROL ('HOME' vs 'RANDOM'): Toggles the starting point of animations
+      between a predefined "home" coordinate for each region and a random point.
+    - REGION-SPECIFIC BUTTONS: Allow direct toggling of each language layer.
+    - UTILITY BUTTONS: Toggle 'Borders' and 'Regions' layers.
+
+  - STATE MANAGEMENT:
+    - Pure JavaScript implementation using parallel arrays to manage the state of
+      each region (e.g., `isRevealing`, `isHidden`, `speed`, `clickX`, `clickY`).
+
+  - RESPONSIVE DESIGN:
+    - The canvas and SVG elements are configured to fill the viewport (100vw, 100vh)
+      and adapt to window resizing.
+
+  ================================================================================
 -->
 <!doctype html>
 <html lang="en">
