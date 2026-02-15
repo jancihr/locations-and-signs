@@ -21,7 +21,7 @@ KEY FEATURES:
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LOCATION AND SIGNS</title>
+    <title>LOCATION AND SIGNS</title>
     <style>
       body {
         margin: 0;
@@ -123,234 +123,225 @@ KEY FEATURES:
         justify-content: center;
       "
     >
-      <!-- <a
-        id="speed-link"
-        class="hidden"
-        href="#"
-        onclick="
-          setSpeed();
-          return false;
-        "
-        >FAST</a
-      >
-      -->
+      <div>
+        <a
+          id="autoplay-link"
+          class="shown"
+          href="#"
+          title="START/STOP AUTOMATIC LOOP"
+          onclick="
+            toggleAutoPlay(event, false);
+            return false;
+          "
+          >AUTOPLAY</a
+        >
 
-      <a
-        id="autoplay-link"
-        class="shown"
-        href="#"
-        title="START/STOP AUTOMATIC LOOP"
-        onclick="
-          toggleAutoPlay(event);
-          return false;
-        "
-        >AUTOPLAY</a
-      >
+        <a
+          id="all-link"
+          class="shown"
+          href="#"
+          title="SWITCH TO HOME ORIGIN"
+          onclick="
+            toggleRandomOrigin(event, false);
+            return false;
+          "
+          >HOME ORIGIN</a
+        >
 
-      <a
-        id="all-link"
-        class="hidden"
-        href="#"
-        title="START/STOP ALL ON PREDEFINED REGIONS"
-        onclick="
-          randomRegions(event, false);
-          return false;
-        "
-        >HOME</a
-      >
+        <a
+          id="random-link"
+          class="hidden"
+          href="#"
+          title="SWITCH TO RANDOM ORIGIN"
+          onclick="
+            toggleRandomOrigin(event, true);
+            return false;
+          "
+          >RANDOM ORIGIN</a
+        >
 
-      <a
-        id="random-link"
-        class="hidden"
-        href="#"
-        title="START/STOP ALL ON RANDOM REGIONS"
-        onclick="
-          randomRegions(event, true);
-          return false;
-        "
-        >RANDOM</a
-      >
+        <a
+          id="freeze-link"
+          class="hidden"
+          href="#"
+          title="FREEZE ALL REGIONS"
+          onclick="
+            freezeAllRegions(event);
+            return false;
+          "
+          >FREEZE</a
+        >
 
-      <a
-        id="freeze-link"
-        class="hidden"
-        href="#"
-        title="FREEZE ALL REGIONS"
-        onclick="
-          freezeAllRegions(event);
-          return false;
-        "
-        >FREEZE</a
-      >
+        <a
+          id="reset-link"
+          class="hidden"
+          href="#"
+          title="CLEAR ALL REGIONS"
+          onclick="
+            resetRegions(event);
+            return false;
+          "
+          >CLEAR</a
+        >
 
-      <a
-        id="reset-link"
-        class="hidden"
-        href="#"
-        title="CLEAR ALL REGIONS"
-        onclick="
-          resetRegions(event);
-          return false;
-        "
-        >CLEAR</a
-      >
-
-      |
-      <a
-        id="borders-link"
-        class="hidden"
-        href="#"
-        title="SHOW/HIDE ALPHABET BORDERS"
-        onclick="
-          clickedRegion(event, 12, false);
-          return false;
-        "
-        >BORDERS</a
-      >
-      <a
-        id="colours-link"
-        class="hidden"
-        href="#"
-        title="SHOW/HIDE ALPHABET IN THEIR REGIONS"
-        onclick="
-          clickedRegion(event, 13, false);
-          return false;
-        "
-        >REGIONS</a
-      >
-      |
-      <a
-        id="arm-link"
-        class="hidden"
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        href="#"
-        onclick="
-          clickedRegion(event, 1, false);
-          return false;
-        "
-        >ARMENIAN</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="geo-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 4, false);
-          return false;
-        "
-        >GEORGIAN</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="rus-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 10, false);
-          return false;
-        "
-        >CYRILLIC</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="ara-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 0, false);
-          return false;
-        "
-        >ARABIC</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="eti-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 3, false);
-          return false;
-        "
-        >ETHIOPIAN</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="heb-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 6, false);
-          return false;
-        "
-        >HEBREW</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="gre-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 5, false);
-          return false;
-        "
-        >GREEK</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="san-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 11, false);
-          return false;
-        "
-        >BRAHMIC</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="chi-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 2, false);
-          return false;
-        "
-        >CHINESE</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="jap-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 7, false);
-          return false;
-        "
-        >JAPANESE</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="kor-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 8, false);
-          return false;
-        "
-        >KOREAN</a
-      >
-      <a
-        title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
-        id="lat-link"
-        class="hidden"
-        href="#"
-        onclick="
-          clickedRegion(event, 9, false);
-          return false;
-        "
-        >LATIN</a
-      >
+        |
+        <a
+          id="borders-link"
+          class="hidden"
+          href="#"
+          title="SHOW/HIDE ALPHABET BORDERS"
+          onclick="
+            clickedRegion(event, 12, false);
+            return false;
+          "
+          >BORDERS</a
+        >
+        <a
+          id="colours-link"
+          class="hidden"
+          href="#"
+          title="SHOW/HIDE ALPHABET IN THEIR REGIONS"
+          onclick="
+            clickedRegion(event, 13, false);
+            return false;
+          "
+          >REGIONS</a
+        >
+      </div>
+      <div>
+        <a
+          id="arm-link"
+          class="hidden"
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          href="#"
+          onclick="
+            clickedRegion(event, 1, false);
+            return false;
+          "
+          >ARMENIAN</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="geo-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 4, false);
+            return false;
+          "
+          >GEORGIAN</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="rus-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 10, false);
+            return false;
+          "
+          >CYRILLIC</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="ara-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 0, false);
+            return false;
+          "
+          >ARABIC</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="eti-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 3, false);
+            return false;
+          "
+          >ETHIOPIAN</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="heb-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 6, false);
+            return false;
+          "
+          >HEBREW</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="gre-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 5, false);
+            return false;
+          "
+          >GREEK</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="san-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 11, false);
+            return false;
+          "
+          >BRAHMIC</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="chi-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 2, false);
+            return false;
+          "
+          >CHINESE</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="jap-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 7, false);
+            return false;
+          "
+          >JAPANESE</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="kor-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 8, false);
+            return false;
+          "
+          >KOREAN</a
+        >
+        <a
+          title="SHOW/PAUSE/HIDE REGION FROM THE LAST CLICKED ORIGIN"
+          id="lat-link"
+          class="hidden"
+          href="#"
+          onclick="
+            clickedRegion(event, 9, false);
+            return false;
+          "
+          >LATIN</a
+        >
+      </div>
     </div>
     <svg
       viewBox="0 0 2320 1474"
@@ -727,7 +718,6 @@ KEY FEATURES:
         document.getElementById("san-link"),
         document.getElementById("borders-link"),
         document.getElementById("colours-link"),
-        document.getElementById("speed-link"),
       ];
 
       // DOM Elements: Canvas layers for each region
@@ -819,7 +809,7 @@ KEY FEATURES:
 
       // State Management: Parallel arrays for 14 regions
       // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
-      let speed = 700;
+      let speed = [700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 100, 100];
       let revealRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Current radius of the reveal circle
       let clickX = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center X of the reveal
       let clickY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center Y of the reveal
@@ -940,8 +930,6 @@ KEY FEATURES:
         false,
       ];
 
-      let foreverRepeat = false;
-
       let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
       // Recalculates default starting coordinates based on current window size
@@ -972,18 +960,19 @@ KEY FEATURES:
 
       // Resets all regions to hidden state
       function resetRegions(e) {
-        speed = 100;
+        toggleAutoPlay(e, true);
         calculateStarts();
         for (let index = 0; index < 12; index++) {
           isFrozen[index] = false;
         }
-        foreverRepeat = false;
+        
         for (let index = 0; index < 12; index++) {
-          if (!isHidden[index]) {
+          if (!isHidden[index] && ! isFrozen[index]) {
             isHiding[index] = true;
             isRevealing[index] = false;
             isHidden[index] = false;
             isShown[index] = false;
+            isFrozen[index] = false;
             paint(index);
             links[index].className = "active";
           }
@@ -991,8 +980,7 @@ KEY FEATURES:
       }
 
       // Toggles visibility of regions, optionally with random centers
-      function randomRegions(e, randomizeStarts) {
-        //foreverRepeat = true;
+      function toggleAllRegions(e, randomizeStarts) {
         if (!randomizeStarts) {
           calculateStarts();
         }
@@ -1049,21 +1037,13 @@ KEY FEATURES:
         }
       }
 
-      // Toggles animation speed
-      function setSpeed() {
-        if (speed == 100) {
-          speed = 700;
-          links[14].className = "hidden";
-        } else {
-          speed = 100;
-          links[14].className = "shown";
-        }
-      }
 
       // Handles user interaction (click on map or menu link)
       // index: Region ID (0-13)
       // getclick: If true, use mouse coordinates. If false, use default center.
       function clickedRegion(e, index, getclick) {
+
+
         if (index > 11) {
           clickX[index] = Math.round(canvas[index].width / 2);
           clickY[index] = Math.round(canvas[index].height / 2);
@@ -1071,27 +1051,46 @@ KEY FEATURES:
           clickX[index] = e.clientX;
           clickY[index] = e.clientY;
         } else {
-          if (clickX[index] == 0) {
-            clickX[index] = Math.round(
-              (imageOriginalX[index] * canvas[index].width) /
-                images[index].width,
-            );
-          }
-          if (clickY[index] == 0) {
-            clickY[index] = Math.round(
-              (imageOriginalY[index] * canvas[index].height) /
-                images[index].height,
-            );
+          if (isHidden[index]) {
+            if (randomOrigin) {
+              clickX[index] = Math.round(Math.random() * canvas[index].width);
+              clickY[index] = Math.round(Math.random() * canvas[index].height);
+            } else {
+              clickX[index] = Math.round(
+                (imageOriginalX[index] * canvas[index].width) /
+                  images[index].width,
+              );
+              clickY[index] = Math.round(
+                (imageOriginalY[index] * canvas[index].height) /
+                  images[index].height,
+              );
+            }
           }
         }
 
-        //if ( !isHiding[index]) {
+        //change z-index of canvases so active one is on top
 
-        for (let i = 0; i < canvas.length - 2; i++) {
-          canvas[i].style.zIndex = i + 10;
+        if(true){//if (isHidden[index]) {
+          const regions = [];
+          for (let i = 0; i < canvas.length - 2; i++) {
+            regions.push({
+              id: i,
+              zIndex: parseInt(canvas[i].style.zIndex),
+            });
+          }
+          regions.sort((a, b) => a.zIndex - b.zIndex);
+
+          const sortedIds = regions
+            .map((r) => r.id)
+            .filter((id) => id !== index);
+          sortedIds.push(index);
+
+          sortedIds.forEach((id, pos) => {
+            canvas[id].style.zIndex = 10 + pos;
+          });
+
+          canvas[index].style.zIndex = 30;
         }
-        canvas[index].style.zIndex = 30;
-
         if (isHidden[index]) {
           isHidden[index] = false;
           isRevealing[index] = true;
@@ -1127,7 +1126,6 @@ KEY FEATURES:
 
         paint(index);
       }
-      //}
 
       // Main animation loop for a specific region
       // Uses requestAnimationFrame for smooth rendering
@@ -1164,7 +1162,7 @@ KEY FEATURES:
           if (isRevealing[region])
             if (revealRadius[region] < maxRadius[region]) {
               links[region].className = "active";
-              revealRadius[region] += maxRadius[region] / speed;
+              revealRadius[region] += maxRadius[region] / speed[region];
               requestAnimationFrame(() => paint(region));
             } else {
               //console.log("Region fully revealed:", region);
@@ -1174,15 +1172,13 @@ KEY FEATURES:
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = true;
-              speed = 700;
-
               //requestAnimationFrame(() => paint(region));
             }
 
           if (isHiding[region])
             if (revealRadius[region] > 0) {
               links[region].className = "active";
-              revealRadius[region] -= maxRadius[region] / speed;
+              revealRadius[region] -= maxRadius[region] / speed[region];
               requestAnimationFrame(() => paint(region));
             } else {
               //console.log("Region hidden:", region);
@@ -1193,7 +1189,6 @@ KEY FEATURES:
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = false;
-              speed = 700;
               requestAnimationFrame(() => paint(region));
             }
         }
@@ -1217,6 +1212,7 @@ KEY FEATURES:
       });
 
       let isAutoPlaying = true;
+      let randomOrigin = false;
       let autoPlayTimeout;
 
       function autoPlay() {
@@ -1228,8 +1224,14 @@ KEY FEATURES:
         autoPlayTimeout = setTimeout(autoPlay, Math.random() * 2000 + 500);
       }
 
-      function toggleAutoPlay(e) {
-        isAutoPlaying = !isAutoPlaying;
+      function toggleAutoPlay(e, resetAutoplay) {
+
+        if (resetAutoplay) {
+          isAutoPlaying = false;
+        } else {
+           isAutoPlaying = !isAutoPlaying;
+        }
+       
         const link = document.getElementById("autoplay-link");
         link.className = isAutoPlaying ? "shown" : "hidden";
         if (isAutoPlaying) {
@@ -1237,6 +1239,16 @@ KEY FEATURES:
         } else {
           clearTimeout(autoPlayTimeout);
         }
+      }
+
+      function toggleRandomOrigin(e, randomOriginIn) {
+        randomOrigin = randomOriginIn;
+        const allLink = document.getElementById("all-link");
+        const randomLink = document.getElementById("random-link");
+        allLink.className = randomOrigin ? "hidden" : "shown";
+        randomLink.className = randomOrigin ? "shown" : "hidden";
+          toggleAllRegions(e, randomOriginIn);
+      
       }
 
       window.addEventListener("load", () => {
