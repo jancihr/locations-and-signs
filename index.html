@@ -181,6 +181,18 @@
         >
 
         <a
+          id="sound-link"
+          class="hidden"
+          href="#"
+          title="TOGGLE SOUND"
+          onclick="
+            toggleSound(event);
+            return false;
+          "
+          >SOUND</a
+        >
+
+        <a
           id="all-link"
           class="hidden"
           href="#"
@@ -978,6 +990,101 @@
 
       let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+      // Audio Context and State
+      let audioCtx;
+      let audioEnabled = false;
+      const regionOscillators = new Array(14).fill(null);
+      const regionGains = new Array(14).fill(null);
+
+      // Harmonic base frequencies (Pentatonic/Major scale mapping)
+      const baseFrequencies = [
+        261.63, // C4
+        293.66, // D4
+        329.63, // E4
+        392.00, // G4
+        440.00, // A4
+        523.25, // C5
+        587.33, // D5
+        659.25, // E5
+        783.99, // G5
+        880.00, // A5
+        1046.50, // C6
+        1174.66, // D6
+        130.81, // C3 (Borders)
+        1318.51, // E6 (Colours)
+      ];
+
+      function initAudio() {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+      }
+
+      function updateTone(region, currentRadius, maxR) {
+        if (!audioEnabled || !audioCtx) return;
+
+        const progress = Math.min(1, Math.max(0, currentRadius / maxR));
+        const pitchMultiplier = 1 + progress * 0.5; // Pitch goes up as radius increases
+        const frequency = baseFrequencies[region] * pitchMultiplier;
+
+        if (!regionOscillators[region]) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = "sine";
+          osc.frequency.value = frequency;
+
+          gain.gain.setValueAtTime(0, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.1);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+
+          regionOscillators[region] = osc;
+          regionGains[region] = gain;
+        } else {
+          const osc = regionOscillators[region];
+          osc.frequency.setTargetAtTime(frequency, audioCtx.currentTime, 0.05);
+        }
+      }
+
+      function stopTone(region) {
+        if (regionOscillators[region]) {
+          const osc = regionOscillators[region];
+          const gain = regionGains[region];
+
+          try {
+            gain.gain.cancelScheduledValues(audioCtx.currentTime);
+            gain.gain.setValueAtTime(gain.gain.value, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+            osc.stop(audioCtx.currentTime + 0.2);
+          } catch (e) {}
+
+          regionOscillators[region] = null;
+          regionGains[region] = null;
+        }
+      }
+
+      function toggleSound(e) {
+        audioEnabled = !audioEnabled;
+        const link = document.getElementById("sound-link");
+        link.className = audioEnabled ? "shown" : "hidden";
+
+        if (audioEnabled) {
+          initAudio();
+        } else {
+          for (let i = 0; i < 14; i++) {
+            stopTone(i);
+          }
+          if (audioCtx) audioCtx.suspend();
+        }
+      }
+
       // Recalculates default starting coordinates based on current window size
       function calculateStarts() {
         for (let index = 0; index < clickX.length; index++) {
@@ -999,6 +1106,7 @@
             if (!isFrozen[index]) {
               isFrozen[index] = true;
               links[index].className = "frozen";
+              stopTone(index);
             }
           }
           paint(index);
@@ -1070,6 +1178,7 @@
               links[index].className = "frozen";
             }
             isFrozen[index] = !isFrozen[index];
+            if (isFrozen[index]) stopTone(index);
           } else if (isHiding[index]) {
             if (randomizeStarts && isFrozen[index]) {
               clickX[index] = Math.round(Math.random() * canvas[index].width);
@@ -1082,6 +1191,7 @@
               links[index].className = "frozen";
             }
             isFrozen[index] = !isFrozen[index];
+            if (isFrozen[index]) stopTone(index);
           }
           paint(index);
         }
@@ -1152,6 +1262,7 @@
             links[index].className = "frozen";
           }
           isFrozen[index] = !isFrozen[index];
+          if (isFrozen[index]) stopTone(index);
         } else if (isHiding[index]) {
           if (!isFrozen[index]) {
             isHiding[index] = false;
@@ -1159,6 +1270,7 @@
             links[index].className = "frozen";
           }
           isFrozen[index] = !isFrozen[index];
+          if (isFrozen[index]) stopTone(index);
         }
 
         maxRadius[index] = Math.sqrt(
@@ -1211,10 +1323,12 @@
             if (revealRadius[region] < maxRadius[region]) {
               links[region].className = "active";
               revealRadius[region] += maxRadius[region] / speed[region];
+              updateTone(region, revealRadius[region], maxRadius[region]);
               requestAnimationFrame(() => paint(region));
             } else {
               //console.log("Region fully revealed:", region);
               links[region].className = "shown";
+              stopTone(region);
 
               isHidden[region] = false;
               isHiding[region] = false;
@@ -1227,10 +1341,12 @@
             if (revealRadius[region] > 0) {
               links[region].className = "active";
               revealRadius[region] -= maxRadius[region] / speed[region];
+              updateTone(region, revealRadius[region], maxRadius[region]);
               requestAnimationFrame(() => paint(region));
             } else {
               //console.log("Region hidden:", region);
               revealRadius[region] = 0;
+              stopTone(region);
               links[region].className = "hidden";
 
               isHidden[region] = true;
