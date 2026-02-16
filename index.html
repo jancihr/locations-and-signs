@@ -91,7 +91,16 @@
       }
 
       .my-button {
-        border-radius: 3px;
+        border-radius: 1px;
+        border: #000000 2px solid;
+      }
+
+      .my-button:hover {
+        border-color: #1eff00;
+      }
+
+      .region-button {
+        border-radius: 7px;
         border: #000000 2px solid;
       }
 
@@ -108,11 +117,11 @@
       .my-region {
         fill: transparent;
         stroke: transparent;
-        stroke-width: 1;
+        stroke-width: 0;
       }
       /* Hover state */
       .my-region:hover {
-        stroke: #1eff00; /* Color change on hover */
+        fill: #0b5d0008; /* Color change on hover */
       }
     </style>
   </head>
@@ -137,21 +146,20 @@
     >
       <div>
         <a
-          id="autoplay-link"
-          class="button"
-          style="background: #1eff00"
+          id="menu-toggle-link"
+          class="my-button"
           href="#"
-          title="START/STOP AUTOMATIC LOOP"
+           style="background: #ffffff"
+          title="SHOW/HIDE MENU"
           onclick="
-            toggleAutoPlay(event, false);
+            toggleMenu(event);
             return false;
           "
-          >AUTOPLAY</a
+          >MENU</a
         >
-
         <a
           id="sound-link"
-          class="button"
+          class="my-button"
           style="background: #ffffff"
           href="#"
           title="TOGGLE SOUND"
@@ -161,76 +169,13 @@
           "
           >SOUND</a
         >
+      </div>
+      <div id="controls-container" style="display: none;">
 
-        <a
-          id="ripple-link"
-          class="button"
-          style="background: #1eff00"
-          href="#"
-          title="TOGGLE RIPPLE EFFECT"
-          onclick="
-            toggleRipple(event);
-            return false;
-          "
-          >RIPPLE</a
-        >
-
-        <a
-          id="all-link"
-          class="button"
-          style="background: #1eff00"
-          href="#"
-          title="SWITCH TO HOME ORIGIN"
-          onclick="
-            toggleRandomOrigin(event, false);
-            return false;
-          "
-          >HOME ORIGIN</a
-        >
-
-        <a
-          id="random-link"
-          class="button"
-          style="background: #ffffff"
-          href="#"
-          title="SWITCH TO RANDOM ORIGIN"
-          onclick="
-            toggleRandomOrigin(event, true);
-            return false;
-          "
-          >RANDOM ORIGIN</a
-        >
-
-        <a
-          id="freeze-link"
-          class="button"
-          style="background: #ffffff"
-          href="#"
-          title="FREEZE ALL REGIONS"
-          onclick="
-            freezeAllRegions(event);
-            return false;
-          "
-          >FREEZE</a
-        >
-
-        <a
-          id="reset-link"
-          class="button"
-          style="background: #ffffff"
-          href="#"
-          title="CLEAR ALL REGIONS"
-          onclick="
-            resetRegions(event);
-            return false;
-          "
-          >CLEAR</a
-        >
-
-        |
+        
         <a
           id="borders-link"
-          class="button"
+          class="my-button"
           style="background: #ffffff"
           href="#"
           title="SHOW/HIDE ALPHABET BORDERS"
@@ -242,7 +187,7 @@
         >
         <a
           id="colours-link"
-          class="button"
+          class="my-button"
           style="background: #ffffff"
           href="#"
           title="SHOW/HIDE ALPHABET IN THEIR REGIONS"
@@ -252,11 +197,122 @@
           "
           >REGIONS</a
         >
+        
+          <!--
+
+        <a
+          id="reset-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="CLEAR ALL REGIONS"
+          onclick="
+            resetRegions(event);
+            return false;
+          "
+          >CLEAR</a
+        >
+      
+       
+        <a
+          id="grow-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="GROW ALL REGIONS"
+          onclick="
+            growAllRegions(event);
+            return false;
+          "
+          >GROW</a
+        >
+        <a
+          id="shrink-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="SHRINK ALL REGIONS"
+          onclick="
+            shrinkAllRegions(event);
+            return false;
+          "
+          >SHRINK</a
+        >
+
+  
+        <a
+          id="melody-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="PLAY MELODY"
+          onclick="
+            toggleMelody(event);
+            return false;
+          "
+          >MELODY</a
+        >
+-->
+
+        <!--    <a
+          id="ripple-link"
+          class="my-button"
+          style="background: #1eff00"
+          href="#"
+          title="TOGGLE RIPPLE EFFECT"
+          onclick="
+            toggleRipple(event);
+            return false;
+          "
+          >RIPPLE</a
+        >
+-->
+
+        <a
+          id="all-link"
+          class="my-button"
+          style="background: #1eff00"
+          href="#"
+          title="SWITCH TO HOME ORIGIN"
+          onclick="
+            toggleRandomOrigin(event, false);
+            return false;
+          "
+          >RESET TO HOME</a
+        >
+
+        <a
+          id="random-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="SWITCH TO RANDOM ORIGIN"
+          onclick="
+            toggleRandomOrigin(event, true);
+            return false;
+          "
+          >RESET TO RANDOM</a
+        >
+
+         <a
+          id="freeze-link"
+          class="my-button"
+          style="background: #1eff00"
+          href="#"
+          title="FREEZE ALL REGIONS"
+          onclick="
+            freezeAllRegions(event);
+            return false;
+          "
+          >AUTORUN</a
+        >
+
+       
       </div>
-      <div>
+      <div id="regions-container" style="display: none;">
         <a
           id="arm-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           title="(CLICK TO START/STOP REGION ANIMATION)"
           href="#"
@@ -269,7 +325,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="geo-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -281,7 +337,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="rus-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -293,7 +349,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="ara-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -305,7 +361,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="eth-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -317,7 +373,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="heb-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -329,7 +385,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="gre-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -341,7 +397,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="san-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -353,7 +409,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="chi-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -365,7 +421,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="jap-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -377,7 +433,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="kor-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -389,7 +445,7 @@
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="lat-link"
-          class="button"
+          class="region-button"
           style="background: #ffffff"
           href="#"
           onclick="
@@ -877,10 +933,7 @@
 
       // State Management: Parallel arrays for 14 regions
       // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
-      let speed = [
-        1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000,
-        100, 100,
-      ];
+
       let revealRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Current radius of the reveal circle
       let clickX = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center X of the reveal
       let clickY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center Y of the reveal
@@ -1065,23 +1118,25 @@
       const regionOscillators = new Array(14).fill(null);
       const regionGains = new Array(14).fill(null);
 
-      // Harmonic base frequencies (Pentatonic/Major scale mapping)
+      // Harmonic base frequencies (C Major Scale for Ode to Joy)
       const baseFrequencies = [
-        261.63, // C4
-        293.66, // D4
-        329.63, // E4
-        392.0, // G4
-        440.0, // A4
-        523.25, // C5
-        587.33, // D5
-        659.25, // E5
-        783.99, // G5
-        880.0, // A5
-        1046.5, // C6
-        1174.66, // D6
-        130.81, // C3 (Borders)
-        1318.51, // E6 (Colours)
+        261.63, // 0: C4
+        293.66, // 1: D4
+        329.63, // 2: E4
+        349.23, // 3: F4
+        392.0, // 4: G4
+        440.0, // 5: A4
+        493.88, // 6: B4
+        523.25, // 7: C5
+        587.33, // 8: D5
+        659.25, // 9: E5
+        698.46, // 10: F5
+        783.99, // 11: G5
+
+        1318.51, // 13: E6 (Borders)
+        783.99, // 12: C3 (Colours)
       ];
+      const defaultFrequencies = [...baseFrequencies];
 
       function initAudio() {
         if (!audioCtx) {
@@ -1128,6 +1183,7 @@
           const gain = regionGains[region];
 
           try {
+            // Fade out the sound
             gain.gain.cancelScheduledValues(audioCtx.currentTime);
             gain.gain.setValueAtTime(gain.gain.value, audioCtx.currentTime);
             gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
@@ -1167,33 +1223,139 @@
         }
       }
 
-      // Pauses all currently animating regions
-      function freezeAllRegions(e) {
-        toggleAutoPlay(e, true);
-        for (let index = 0; index < 12; index++) {
-          if (isRevealing[index] || isHiding[index]) {
-            if (!isFrozen[index]) {
-              isFrozen[index] = true;
 
-              stopTone(index);
+     /* function toggleAutoPlay(e, resetAutoplay) {
+        if (resetAutoplay) {
+          isAutoPlaying = false;
+        } else {
+          if (!isAutoPlaying && isMelodyPlaying) {
+            toggleMelody(null);
+          }
+          isAutoPlaying = !isAutoPlaying;
+        }
+
+        const link = document.getElementById("autoplay-link");
+        link.style.background = isAutoPlaying ? "#1eff00" : "#ffffff";
+        if (isAutoPlaying) {
+          autoPlay();
+        } else {
+          clearTimeout(autoPlayTimeout);
+        }
+
+        
+      }*/
+
+      // Pauses all currently animating regions
+      function freezeAllRegions(e ) {
+        
+
+       
+          if (isMelodyPlaying) {
+            toggleMelody(null);
+          }
+          
+        
+       
+        let activeFound = false;
+        for (let index = 0; index < 12; index++) {
+          if ((isRevealing[index] || isHiding[index]) && !isFrozen[index]) {
+            activeFound = true;
+            break;
+          }
+        }
+        if (activeFound) {
+
+           
+
+          clearTimeout(autoPlayTimeout);
+          isAutoPlaying = false;
+          for (let index = 0; index < 12; index++) {
+            if (isRevealing[index] || isHiding[index]) {
+              if (!isFrozen[index]) {
+                isFrozen[index] = true;
+                stopTone(index);
+              }
+            }
+            paint(index, 100);
+          }
+        } else {
+          isAutoPlaying = true;
+          autoPlay();
+          
+        }
+
+        const link = document.getElementById("freeze-link");
+        link.style.background = isAutoPlaying ? "#1eff00" : "#ffffff";
+      }
+
+      function growAllRegions(e) {
+        //toggleAutoPlay(e, true);
+        if (isMelodyPlaying) {
+          toggleMelody(e);
+        }
+        for (let index = 0; index < 12; index++) {
+          if (isRevealing[index] && !isFrozen[index]) {
+            isFrozen[index] = true;
+            stopTone(index);
+          } else {
+            isFrozen[index] = false;
+            isHidden[index] = false;
+            isShown[index] = false;
+            isRevealing[index] = true;
+            isHiding[index] = false;
+
+            maxRadius[index] = Math.sqrt(
+              Math.pow(
+                Math.max(clickX[index], window.innerWidth - clickX[index]),
+                2,
+              ) +
+                Math.pow(
+                  Math.max(clickY[index], window.innerHeight - clickY[index]),
+                  2,
+                ),
+            );
+            paint(index, 2000);
+          }
+        }
+      }
+
+      function shrinkAllRegions(e) {
+        //toggleAutoPlay(e, true);
+        if (isMelodyPlaying) {
+          toggleMelody(e);
+        }
+        for (let index = 0; index < 12; index++) {
+          if (isHiding[index] && !isFrozen[index]) {
+            isFrozen[index] = true;
+            stopTone(index);
+          } else {
+            if (!isHidden[index]) {
+              isFrozen[index] = false;
+              isHiding[index] = true;
+              isRevealing[index] = false;
+              isShown[index] = false;
+              paint(index, 2000);
             }
           }
-          paint(index);
         }
       }
 
       // Resets all regions to hidden state
       function resetRegions(e) {
-        toggleAutoPlay(e, true);
-    //    randomOrigins = false;
+        //toggleAutoPlay(e, true);
+        if (isMelodyPlaying) {
+          toggleMelody(e);
+        }
+        //    randomOrigins = false;
 
-      //  const allLink = document.getElementById("all-link");
-      //  const randomLink = document.getElementById("random-link");
-      //  allLink.style.background = randomOrigins ? "#ffffff" : "#1eff00";
-      //  randomLink.style.background = randomOrigins ? "#1eff00" : "#ffffff";
+        //  const allLink = document.getElementById("all-link");
+        //  const randomLink = document.getElementById("random-link");
+        //  allLink.style.background = randomOrigins ? "#ffffff" : "#1eff00";
+        //  randomLink.style.background = randomOrigins ? "#1eff00" : "#ffffff";
 
-
-        if (!randomOrigins) {calculateStarts();}
+        if (!randomOrigins) {
+          calculateStarts();
+        }
         for (let index = 0; index < 12; index++) {
           isFrozen[index] = false;
         }
@@ -1205,7 +1367,7 @@
             isHidden[index] = false;
             isShown[index] = false;
             isFrozen[index] = false;
-            paint(index);
+            paint(index, 100);
           }
         }
       }
@@ -1264,17 +1426,27 @@
             isFrozen[index] = !isFrozen[index];
             if (isFrozen[index]) stopTone(index);
           }
-          paint(index);
+          paint(index, 2000);
         }
       }
 
       // Handles user interaction (click on map or menu link)
       // index: Region ID (0-13)
       // getclick: If true, use mouse coordinates. If false, use default center.
-      function clickedRegion(e, index, getclick) {
-
-        if (index <12 && randomOrigins && getclick){
+      function clickedRegion(e, index, getclick, duration) {
+        if (index < 12 && randomOrigins && getclick) {
           index = Math.floor(Math.random() * 12);
+        }
+
+        let speed = 100;
+        if (duration) {
+          speed = (duration / 1000) * 60;
+        } else {
+          if (index > 11) {
+            speed = 100;
+          } else {
+            speed = 1000;
+          }
         }
         if (e) e.stopPropagation();
         if (index > 11) {
@@ -1284,7 +1456,7 @@
           clickX[index] = e.clientX;
           clickY[index] = e.clientY;
         } else {
-          if (isHidden[index]) {
+          if (isHidden[index] || (isFrozen[index] && !isHiding[index])) {
             if (randomOrigins) {
               clickX[index] = Math.round(Math.random() * canvas[index].width);
               clickY[index] = Math.round(Math.random() * canvas[index].height);
@@ -1372,7 +1544,11 @@
 
           const rippleSpeed = maxRadius[index] / 90;
 
-          if (!isFrozen[index] && (isRevealing[index] || isHiding[index])) {
+          if (
+            getclick &&
+            !isFrozen[index] &&
+            (isRevealing[index] || isHiding[index])
+          ) {
             createRipple(clickX[index], clickY[index], {
               startRadius: startR,
               speed: rippleSpeed,
@@ -1381,12 +1557,12 @@
           }
         }
 
-        paint(index);
+        paint(index, speed);
       }
 
       // Main animation loop for a specific region
       // Uses requestAnimationFrame for smooth rendering
-      function paint(region) {
+      function paint(region, speed) {
         if (!isFrozen[region]) {
           //console.log("Drawing region:", region);
 
@@ -1425,9 +1601,9 @@
               links[region].style.background =
                 `linear-gradient(to right, #1eff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
-              revealRadius[region] += maxRadius[region] / speed[region];
+              revealRadius[region] += maxRadius[region] / speed;
               updateTone(region, revealRadius[region], maxRadius[region]);
-              requestAnimationFrame(() => paint(region));
+              requestAnimationFrame(() => paint(region, speed));
             } else {
               //console.log("Region fully revealed:", region);
               links[region].style.background = "#1eff00";
@@ -1438,7 +1614,7 @@
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = true;
-              //requestAnimationFrame(() => paint(region));
+              requestAnimationFrame(() => paint(region, speed));
             }
 
           if (isHiding[region])
@@ -1450,9 +1626,9 @@
               links[region].style.background =
                 `linear-gradient(to right, #1eff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
-              revealRadius[region] -= maxRadius[region] / speed[region];
+              revealRadius[region] -= maxRadius[region] / speed;
               updateTone(region, revealRadius[region], maxRadius[region]);
-              requestAnimationFrame(() => paint(region));
+              requestAnimationFrame(() => paint(region, speed));
             } else {
               //console.log("Region hidden:", region);
               revealRadius[region] = 0;
@@ -1477,22 +1653,22 @@
         images.forEach((image, index) => {
           canvas[index].width = window.innerWidth;
           canvas[index].height = window.innerHeight;
-           maxRadius[index] = Math.sqrt(
+          maxRadius[index] = Math.sqrt(
+            Math.pow(
+              Math.max(clickX[index], window.innerWidth - clickX[index]),
+              2,
+            ) +
               Math.pow(
-                Math.max(clickX[index], window.innerWidth - clickX[index]),
+                Math.max(clickY[index], window.innerHeight - clickY[index]),
                 2,
-              ) +
-                Math.pow(
-                  Math.max(clickY[index], window.innerHeight - clickY[index]),
-                  2,
-                ),
-            );
-           if (isShown[index]) {
+              ),
+          );
+          if (isShown[index]) {
             revealRadius[index] = maxRadius[index];
           }
 
           if (image.complete) {
-            paint(index);
+            paint(index, 5);
           }
         });
         calculateStarts();
@@ -1504,28 +1680,148 @@
 
       function autoPlay() {
         if (!isAutoPlaying) return;
-        const index = Math.floor(Math.random() * 12);
-        if (images[index].complete && images[index].width > 0) {
-          clickedRegion(null, index, false);
+        const numberOfRegions =
+          Math.floor(Math.pow(Math.random(), 0.1) * 11) + 1;
+        const indices = [];
+        while (indices.length < numberOfRegions) {
+          const r = Math.floor(Math.random() * 12);
+          if (indices.indexOf(r) === -1) indices.push(r);
         }
-        autoPlayTimeout = setTimeout(autoPlay, Math.random() * 2000 + 500);
+        indices.forEach((index) => {
+          if (images[index].complete && images[index].width > 0) {
+            clickedRegion(null, index, false);
+          }
+        });
+        autoPlayTimeout = setTimeout(
+          autoPlay,
+          2000 * (Math.floor(Math.random() * 2) + 1),
+        );
       }
 
-      function toggleAutoPlay(e, resetAutoplay) {
-        if (resetAutoplay) {
-          isAutoPlaying = false;
-        } else {
-          isAutoPlaying = !isAutoPlaying;
+      let isMelodyPlaying = false;
+      let melodyTimeout;
+      let melodyIndex = 0;
+
+      const SONG = [
+        // Ode to Joy
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 3, duration: 400, delay: 400 }, // F
+        { region: 4, duration: 400, delay: 400 }, // G
+        { region: 4, duration: 400, delay: 400 }, // G
+        { region: 3, duration: 400, delay: 400 }, // F
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 2, duration: 600, delay: 600 }, // E.
+        { region: 1, duration: 200, delay: 200 }, // D
+        { region: 1, duration: 800, delay: 800 }, // D
+
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 3, duration: 400, delay: 400 }, // F
+        { region: 4, duration: 400, delay: 400 }, // G
+        { region: 4, duration: 400, delay: 400 }, // G
+        { region: 3, duration: 400, delay: 400 }, // F
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 1, duration: 600, delay: 600 }, // D.
+        { region: 0, duration: 200, delay: 200 }, // C
+        { region: 0, duration: 800, delay: 800 }, // C
+
+        // Part 3 (Bridge)
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 2, duration: 200, delay: 200 }, // E
+        { region: 3, duration: 200, delay: 200 }, // F
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 2, duration: 200, delay: 200 }, // E
+        { region: 3, duration: 200, delay: 200 }, // F
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 4, duration: 800, delay: 800, frequency: 196.0 }, // G3 (Low G)
+
+        // Part 4 (Repeat of Part 2)
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 3, duration: 400, delay: 400 }, // F
+        { region: 4, duration: 400, delay: 400 }, // G
+        { region: 4, duration: 400, delay: 400 }, // G
+        { region: 3, duration: 400, delay: 400 }, // F
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 0, duration: 400, delay: 400 }, // C
+        { region: 1, duration: 400, delay: 400 }, // D
+        { region: 2, duration: 400, delay: 400 }, // E
+        { region: 1, duration: 600, delay: 600 }, // D.
+        { region: 0, duration: 200, delay: 200 }, // C
+        { region: 0, duration: 800, delay: 800 }, // C
+      ];
+
+      function playMelody() {
+        if (!isMelodyPlaying) return;
+
+        for (let i = 0; i < 14; i++) {
+          baseFrequencies[i] = defaultFrequencies[i];
         }
 
-        const link = document.getElementById("autoplay-link");
-        link.style.background = isAutoPlaying ? "#1eff00" : "#ffffff";
-        if (isAutoPlaying) {
-          autoPlay();
+        const note = SONG[melodyIndex];
+        const region = note.region;
+
+        if (note.frequency) {
+          baseFrequencies[region] = note.frequency;
+        }
+
+        if (isRevealing[region] || isHiding[region]) {
+          stopTone(region);
+          isRevealing[region] = false;
+          isHiding[region] = false;
+          isShown[region] = false;
+          isHidden[region] = true;
+          isFrozen[region] = false;
+        }
+
+        if (images[region].complete) {
+          clickedRegion(null, region, false, note.duration);
+        }
+
+        melodyIndex = (melodyIndex + 1) % SONG.length;
+        melodyTimeout = setTimeout(playMelody, note.delay);
+      }
+
+      function toggleMelody(e) {
+        isMelodyPlaying = !isMelodyPlaying;
+        const link = document.getElementById("melody-link");
+        link.style.background = isMelodyPlaying ? "#1eff00" : "#ffffff";
+
+        if (isMelodyPlaying) {
+          //if (isAutoPlaying) toggleAutoPlay(null, true);
+          melodyIndex = 0;
+          playMelody();
         } else {
-          clearTimeout(autoPlayTimeout);
+          clearTimeout(melodyTimeout);
+          for (let i = 0; i < 14; i++) {
+            baseFrequencies[i] = defaultFrequencies[i];
+          }
         }
       }
+
+      
 
       function toggleRandomOrigin(e, randomOriginsIn, onReset) {
         randomOrigins = randomOriginsIn;
@@ -1535,7 +1831,20 @@
         allLink.style.background = randomOrigins ? "#ffffff" : "#1eff00";
         randomLink.style.background = randomOrigins ? "#1eff00" : "#ffffff";
 
-        toggleAllRegions(e, randomOrigins);
+        resetRegions(e);
+      }
+
+      let isMenuVisible = false;
+
+      function toggleMenu(e) {
+        isMenuVisible = !isMenuVisible;
+        const controls = document.getElementById("controls-container");
+        const regions = document.getElementById("regions-container");
+        const link = document.getElementById("menu-toggle-link");
+
+        controls.style.display = isMenuVisible ? "" : "none";
+        regions.style.display = isMenuVisible ? "" : "none";
+        link.style.background = isMenuVisible ? "#1eff00" : "#ffffff";
       }
 
       window.addEventListener("load", () => {
