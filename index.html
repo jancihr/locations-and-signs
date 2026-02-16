@@ -1529,8 +1529,10 @@
       }
 
       window.addEventListener("load", () => {
+        
         autoPlay();
         animateRipples();
+        clickedRegion(null, 12, false);
       });
 
       window.addEventListener("click", (e) => {
