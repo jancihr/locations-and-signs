@@ -1476,10 +1476,19 @@
         images.forEach((image, index) => {
           canvas[index].width = window.innerWidth;
           canvas[index].height = window.innerHeight;
-          maxRadius[index] = Math.max(
-            canvas[index].width * 2,
-            canvas[index].height * 2,
-          );
+           maxRadius[index] = Math.sqrt(
+              Math.pow(
+                Math.max(clickX[index], window.innerWidth - clickX[index]),
+                2,
+              ) +
+                Math.pow(
+                  Math.max(clickY[index], window.innerHeight - clickY[index]),
+                  2,
+                ),
+            );
+           if (isShown[index]) {
+            revealRadius[index] = maxRadius[index];
+          }
 
           if (image.complete) {
             paint(index);
@@ -1529,7 +1538,6 @@
       }
 
       window.addEventListener("load", () => {
-        
         autoPlay();
         animateRipples();
         clickedRegion(null, 12, false);
