@@ -1105,7 +1105,7 @@
           if (isRevealing[index] || isHiding[index]) {
             if (!isFrozen[index]) {
               isFrozen[index] = true;
-              links[index].className = "frozen";
+             
               stopTone(index);
             }
           }
@@ -1179,7 +1179,7 @@
             if (!isFrozen[index]) {
               isHiding[index] = true;
               isRevealing[index] = false;
-              links[index].className = "frozen";
+             
             }
             isFrozen[index] = !isFrozen[index];
             if (isFrozen[index]) stopTone(index);
@@ -1192,7 +1192,7 @@
             if (!isFrozen[index]) {
               isHiding[index] = false;
               isRevealing[index] = true;
-              links[index].className = "frozen";
+            
             }
             isFrozen[index] = !isFrozen[index];
             if (isFrozen[index]) stopTone(index);
@@ -1263,7 +1263,7 @@
           if (!isFrozen[index]) {
             isHiding[index] = true;
             isRevealing[index] = false;
-            links[index].className = "frozen";
+       
           }
           isFrozen[index] = !isFrozen[index];
           if (isFrozen[index]) stopTone(index);
@@ -1271,7 +1271,7 @@
           if (!isFrozen[index]) {
             isHiding[index] = false;
             isRevealing[index] = true;
-            links[index].className = "frozen";
+         
           }
           isFrozen[index] = !isFrozen[index];
           if (isFrozen[index]) stopTone(index);
@@ -1326,12 +1326,17 @@
           if (isRevealing[region])
             if (revealRadius[region] < maxRadius[region]) {
               links[region].className = "active";
+              const pct = Math.min(100, Math.max(0, (revealRadius[region] / maxRadius[region]) * 100));
+              links[region].style.background = `linear-gradient(to right, #1eff00 ${pct}%, #ffffff ${pct}%)`;
+              links[region].style.animation = "none";
               revealRadius[region] += maxRadius[region] / speed[region];
               updateTone(region, revealRadius[region], maxRadius[region]);
               requestAnimationFrame(() => paint(region));
             } else {
               //console.log("Region fully revealed:", region);
               links[region].className = "shown";
+              links[region].style.background = "";
+              links[region].style.animation = "";
               stopTone(region);
 
               isHidden[region] = false;
@@ -1344,12 +1349,17 @@
           if (isHiding[region])
             if (revealRadius[region] > 0) {
               links[region].className = "active";
+              const pct = Math.min(100, Math.max(0, (revealRadius[region] / maxRadius[region]) * 100));
+              links[region].style.background = `linear-gradient(to right, #1eff00 ${pct}%, #ffffff ${pct}%)`;
+              links[region].style.animation = "none";
               revealRadius[region] -= maxRadius[region] / speed[region];
               updateTone(region, revealRadius[region], maxRadius[region]);
               requestAnimationFrame(() => paint(region));
             } else {
               //console.log("Region hidden:", region);
               revealRadius[region] = 0;
+              links[region].style.background = "";
+              links[region].style.animation = "";
               stopTone(region);
               links[region].className = "hidden";
 
