@@ -1116,8 +1116,12 @@
       // Resets all regions to hidden state
       function resetRegions(e) {
         toggleAutoPlay(e, true);
-
-        toggleRandomOrigin(e, false);
+       randomOrigins = false;
+        
+        const homeOriginLink = document.getElementById("all-link");
+        const randomOriginLink = document.getElementById("random-link");
+        homeOriginLink.className = randomOrigins ? "hidden" : "shown";
+        randomOriginLink.className = randomOrigins ? "shown" : "hidden";
 
         calculateStarts();
         for (let index = 0; index < 12; index++) {
@@ -1125,7 +1129,7 @@
         }
 
         for (let index = 0; index < 12; index++) {
-          if (!isHidden[index] && !isFrozen[index]) {
+          if (!isHidden[index]) {
             isHiding[index] = true;
             isRevealing[index] = false;
             isHidden[index] = false;
@@ -1404,7 +1408,7 @@
         }
       }
 
-      function toggleRandomOrigin(e, randomOriginsIn) {
+      function toggleRandomOrigin(e, randomOriginsIn, onReset) {
       
           randomOrigins = randomOriginsIn;
         
@@ -1412,7 +1416,9 @@
         const randomLink = document.getElementById("random-link");
         allLink.className = randomOrigins ? "hidden" : "shown";
         randomLink.className = randomOrigins ? "shown" : "hidden";
-        toggleAllRegions(e, randomOrigins);
+       
+          toggleAllRegions(e, randomOrigins);
+        
       }
 
       window.addEventListener("load", () => {
