@@ -1274,7 +1274,7 @@
       function clickedRegion(e, index, getclick) {
 
         if (index <12 && randomOrigins && getclick){
-          index = Math.round(Math.random() * 11);
+          index = Math.floor(Math.random() * 12);
         }
         if (e) e.stopPropagation();
         if (index > 11) {
