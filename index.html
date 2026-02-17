@@ -169,6 +169,18 @@
           "
           >SOUND</a
         >
+        <a
+          id="help-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="SHOW HELP"
+          onclick="
+            showHelp(event);
+            return false;
+          "
+          >HELP</a
+        >
       </div>
       <div id="controls-container" style="display: none;">
 
@@ -824,6 +836,84 @@
         pointer-events: none;
       "
     ></canvas>
+
+    <div
+      id="help-popup"
+      style="
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 450px;
+        max-width: 90%;
+        background: white;
+        border: 2px solid black;
+        border-radius: 10px;
+        padding: 20px;
+        z-index: 2000;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      "
+    >
+      <h2 style="text-align: center; margin-top: 0">Help</h2>
+      <p>
+        This is an interactive map of world writing systems. You can trigger
+        animations to reveal layers of typography for different scripts.
+      </p>
+      <h3>Interaction</h3>
+      <ul style="padding-left: 20px; margin-bottom: 15px">
+        <li style="margin-bottom: 10px">
+          <strong>Clicking on a map region:</strong> Starts or stops the
+          expansion animation for that region in this order: START - STOP - REVERSE - STOP - ..., originating from the click point. If RESET TO RANDOM was selected before, then random symbols are shown from any region. Otherwise symbols used in the region will start from the click point. 
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>Using Region Buttons (in MENU):</strong> Starts or stops the
+          animation for a specific region. The origin depends on the 'RESET TO'
+          setting.
+        </li>
+      </ul>
+      <h3>Menu Buttons</h3>
+      <ul style="padding-left: 20px">
+        <li style="margin-bottom: 10px">
+          <strong>MENU:</strong> Shows or hides the control buttons.
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>SOUND:</strong> Toggles sound on/off. The pitch changes as a
+          region expands or contracts.
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>BORDERS:</strong> Toggles a layer showing the boundaries of
+          the script regions.
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>REGIONS:</strong> Toggles a colored overlay for each script
+          region.
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>RESET TO HOME:</strong> Animations will start from a
+          predefined central point for each region.
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>RESET TO RANDOM:</strong> Animations will start from a random
+          point within the window.
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>AUTORUN:</strong> Toggles automatic playback, where regions
+          are randomly activated. When animations are running, this button
+          freezes/unfreezes them.
+        </li>
+      </ul>
+      <div style="text-align: center; margin-top: 20px">
+        <a
+          href="#"
+          class="my-button"
+          onclick="hideHelp(event); return false;"
+          style="background: #ffffff"
+          >CLOSE</a
+        >
+      </div>
+    </div>
 
     <script>
       // DOM Elements: Links for controlling specific regions
@@ -1845,6 +1935,16 @@
         controls.style.display = isMenuVisible ? "" : "none";
         regions.style.display = isMenuVisible ? "" : "none";
         link.style.background = isMenuVisible ? "#1eff00" : "#ffffff";
+      }
+
+      function showHelp(e) {
+        if (e) e.preventDefault();
+        document.getElementById("help-popup").style.display = "block";
+      }
+
+      function hideHelp(e) {
+        if (e) e.preventDefault();
+        document.getElementById("help-popup").style.display = "none";
       }
 
       window.addEventListener("load", () => {
