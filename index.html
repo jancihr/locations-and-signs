@@ -169,14 +169,26 @@
           "
           >SOUND</a
         >
+         <a
+          id="slow-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="TOGGLE SLOW MODE (10X SLOWER)"
+          onclick="
+            toggleSlow(event);
+            return false;
+          "
+          >SLOW</a
+        >
         <a
           id="help-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="SHOW HELP"
+          title="TOGGLE HELP"
           onclick="
-            showHelp(event);
+            toggleHelp(event);
             return false;
           "
           >HELP</a
@@ -318,6 +330,8 @@
           "
           >AUTORUN</a
         >
+
+       
 
        
       </div>
@@ -886,6 +900,11 @@
           region expands or contracts.
         </li>
 
+
+        <li style="margin-bottom: 10px">
+          <strong>SLOW:</strong> Toggles slow mode (10x slower).
+        </li>
+
         <li style="margin-bottom: 10px">
           <strong>HELP:</strong> Shows or hides this help.
         </li>
@@ -1307,6 +1326,13 @@
         }
       }
 
+      function toggleSlow(e) {
+        if (e) e.preventDefault();
+        slowMode = !slowMode;
+        const link = document.getElementById("slow-link");
+        link.style.background = slowMode ? "#1eff00" : "#ffffff";
+      }
+
       // Recalculates default starting coordinates based on current window size
       function calculateStarts() {
         for (let index = 0; index < clickX.length; index++) {
@@ -1545,6 +1571,10 @@
             speed = 1000;
           }
         }
+        // Apply slow mode multiplier (10x slower)
+        if (slowMode) {
+          speed *= 10;
+        }
         if (e) e.stopPropagation();
         if (index > 11) {
           clickX[index] = Math.round(canvas[index].width / 2);
@@ -1774,12 +1804,14 @@
 
       let isAutoPlaying = true;
       let randomOrigins = false;
+      let slowMode = false;
+      let helpIsVisible = false;
       let autoPlayTimeout;
 
       function autoPlay() {
         if (!isAutoPlaying) return;
         const numberOfRegions =
-          Math.floor(Math.pow(Math.random(), 0.1) * 11) + 1;
+          Math.floor(Math.pow(Math.random(), 0.5) * 11) + 1;
         const indices = [];
         while (indices.length < numberOfRegions) {
           const r = Math.floor(Math.random() * 12);
@@ -1792,7 +1824,7 @@
         });
         autoPlayTimeout = setTimeout(
           autoPlay,
-          2000 * (Math.floor(Math.random() * 2) + 1),
+          (slowMode?4000:200) * (Math.floor(Math.random() * 6) + 1),
         );
       }
 
@@ -1948,10 +1980,13 @@
       function showHelp(e) {
         if (e) e.preventDefault();
         const helpPopup = document.getElementById("help-popup");
+        const helpLink = document.getElementById("help-link");
         // reset to default (centered) state then show
         helpPopup.style.top = "50%";
         helpPopup.style.transform = "translate(-50%, -50%)";
         helpPopup.style.display = "block";
+        helpIsVisible = true;
+        helpLink.style.background = "#1eff00";
 
         // measure after paint — if content is taller than the viewport,
         // pin the dialog near the top and allow internal scrolling (max-height handles the scrollbar)
@@ -1970,16 +2005,28 @@
       function hideHelp(e) {
         if (e) e.preventDefault();
         const helpPopup = document.getElementById("help-popup");
+        const helpLink = document.getElementById("help-link");
         helpPopup.style.display = "none";
+        helpIsVisible = false;
+        helpLink.style.background = "#ffffff";
         // restore default positioning and scroll position
         helpPopup.style.top = "50%";
         helpPopup.style.transform = "translate(-50%, -50%)";
         helpPopup.scrollTop = 0;
       }
 
+      function toggleHelp(e) {
+        if (e) e.preventDefault();
+        if (helpIsVisible) {
+          hideHelp(null);
+        } else {
+          showHelp(null);
+        }
+      }
+
       document.getElementById("help-popup").addEventListener("click", (e) => {
-        const helpPopup = document.getElementById("help-popup");
-        if (helpPopup.style.display === "block") {
+        // Only close when clicking on the popup element itself, not on content inside
+        if (e.target.id === "help-popup") {
           hideHelp(e);
         }
       });
