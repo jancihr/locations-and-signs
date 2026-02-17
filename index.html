@@ -933,12 +933,12 @@
           region.
         </li>
         <li style="margin-bottom: 10px">
-          <strong>HOME:</strong> Animations will start from a predefined central
-          point for each region.
+          <strong>HOME:</strong> Only local signs can start in their home regions, 
+          however than they can spread around the world.
         </li>
         <li style="margin-bottom: 10px">
-          <strong>RANDOM:</strong> Animations will start from a random point
-          within the window.
+          <strong>RANDOM:</strong> No connection with original location. 
+          Any signs can start in any location freely and randomly.
         </li>
 
         <li style="margin-bottom: 10px">
@@ -2046,7 +2046,7 @@
         allLink.style.background = randomOrigins ? "#ffffff" : "#1eff00";
         randomLink.style.background = randomOrigins ? "#1eff00" : "#ffffff";
 
-        resetRegions(e);
+       // resetRegions(e);
       }
 
       let isMenuVisible = false;
