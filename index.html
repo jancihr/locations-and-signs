@@ -146,29 +146,18 @@
     >
       <div>
         <a
-          id="menu-toggle-link"
-          class="my-button"
-          href="#"
-          style="background: #ffffff"
-          title="SHOW/HIDE MENU"
-          onclick="
-            toggleMenu(event);
-            return false;
-          "
-          >MENU</a
-        >
-         <a
-          id="freeze-link"
+          id="autoplay-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="FREEZE ALL REGIONS"
+          title="AUTOCLICK RANDOMLY ALL REGIONS"
           onclick="
             autoplayToggle(event);
             return false;
           "
           >AUTORUN</a
         >
+
         <a
           id="sound-link"
           class="my-button"
@@ -180,6 +169,33 @@
             return false;
           "
           >SOUND</a
+        >
+
+        <a
+          id="menu-toggle-link"
+          class="my-button"
+          href="#"
+          style="background: #ffffff"
+          title="SHOW/HIDE MENU"
+          onclick="
+            toggleMenu(event);
+            return false;
+          "
+          >MORE CONTROLS</a
+        >
+      </div>
+      <div id="controls-container" style="display: none">
+        <a
+          id="stop-all-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="STOP/RESUME ALL ANIMATIONS"
+          onclick="
+            toggleStopAll(event);
+            return false;
+          "
+          >STOP</a
         >
         <a
           id="fast-link"
@@ -193,9 +209,7 @@
           "
           >FAST</a
         >
-      
-      </div>
-      <div id="controls-container" style="display: none">
+
         <a
           id="borders-link"
           class="my-button"
@@ -296,12 +310,12 @@
           class="my-button"
           style="background: #1eff00"
           href="#"
-          title="SWITCH TO HOME ORIGIN"
+          title="START ANIMATIONS FROM HOME ORIGIN"
           onclick="
             toggleRandomOrigin(event, false);
             return false;
           "
-          >HOME ORIGINS</a
+          >HOME</a
         >
 
         <a
@@ -309,15 +323,13 @@
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="SWITCH TO RANDOM ORIGIN"
+          title="START ANIMATION FROM RANDOM ORIGIN"
           onclick="
             toggleRandomOrigin(event, true);
             return false;
           "
-          >RANDOM ORIGINS</a
+          >RANDOM</a
         >
-
-       
       </div>
       <div id="regions-container" style="display: none">
         <a
@@ -467,7 +479,6 @@
       </div>
 
       <div>
-       
         <a
           id="help-link"
           class="my-button"
@@ -502,7 +513,7 @@
           stroke-width="0"
           class="my-region"
         >
-          <title>ARMENIAN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>ARMENIAN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -516,7 +527,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>GEORGIAN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>GEORGIAN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -530,7 +541,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>CYRILLIC (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>CYRILLIC (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -545,7 +556,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>ARABIC (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>ARABIC (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -559,7 +570,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>ETHIOPIAN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>ETHIOPIAN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -573,7 +584,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>HEBREW (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>HEBREW (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -587,7 +598,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>GREEK (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>GREEK (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -601,7 +612,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>BRAHMIC (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>BRAHMIC (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -615,7 +626,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>CHINESE (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>CHINESE (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -629,7 +640,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>JAPANESE (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>JAPANESE (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -643,7 +654,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>KOREAN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>KOREAN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -657,7 +668,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -671,7 +682,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
         <polygon
           class="my-region"
@@ -684,7 +695,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
         <polygon
           class="my-region"
@@ -697,7 +708,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
         <polygon
           class="my-region"
@@ -710,7 +721,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
         <polygon
           class="my-region"
@@ -723,7 +734,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
         <polygon
           class="my-region"
@@ -736,7 +747,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
         <polygon
           class="my-region"
@@ -749,7 +760,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
         <polygon
           class="my-region"
@@ -762,7 +773,7 @@
           stroke="blue"
           stroke-width="0"
         >
-          <title>LATIN (CLICK TO START/STOP REGION ANIMATION)</title>
+          <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
       </g>
     </svg>
@@ -873,42 +884,46 @@
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
       "
     >
-      <h2 style="text-align: center; margin-top: 0">Help</h2>
+      <h1 style="text-align: center; margin-top: 0">SIGNS AND LOCATIONS</h1>
+      <h2 style="text-align: center; margin-top: 0">by Zorka and Janči</h2>
+
       <p>
         This is an interactive map of world writing systems. You can trigger
-        animations to reveal layers of typography for different scripts.
+        animations to reveal layers of typography for different scripts. For
+        fun, signs spread around the world from their home or randomly as you
+        choose, and the pitch of the sound changes as they expand and contract.
+        The map is based on the scripts' historical origins, but the animations
+        are purely artistic and not meant to be historically accurate.
       </p>
       <h3>Interaction</h3>
       <ul style="padding-left: 20px; margin-bottom: 15px">
         <li style="margin-bottom: 10px">
-          <strong>Clicking on a map region:</strong> Starts or stops the
-          expansion animation for that region in this order: START - STOP -
-          REVERSE - STOP - ..., originating from the click point. If RESET TO
-          RANDOM was selected before, then random symbols are shown from any
-          region. Otherwise symbols used in the region will start from the click
-          point.
-        </li>
-        <li style="margin-bottom: 10px">
-          <strong>Using Region Buttons (in MENU):</strong> Starts or stops the
-          animation for a specific region. The origin depends on the 'RESET TO'
-          setting.
+          <strong>Clicking on a map region:</strong> Starts the expansion
+          animation for that region from the click point.
         </li>
       </ul>
       <h3>Menu Buttons</h3>
       <ul style="padding-left: 20px">
         <li style="margin-bottom: 10px">
-          <strong>MENU:</strong> Shows or hides the control buttons.
+          <strong>AUTORUN:</strong> Toggles automatic playback, where regions
+          are randomly activated. When animations are running, this button
+          freezes/unfreezes them.
         </li>
         <li style="margin-bottom: 10px">
           <strong>SOUND:</strong> Toggles sound on/off. The pitch changes as a
           region expands or contracts.
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>MORE CONTROLS:</strong> Shows or hides more control buttons.
+        </li>
+        <li style="margin-bottom: 10px">
+          <strong>STOP:</strong> Freezes all running animations and audio.
         </li>
 
         <li style="margin-bottom: 10px">
           <strong>FAST:</strong> Toggles fast mode (10x faster).
         </li>
 
-       
         <li style="margin-bottom: 10px">
           <strong>BORDERS:</strong> Toggles a layer showing the boundaries of
           the script regions.
@@ -918,20 +933,21 @@
           region.
         </li>
         <li style="margin-bottom: 10px">
-          <strong>HOME ORIGINS:</strong> Animations will start from a
-          predefined central point for each region.
+          <strong>HOME:</strong> Animations will start from a predefined central
+          point for each region.
         </li>
         <li style="margin-bottom: 10px">
-          <strong>RANDOM ORIGINS:</strong> Animations will start from a random
-          point within the window.
-        </li>
-        <li style="margin-bottom: 10px">
-          <strong>AUTORUN:</strong> Toggles automatic playback, where regions
-          are randomly activated. When animations are running, this button
-          freezes/unfreezes them.
+          <strong>RANDOM:</strong> Animations will start from a random point
+          within the window.
         </li>
 
-         <li style="margin-bottom: 10px">
+        <li style="margin-bottom: 10px">
+          <strong>Region Buttons:</strong> Starts or stops the
+          animation for a specific region. The origin is either on selected
+          region or random spot if RANDOM ORIGIN is selected
+        </li>
+
+        <li style="margin-bottom: 10px">
           <strong>HELP:</strong> Shows or hides this help.
         </li>
       </ul>
@@ -1334,6 +1350,17 @@
         }
       }
 
+      function toggleStopAll(e) {
+        if (isAutoPlaying) {
+          autoplayToggle(e);
+        } else {
+          for (let i = 0; i < isFrozen.length; i++) {
+            isFrozen[i] = true;
+            stopTone(i);
+          }
+        }
+      }
+
       // Recalculates default starting coordinates based on current window size
       function calculateStarts() {
         for (let index = 0; index < clickX.length; index++) {
@@ -1515,7 +1542,28 @@
       // getclick: If true, use mouse coordinates. If false, use default center.
       function clickedRegion(e, index, getclick, duration) {
         if (index < 12 && randomOrigins && getclick) {
-          index = Math.floor(Math.random() * 12);
+          let attempts = 0;
+          let randomIndex = 0;
+
+          //first try hidden, then try frozen but not hiding, then shown, to avoid picking a region that's already in the middle of an animation, which would look odd with a random origin. After 20 attempts just pick whatever comes up to avoid infinite loop in edge cases. This is a bit hacky but it works well in practice to create a more dynamic autoplay experience.
+          while (attempts < 20) {
+            randomIndex = Math.floor(Math.random() * 12);
+            if (isHidden[randomIndex]) {
+              break;
+            }
+            if (attempts > 5) {
+              if (isFrozen[randomIndex] && !isHiding[randomIndex]) {
+                break;
+              }
+            }
+            if (attempts > 10) {
+              if (isShown[randomIndex]) {
+                break;
+              }
+            }
+            attempts++;
+          }
+          index = randomIndex;
         }
 
         let speed = 100;
@@ -1639,6 +1687,40 @@
               growing: isGrowing,
             });
           }
+        }
+
+        if (getclick) {
+          const regions = [];
+          for (let i = 0; i < canvas.length - 2; i++) {
+            regions.push({
+              id: i,
+              zIndex: parseInt(canvas[i].style.zIndex),
+            });
+          }
+          regions.sort((a, b) => a.zIndex - b.zIndex);
+
+          const sortedIds = regions
+            .map((r) => r.id)
+            .filter((id) => id !== index);
+          sortedIds.push(index);
+
+          sortedIds.forEach((id, pos) => {
+            canvas[id].style.zIndex = 10 + pos;
+          });
+
+          canvas[index].style.zIndex = 30;
+
+          isRevealing[index] = true;
+          isHiding[index] = false;
+          isFrozen[index] = false;
+          isHidden[index] = false;
+          isShown[index] = false;
+          revealRadius[index] = 0;
+          createRipple(clickX[index], clickY[index], {
+            startRadius: 0,
+            speed: maxRadius[index] / 90,
+            growing: true,
+          });
         }
 
         paint(index, speed);
@@ -1809,7 +1891,7 @@
           autoPlay();
         }
 
-        const link = document.getElementById("freeze-link");
+        const link = document.getElementById("autoplay-link");
         link.style.background = isAutoPlaying ? "#1eff00" : "#ffffff";
       }
 
@@ -1829,7 +1911,7 @@
         });
         autoPlayTimeout = setTimeout(
           autoPlay,
-          (fastMode ? 2000: 200) * (Math.floor(Math.random() * 6) + 1),
+          (fastMode ? 2000 : 200) * (Math.floor(Math.random() * 6) + 1),
         );
       }
 
@@ -2038,7 +2120,7 @@
         //autoPlay();
         animateRipples();
         clickedRegion(null, 12, false);
-        clickedRegion(null, 0, false);
+        /*   clickedRegion(null, 0, false);
         clickedRegion(null, 1, false);
         clickedRegion(null, 2, false);
         clickedRegion(null, 3, false);
@@ -2050,7 +2132,7 @@
         clickedRegion(null, 9, false);
         clickedRegion(null, 10, false);
         clickedRegion(null, 11, false);
-        
+        */
       });
 
       window.addEventListener("click", (e) => {
