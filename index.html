@@ -195,7 +195,7 @@
           href="#"
           title="STOP/RESUME ALL ANIMATIONS"
           onclick="
-            toggleStopAll(event);
+            toggleStopAll(event, true);
             return false;
           "
           >STOP</a
@@ -1359,8 +1359,8 @@
         }
       }
 
-      function toggleStopAll(e) {
-        if (isAutoPlaying) {
+      function toggleStopAll(e, stopAutorunAlso) {
+        if (isAutoPlaying && stopAutorunAlso) {
           autoplayToggle(e);
         } else {
           for (let i = 0; i < isFrozen.length; i++) {
@@ -1906,8 +1906,11 @@
 
       function autoPlay() {
         if (!isAutoPlaying) return;
-        const numberOfRegions =
-          Math.floor(Math.pow(Math.random(), 0.5) * 3) + 1;
+        const numberOfRegions = Math.floor(Math.pow(Math.random(), 0.5) * 5) + 1;
+
+
+          //toggleStopAll(null, false);
+
         const indices = [];
         while (indices.length < numberOfRegions) {
           const r = Math.floor(Math.random() * 12);
