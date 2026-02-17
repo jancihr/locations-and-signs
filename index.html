@@ -845,8 +845,11 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 450px;
+        width: 700px;
         max-width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-sizing: border-box;
         background: white;
         border: 2px solid black;
         border-radius: 10px;
@@ -881,6 +884,10 @@
         <li style="margin-bottom: 10px">
           <strong>SOUND:</strong> Toggles sound on/off. The pitch changes as a
           region expands or contracts.
+        </li>
+
+        <li style="margin-bottom: 10px">
+          <strong>HELP:</strong> Shows or hides this help.
         </li>
         <li style="margin-bottom: 10px">
           <strong>BORDERS:</strong> Toggles a layer showing the boundaries of
@@ -1653,6 +1660,7 @@
       // Main animation loop for a specific region
       // Uses requestAnimationFrame for smooth rendering
       function paint(region, speed) {
+        if (speed === undefined) speed = 100;
         if (!isFrozen[region]) {
           //console.log("Drawing region:", region);
 
@@ -1939,13 +1947,42 @@
 
       function showHelp(e) {
         if (e) e.preventDefault();
-        document.getElementById("help-popup").style.display = "block";
+        const helpPopup = document.getElementById("help-popup");
+        // reset to default (centered) state then show
+        helpPopup.style.top = "50%";
+        helpPopup.style.transform = "translate(-50%, -50%)";
+        helpPopup.style.display = "block";
+
+        // measure after paint — if content is taller than the viewport,
+        // pin the dialog near the top and allow internal scrolling (max-height handles the scrollbar)
+        requestAnimationFrame(() => {
+          if (helpPopup.scrollHeight > window.innerHeight * 0.95) {
+            helpPopup.style.top = "5%";
+            helpPopup.style.transform = "translateX(-50%)"; // only center horizontally
+          } else {
+            helpPopup.style.top = "50%";
+            helpPopup.style.transform = "translate(-50%, -50%)";
+          }
+          helpPopup.scrollTop = 0;
+        });
       }
 
       function hideHelp(e) {
         if (e) e.preventDefault();
-        document.getElementById("help-popup").style.display = "none";
+        const helpPopup = document.getElementById("help-popup");
+        helpPopup.style.display = "none";
+        // restore default positioning and scroll position
+        helpPopup.style.top = "50%";
+        helpPopup.style.transform = "translate(-50%, -50%)";
+        helpPopup.scrollTop = 0;
       }
+
+      document.getElementById("help-popup").addEventListener("click", (e) => {
+        const helpPopup = document.getElementById("help-popup");
+        if (helpPopup.style.display === "block") {
+          hideHelp(e);
+        }
+      });
 
       window.addEventListener("load", () => {
         autoPlay();
