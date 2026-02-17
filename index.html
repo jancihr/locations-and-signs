@@ -80,18 +80,20 @@
       }
       a {
         text-decoration: none;
-        color: black;
-        padding: 0px 0px;
-        border: 1px solid black;
-        border-radius: 3px;
-        background-color: white;
+        color: #000000;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
       }
       a:hover {
         border-color: #1eff00;
       }
 
       .my-button {
-        border-radius: 1px;
+        flex-grow: 0;
+        overflow-wrap: break-word;
+        border-radius: 3px;
+        padding: 5px 5px;
+        margin: auto;
         border: #000000 2px solid;
       }
 
@@ -100,11 +102,15 @@
       }
 
       .region-button {
-        border-radius: 7px;
+        overflow-wrap: break-word;
+        flex-grow: 0;
+        border-radius: 15px;
+        padding: 5px 5px;
+        margin: auto;
         border: #000000 2px solid;
       }
 
-      .my-button:hover {
+      .region-button:hover {
         border-color: #1eff00;
       }
 
@@ -130,21 +136,18 @@
       style="
         position: absolute;
         left: 0px;
-        top: 0px;
+        top: 2%;
         width: 100%;
 
         z-index: 1000;
-        font-family: Arial, sans-serif;
-        font-size: 12px;
-        padding: 5px;
-        border-radius: 5px;
+      
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
         justify-content: center;
       "
     >
-      <div>
+      <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
         <a
           id="autoplay-link"
           class="my-button"
@@ -184,7 +187,7 @@
           >MORE CONTROLS</a
         >
       </div>
-      <div id="controls-container" style="display: none">
+      <div id="controls-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
         <a
           id="stop-all-link"
           class="my-button"
@@ -332,7 +335,7 @@
           >RANDOM</a
         >
       </div>
-      <div id="regions-container" style="display: none">
+      <div id="regions-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
         <a
           id="arm-link"
           class="region-button"
@@ -344,7 +347,7 @@
             return false;
           "
           >ARMENIAN</a
-        >
+        > 
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="geo-link"
@@ -356,7 +359,7 @@
             return false;
           "
           >GEORGIAN</a
-        >
+        > 
         <a
           title="(CLICK TO START/STOP REGION ANIMATION)"
           id="rus-link"
@@ -479,7 +482,7 @@
         >
       </div>
 
-      <div>
+      <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
         <a
           id="help-link"
           class="my-button"
@@ -1265,20 +1268,21 @@
 
       // Harmonic base frequencies (C Major Scale for Ode to Joy)
       const baseFrequencies = [
-        261.63, // 0: C4
-        293.66, // 1: D4
-        329.63, // 2: E4
-        349.23, // 3: F4
-        392.0, // 4: G4
-        440.0, // 5: A4
-        493.88, // 6: B4
-        523.25, // 7: C5
-        587.33, // 8: D5
-        659.25, // 9: E5
-        698.46, // 10: F5
-        783.99, // 11: G5
+        246.94, // 0: B3
+        261.63, // 1: C4 
+        293.66, // 2: D4
+        329.63, // 3: E4
+        349.23, // 4: F4
+        392.0, // 5: G4
+        440.0, // 6: A4
+        493.88, // 7: B4
+        523.25, // 8: C5
+        587.33, // 9: D5
+        659.25, // 10: E5
+        698.46, // 11: F5 
+        
 
-        1318.51, // 13: E6 (Borders)
+        1318.51, // 11: E6 (Borders)
         783.99, // 12: C3 (Colours)
       ];
       const defaultFrequencies = [...baseFrequencies];
@@ -1903,7 +1907,7 @@
       function autoPlay() {
         if (!isAutoPlaying) return;
         const numberOfRegions =
-          Math.floor(Math.pow(Math.random(), 0.5) * 11) + 1;
+          Math.floor(Math.pow(Math.random(), 0.5) * 3) + 1;
         const indices = [];
         while (indices.length < numberOfRegions) {
           const r = Math.floor(Math.random() * 12);
@@ -2062,8 +2066,8 @@
         const regions = document.getElementById("regions-container");
         const link = document.getElementById("menu-toggle-link");
 
-        controls.style.display = isMenuVisible ? "" : "none";
-        regions.style.display = isMenuVisible ? "" : "none";
+        controls.style.display = isMenuVisible ? "flex" : "none";
+        regions.style.display = isMenuVisible ? "flex" : "none";
         link.style.background = isMenuVisible ? "#1eff00" : "#ffffff";
       }
 
