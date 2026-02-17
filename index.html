@@ -193,18 +193,7 @@
           "
           >FAST</a
         >
-        <a
-          id="help-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="TOGGLE HELP"
-          onclick="
-            toggleHelp(event);
-            return false;
-          "
-          >HELP</a
-        >
+      
       </div>
       <div id="controls-container" style="display: none">
         <a
@@ -312,7 +301,7 @@
             toggleRandomOrigin(event, false);
             return false;
           "
-          >RESET TO HOME</a
+          >HOME ORIGINS</a
         >
 
         <a
@@ -325,7 +314,7 @@
             toggleRandomOrigin(event, true);
             return false;
           "
-          >RESET TO RANDOM</a
+          >RANDOM ORIGINS</a
         >
 
        
@@ -474,6 +463,22 @@
             return false;
           "
           >LATIN</a
+        >
+      </div>
+
+      <div>
+       
+        <a
+          id="help-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="TOGGLE HELP"
+          onclick="
+            toggleHelp(event);
+            return false;
+          "
+          >HELP</a
         >
       </div>
     </div>
@@ -903,9 +908,7 @@
           <strong>FAST:</strong> Toggles fast mode (10x faster).
         </li>
 
-        <li style="margin-bottom: 10px">
-          <strong>HELP:</strong> Shows or hides this help.
-        </li>
+       
         <li style="margin-bottom: 10px">
           <strong>BORDERS:</strong> Toggles a layer showing the boundaries of
           the script regions.
@@ -915,17 +918,21 @@
           region.
         </li>
         <li style="margin-bottom: 10px">
-          <strong>RESET TO HOME:</strong> Animations will start from a
+          <strong>HOME ORIGINS:</strong> Animations will start from a
           predefined central point for each region.
         </li>
         <li style="margin-bottom: 10px">
-          <strong>RESET TO RANDOM:</strong> Animations will start from a random
+          <strong>RANDOM ORIGINS:</strong> Animations will start from a random
           point within the window.
         </li>
         <li style="margin-bottom: 10px">
           <strong>AUTORUN:</strong> Toggles automatic playback, where regions
           are randomly activated. When animations are running, this button
           freezes/unfreezes them.
+        </li>
+
+         <li style="margin-bottom: 10px">
+          <strong>HELP:</strong> Shows or hides this help.
         </li>
       </ul>
       <div style="text-align: center; margin-top: 20px">
@@ -1822,7 +1829,7 @@
         });
         autoPlayTimeout = setTimeout(
           autoPlay,
-          (fastMode ? 200: 2000) * (Math.floor(Math.random() * 6) + 1),
+          (fastMode ? 2000: 200) * (Math.floor(Math.random() * 6) + 1),
         );
       }
 
