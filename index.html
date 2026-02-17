@@ -149,13 +149,25 @@
           id="menu-toggle-link"
           class="my-button"
           href="#"
-           style="background: #ffffff"
+          style="background: #ffffff"
           title="SHOW/HIDE MENU"
           onclick="
             toggleMenu(event);
             return false;
           "
           >MENU</a
+        >
+         <a
+          id="freeze-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="FREEZE ALL REGIONS"
+          onclick="
+            autoplayToggle(event);
+            return false;
+          "
+          >AUTORUN</a
         >
         <a
           id="sound-link"
@@ -169,17 +181,17 @@
           "
           >SOUND</a
         >
-         <a
-          id="slow-link"
+        <a
+          id="fast-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="TOGGLE SLOW MODE (10X SLOWER)"
+          title="TOGGLE FAST MODE (10X FASTER)"
           onclick="
-            toggleSlow(event);
+            toggleFast(event);
             return false;
           "
-          >SLOW</a
+          >FAST</a
         >
         <a
           id="help-link"
@@ -194,9 +206,7 @@
           >HELP</a
         >
       </div>
-      <div id="controls-container" style="display: none;">
-
-        
+      <div id="controls-container" style="display: none">
         <a
           id="borders-link"
           class="my-button"
@@ -221,8 +231,8 @@
           "
           >REGIONS</a
         >
-        
-          <!--
+
+        <!--
 
         <a
           id="reset-link"
@@ -318,24 +328,9 @@
           >RESET TO RANDOM</a
         >
 
-         <a
-          id="freeze-link"
-          class="my-button"
-          style="background: #1eff00"
-          href="#"
-          title="FREEZE ALL REGIONS"
-          onclick="
-            freezeAllRegions(event);
-            return false;
-          "
-          >AUTORUN</a
-        >
-
-       
-
        
       </div>
-      <div id="regions-container" style="display: none;">
+      <div id="regions-container" style="display: none">
         <a
           id="arm-link"
           class="region-button"
@@ -882,7 +877,11 @@
       <ul style="padding-left: 20px; margin-bottom: 15px">
         <li style="margin-bottom: 10px">
           <strong>Clicking on a map region:</strong> Starts or stops the
-          expansion animation for that region in this order: START - STOP - REVERSE - STOP - ..., originating from the click point. If RESET TO RANDOM was selected before, then random symbols are shown from any region. Otherwise symbols used in the region will start from the click point. 
+          expansion animation for that region in this order: START - STOP -
+          REVERSE - STOP - ..., originating from the click point. If RESET TO
+          RANDOM was selected before, then random symbols are shown from any
+          region. Otherwise symbols used in the region will start from the click
+          point.
         </li>
         <li style="margin-bottom: 10px">
           <strong>Using Region Buttons (in MENU):</strong> Starts or stops the
@@ -900,9 +899,8 @@
           region expands or contracts.
         </li>
 
-
         <li style="margin-bottom: 10px">
-          <strong>SLOW:</strong> Toggles slow mode (10x slower).
+          <strong>FAST:</strong> Toggles fast mode (10x faster).
         </li>
 
         <li style="margin-bottom: 10px">
@@ -934,7 +932,10 @@
         <a
           href="#"
           class="my-button"
-          onclick="hideHelp(event); return false;"
+          onclick="
+            hideHelp(event);
+            return false;
+          "
           style="background: #ffffff"
           >CLOSE</a
         >
@@ -1326,13 +1327,6 @@
         }
       }
 
-      function toggleSlow(e) {
-        if (e) e.preventDefault();
-        slowMode = !slowMode;
-        const link = document.getElementById("slow-link");
-        link.style.background = slowMode ? "#1eff00" : "#ffffff";
-      }
-
       // Recalculates default starting coordinates based on current window size
       function calculateStarts() {
         for (let index = 0; index < clickX.length; index++) {
@@ -1346,8 +1340,7 @@
         }
       }
 
-
-     /* function toggleAutoPlay(e, resetAutoplay) {
+      /* function toggleAutoPlay(e, resetAutoplay) {
         if (resetAutoplay) {
           isAutoPlaying = false;
         } else {
@@ -1365,51 +1358,8 @@
           clearTimeout(autoPlayTimeout);
         }
 
-        
+
       }*/
-
-      // Pauses all currently animating regions
-      function freezeAllRegions(e ) {
-        
-
-       
-          if (isMelodyPlaying) {
-            toggleMelody(null);
-          }
-          
-        
-       
-        let activeFound = false;
-        for (let index = 0; index < 12; index++) {
-          if ((isRevealing[index] || isHiding[index]) && !isFrozen[index]) {
-            activeFound = true;
-            break;
-          }
-        }
-        if (activeFound) {
-
-           
-
-          clearTimeout(autoPlayTimeout);
-          isAutoPlaying = false;
-          for (let index = 0; index < 12; index++) {
-            if (isRevealing[index] || isHiding[index]) {
-              if (!isFrozen[index]) {
-                isFrozen[index] = true;
-                stopTone(index);
-              }
-            }
-            paint(index, 100);
-          }
-        } else {
-          isAutoPlaying = true;
-          autoPlay();
-          
-        }
-
-        const link = document.getElementById("freeze-link");
-        link.style.background = isAutoPlaying ? "#1eff00" : "#ffffff";
-      }
 
       function growAllRegions(e) {
         //toggleAutoPlay(e, true);
@@ -1566,13 +1516,13 @@
           speed = (duration / 1000) * 60;
         } else {
           if (index > 11) {
-            speed = 100;
+            speed = 10;
           } else {
             speed = 1000;
           }
         }
         // Apply slow mode multiplier (10x slower)
-        if (slowMode) {
+        if (fastMode) {
           speed *= 10;
         }
         if (e) e.stopPropagation();
@@ -1752,7 +1702,7 @@
                 Math.max(0, (revealRadius[region] / maxRadius[region]) * 100),
               );
               links[region].style.background =
-                `linear-gradient(to right, #1eff00 ${pct}%, #ffffff ${pct}%)`;
+                `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
               revealRadius[region] -= maxRadius[region] / speed;
               updateTone(region, revealRadius[region], maxRadius[region]);
@@ -1802,11 +1752,59 @@
         calculateStarts();
       });
 
-      let isAutoPlaying = true;
+      let isAutoPlaying = false;
       let randomOrigins = false;
-      let slowMode = false;
+      let fastMode = true;
       let helpIsVisible = false;
       let autoPlayTimeout;
+
+      function toggleFast(e) {
+        if (e) e.preventDefault();
+        fastMode = !fastMode;
+        const link = document.getElementById("fast-link");
+        link.style.background = !fastMode ? "#1eff00" : "#ffffff";
+        for (let index = 0; index < 12; index++) {
+          if (isHidden[index]) {
+            //isHidden[index] = false;
+            //isRevealing[index] = true;
+          } else if (isShown[index]) {
+            //isShown[index] = false;
+            //isHiding[index] = true;
+          } else {
+            isFrozen[index] = true;
+
+            stopTone(index);
+
+            //paint(index, 100);
+          }
+
+          //paint(index, slowMode ? 200 : 2000);
+          //stopTone(index);
+        }
+      }
+
+      // Pauses all currently animating regions
+      function autoplayToggle(e) {
+        clearTimeout(autoPlayTimeout);
+        isAutoPlaying = !isAutoPlaying;
+
+        if (!isAutoPlaying)
+          for (let index = 0; index < 12; index++) {
+            if (isRevealing[index] || isHiding[index]) {
+              if (!isFrozen[index]) {
+                isFrozen[index] = true;
+                stopTone(index);
+              }
+            }
+            paint(index, 100);
+          }
+        else {
+          autoPlay();
+        }
+
+        const link = document.getElementById("freeze-link");
+        link.style.background = isAutoPlaying ? "#1eff00" : "#ffffff";
+      }
 
       function autoPlay() {
         if (!isAutoPlaying) return;
@@ -1824,7 +1822,7 @@
         });
         autoPlayTimeout = setTimeout(
           autoPlay,
-          (slowMode?4000:200) * (Math.floor(Math.random() * 6) + 1),
+          (fastMode ? 200: 2000) * (Math.floor(Math.random() * 6) + 1),
         );
       }
 
@@ -1951,8 +1949,6 @@
         }
       }
 
-      
-
       function toggleRandomOrigin(e, randomOriginsIn, onReset) {
         randomOrigins = randomOriginsIn;
 
@@ -2032,15 +2028,28 @@
       });
 
       window.addEventListener("load", () => {
-        autoPlay();
+        //autoPlay();
         animateRipples();
         clickedRegion(null, 12, false);
+        clickedRegion(null, 0, false);
+        clickedRegion(null, 1, false);
+        clickedRegion(null, 2, false);
+        clickedRegion(null, 3, false);
+        clickedRegion(null, 4, false);
+        clickedRegion(null, 5, false);
+        clickedRegion(null, 6, false);
+        clickedRegion(null, 7, false);
+        clickedRegion(null, 8, false);
+        clickedRegion(null, 9, false);
+        clickedRegion(null, 10, false);
+        clickedRegion(null, 11, false);
+        
       });
 
       window.addEventListener("click", (e) => {
         if (audioEnabled) initAudio();
         // Prevent ripple effect when clicking on UI buttons
-        if (e.target.closest(".button")) {
+        if (e.target.closest(".my-button")) {
           return;
         }
         createRipple(e.clientX, e.clientY);
