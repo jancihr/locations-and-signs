@@ -197,6 +197,18 @@
           "
           >STOP</a
         >
+         <a
+          id="reset-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="CLEAR ALL REGIONS"
+          onclick="
+            resetRegions(event);
+            return false;
+          "
+          >CLEAR</a
+        >
         <a
           id="fast-link"
           class="my-button"
@@ -235,22 +247,11 @@
           >REGIONS</a
         >
 
-        <!--
-
-        <a
-          id="reset-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="CLEAR ALL REGIONS"
-          onclick="
-            resetRegions(event);
-            return false;
-          "
-          >CLEAR</a
-        >
       
+
        
+      
+         <!--
         <a
           id="grow-link"
           class="my-button"
@@ -919,6 +920,10 @@
         <li style="margin-bottom: 10px">
           <strong>STOP:</strong> Freezes all running animations and audio.
         </li>
+         <li style="margin-bottom: 10px">
+          <strong>CLEAR:</strong> Resets the map to its empty state, clearing all animations and audio.
+        </li>
+
 
         <li style="margin-bottom: 10px">
           <strong>FAST:</strong> Toggles fast mode (10x faster).
