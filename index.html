@@ -133,7 +133,7 @@
       #toast {
         position: fixed;
         left: 50%;
-        bottom: 24px;
+        top: 24px;
         transform: translateX(-50%);
         background: rgba(0,0,0,0.8);
         color: #fff;
@@ -156,8 +156,8 @@
     <div
       style="
         position: absolute;
-        left: 0px;
-        top: 2%;
+        bottom: 0px;
+        
         width: 100%;
 
         z-index: 1000;
@@ -1702,7 +1702,10 @@
             isHiding[index] = true;
             isRevealing[index] = false;
           }
-          isFrozen[index] = !isFrozen[index];
+          //if (isFrozen[index]) {
+            isFrozen[index] = !isFrozen[index];
+          //}
+          
           if (isFrozen[index]) stopTone(index);
         } else if (isHiding[index]) {
           if (!isFrozen[index]) {
