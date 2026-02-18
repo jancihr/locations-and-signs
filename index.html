@@ -129,6 +129,27 @@
       .my-region:hover {
         fill: #0b5d0008; /* Color change on hover */
       }
+      /* Toast notifications */
+      #toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.8);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 180ms ease, transform 180ms ease;
+        z-index: 3000;
+      }
+      #toast.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-6px);
+      }
     </style>
   </head>
   <body>
@@ -151,14 +172,14 @@
         <a
           id="autoplay-link"
           class="my-button"
-          style="background: #ffffff"
+          style="background: #1eff00"
           href="#"
-          title="AUTOCLICK RANDOMLY ALL REGIONS"
+          title="AUTOCLICK RANDOMLY ALL REGIONS (Shortcut: A)"
           onclick="
             autoplayToggle(event);
             return false;
           "
-          >AUTORUN</a
+          >AUTORUN [A]</a
         >
 
         <a
@@ -166,88 +187,87 @@
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="TOGGLE SOUND"
+          title="TOGGLE SOUND (Shortcut: S)"
           onclick="
             toggleSound(event);
             return false;
           "
-          >SOUND</a
+          >SOUND [S]</a
         >
-
-        <a
-          id="menu-toggle-link"
-          class="my-button"
-          href="#"
-          style="background: #ffffff"
-          title="SHOW/HIDE MENU"
-          onclick="
-            toggleMenu(event);
-            return false;
-          "
-          >MORE CONTROLS</a
-        >
-      </div>
-      <div id="controls-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
-        <a
+<a
           id="stop-all-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="STOP/RESUME ALL ANIMATIONS"
+          title="STOP/RESUME ALL ANIMATIONS (Shortcut: X)"
           onclick="
             toggleStopAll(event, true);
             return false;
           "
-          >STOP</a
-        >
+          >STOP [X]</a        >
          <a
           id="reset-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="CLEAR ALL REGIONS"
+          title="CLEAR ALL REGIONS (Shortcut: C)"
           onclick="
             resetRegions(event);
             return false;
           "
-          >CLEAR</a
+          >CLEAR [C]</a
         >
         <a
           id="fast-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="TOGGLE FAST MODE (10X FASTER)"
+          title="TOGGLE FAST MODE (10X FASTER) (Shortcut: F)"
           onclick="
             toggleFast(event);
             return false;
           "
-          >FAST</a
+          >FAST [F]</a
         >
+        <a
+          id="menu-toggle-link"
+          class="my-button"
+          href="#"
+          style="background: #ffffff"
+          title="SHOW/HIDE MENU (Shortcut: M)"
+          onclick="
+            toggleMenu(event);
+            return false;
+          "
+          >MORE CONTROLS [M]</a
+        >
+      </div>
+      <div id="controls-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
+        
 
         <a
           id="borders-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="SHOW/HIDE ALPHABET BORDERS"
+          title="SHOW/HIDE ALPHABET BORDERS (Shortcut: B)"
           onclick="
             clickedRegion(event, 12, false);
             return false;
           "
-          >BORDERS</a
+          >BORDERS [B]</a
         >
         <a
           id="colours-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="SHOW/HIDE ALPHABET IN THEIR REGIONS"
+          title="SHOW/HIDE ALPHABET IN THEIR REGIONS (Shortcut: G)"
           onclick="
             clickedRegion(event, 13, false);
             return false;
           "
-          >REGIONS</a
+          >REGIONS [G]</a
         >
 
       
@@ -310,70 +330,21 @@
 -->
 
         <a
-          id="all-link"
-          class="my-button"
-          style="background: #1eff00"
-          href="#"
-          title="START ANIMATIONS FROM HOME ORIGIN"
-          onclick="
-            toggleRandomOrigin(event, false);
-            return false;
-          "
-          >HOME</a
-        >
-
-        <a
           id="random-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="START ANIMATION FROM RANDOM ORIGIN"
+          title="TOGGLE RANDOM/HOME ORIGIN (Shortcut: R)"
           onclick="
-            toggleRandomOrigin(event, true);
+            toggleRandomOrigin(event);
             return false;
           "
-          >RANDOM</a
+          >RANDOM [R]</a
         >
       </div>
       <div id="regions-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
         <a
-          id="arm-link"
-          class="region-button"
-          style="background: #ffffff"
-          title="(CLICK TO START/STOP REGION ANIMATION)"
-          href="#"
-          onclick="
-            clickedRegion(event, 1, false);
-            return false;
-          "
-          >ARMENIAN</a
-        > 
-        <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
-          id="geo-link"
-          class="region-button"
-          style="background: #ffffff"
-          href="#"
-          onclick="
-            clickedRegion(event, 4, false);
-            return false;
-          "
-          >GEORGIAN</a
-        > 
-        <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
-          id="rus-link"
-          class="region-button"
-          style="background: #ffffff"
-          href="#"
-          onclick="
-            clickedRegion(event, 10, false);
-            return false;
-          "
-          >CYRILLIC</a
-        >
-        <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
           class="region-button"
           style="background: #ffffff"
@@ -382,58 +353,24 @@
             clickedRegion(event, 0, false);
             return false;
           "
-          >ARABIC</a
+          >ARABIC [1]</a
         >
+
         <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
-          id="eth-link"
+          id="arm-link"
           class="region-button"
           style="background: #ffffff"
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 2)"
           href="#"
           onclick="
-            clickedRegion(event, 3, false);
+            clickedRegion(event, 1, false);
             return false;
           "
-          >ETHIOPIAN</a
+          >ARMENIAN [2]</a
         >
+
         <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
-          id="heb-link"
-          class="region-button"
-          style="background: #ffffff"
-          href="#"
-          onclick="
-            clickedRegion(event, 6, false);
-            return false;
-          "
-          >HEBREW</a
-        >
-        <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
-          id="gre-link"
-          class="region-button"
-          style="background: #ffffff"
-          href="#"
-          onclick="
-            clickedRegion(event, 5, false);
-            return false;
-          "
-          >GREEK</a
-        >
-        <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
-          id="san-link"
-          class="region-button"
-          style="background: #ffffff"
-          href="#"
-          onclick="
-            clickedRegion(event, 11, false);
-            return false;
-          "
-          >BRAHMIC</a
-        >
-        <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 3)"
           id="chi-link"
           class="region-button"
           style="background: #ffffff"
@@ -442,10 +379,63 @@
             clickedRegion(event, 2, false);
             return false;
           "
-          >CHINESE</a
+          >CHINESE [3]</a
         >
+
         <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 4)"
+          id="eth-link"
+          class="region-button"
+          style="background: #ffffff"
+          href="#"
+          onclick="
+            clickedRegion(event, 3, false);
+            return false;
+          "
+          >ETHIOPIAN [4]</a
+        >
+
+        <a
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 5)"
+          id="geo-link"
+          class="region-button"
+          style="background: #ffffff"
+          href="#"
+          onclick="
+            clickedRegion(event, 4, false);
+            return false;
+          "
+          >GEORGIAN [5]</a
+        >
+
+        <a
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 6)"
+          id="gre-link"
+          class="region-button"
+          style="background: #ffffff"
+          href="#"
+          onclick="
+            clickedRegion(event, 5, false);
+            return false;
+          "
+          >GREEK [6]</a
+        >
+
+        <a
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 7)"
+          id="heb-link"
+          class="region-button"
+          style="background: #ffffff"
+          href="#"
+          onclick="
+            clickedRegion(event, 6, false);
+            return false;
+          "
+          >HEBREW [7]</a
+        >
+
+        <a
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 8)"
           id="jap-link"
           class="region-button"
           style="background: #ffffff"
@@ -454,10 +444,11 @@
             clickedRegion(event, 7, false);
             return false;
           "
-          >JAPANESE</a
+          >JAPANESE [8]</a
         >
+
         <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 9)"
           id="kor-link"
           class="region-button"
           style="background: #ffffff"
@@ -466,10 +457,11 @@
             clickedRegion(event, 8, false);
             return false;
           "
-          >KOREAN</a
+          >KOREAN [9]</a
         >
+
         <a
-          title="(CLICK TO START/STOP REGION ANIMATION)"
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 0)"
           id="lat-link"
           class="region-button"
           style="background: #ffffff"
@@ -478,7 +470,33 @@
             clickedRegion(event, 9, false);
             return false;
           "
-          >LATIN</a
+          >LATIN [0]</a
+        >
+
+        <a
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: -)"
+          id="rus-link"
+          class="region-button"
+          style="background: #ffffff"
+          href="#"
+          onclick="
+            clickedRegion(event, 10, false);
+            return false;
+          "
+          >CYRILLIC [-]</a
+        >
+
+        <a
+          title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: =)"
+          id="san-link"
+          class="region-button"
+          style="background: #ffffff"
+          href="#"
+          onclick="
+            clickedRegion(event, 11, false);
+            return false;
+          "
+          >BRAHMIC [=]</a
         >
       </div>
 
@@ -488,12 +506,12 @@
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="TOGGLE HELP"
+          title="TOGGLE HELP (Shortcut: H)"
           onclick="
             toggleHelp(event);
             return false;
           "
-          >HELP</a
+          >HELP [H]</a
         >
       </div>
     </div>
@@ -506,6 +524,21 @@
       style="position: absolute; left: 0; top: 0; z-index: 300"
     >
       <g cursor="pointer">
+        <polygon
+          class="my-region"
+          id="ara-region"
+          points="915,578 939,555 950,523 974,499 1002,509 1023,488 1075,483 1087,508 1082,523 1119,533 1147,555 1158,529 1184,534 1216,542 1239,537 1251,546 1262,571 1269,561 1274,536 1273,525 1262,520 1263,503 1281,492 1324,491 1325,466 1335,471 1345,467 1363,480 1396,484 1404,474 1435,482 1451,494 1460,499 1478,477 1492,475 1504,479 1515,469 1522,478 1535,474 1518,486 1522,496 1528,493 1554,530 1549,541 1549,561 1525,571 1540,606 1523,609 1505,597 1439,596 1428,583 1420,592 1376,552 1355,551 1356,564 1374,577 1394,603 1420,606 1429,588 1443,615 1466,627 1452,658 1430,687 1349,726 1331,697 1321,668 1294,628 1263,576 1256,579 1244,561 1284,633 1292,676 1274,695 1276,721 1256,777 1279,811 1256,820 1223,810 1178,723 1190,701 1187,667 1123,626 1087,625 1034,664 946,581"
+          onclick="
+            clickedRegion(event, 0, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>ARABIC (CLICK TO START REGION ANIMATION)</title>
+        </polygon>
+
         <polygon
           points="1313,448 1317,459 1329,466 1342,468 1348,463 1327,447"
           onclick="
@@ -522,45 +555,16 @@
 
         <polygon
           class="my-region"
-          points="1291,429 1299,435 1298,443 1309,447 1324,445 1332,445 1328,434 1314,427 1301,423"
+          points="1583,353 1561,374 1548,398 1568,424 1531,444 1542,467 1554,490 1567,492 1599,544 1653,558 1692,554 1735,553 1748,562 1747,599 1759,593 1772,606 1772,619 1785,625 1787,611 1817,599 1832,618 1850,619 1843,643 1859,650 1867,628 1874,617 1913,570 1930,609 1942,586 1928,557 1920,531 1870,460 1873,436 1845,427 1850,406 1869,420 1876,409 1882,391 1904,375 1894,354 1894,324 1882,332 1810,299 1797,282 1772,289 1783,318 1771,323 1770,336 1781,346 1789,340 1799,343 1793,358 1768,375 1772,387 1767,399 1738,414 1706,407 1664,412 1642,388 1624,389 1613,370"
           onclick="
-            clickedRegion(event, 4, true);
+            clickedRegion(event, 2, true);
             return false;
           "
           fill="transparent"
           stroke="blue"
           stroke-width="0"
         >
-          <title>GEORGIAN (CLICK TO START REGION ANIMATION)</title>
-        </polygon>
-
-        <polygon
-          class="my-region"
-          points="1188,168 1204,235 1174,328 1172,355 1165,384 1201,392 1210,406 1213,416 1207,425 1168,428 1170,447 1190,448 1204,439 1204,430 1213,419 1213,401 1226,393 1238,416 1256,408 1290,425 1309,422 1332,435 1333,448 1357,468 1359,450 1326,411 1337,397 1368,385 1371,397 1357,404 1381,431 1392,470 1407,471 1441,482 1461,498 1480,472 1504,477 1513,466 1523,475 1540,473 1528,444 1555,429 1561,419 1547,395 1555,375 1584,348 1605,359 1622,382 1643,387 1656,395 1671,406 1705,403 1733,411 1752,402 1768,387 1766,375 1783,360 1796,346 1779,348 1770,342 1766,322 1779,318 1769,289 1799,279 1810,295 1848,315 1883,331 1894,322 1898,350 1905,372 1916,370 1927,341 1926,309 1912,294 1894,269 1878,261 1871,271 1844,263 1854,239 1849,219 1866,210 1907,209 1891,256 1957,331 1969,324 1900,256 1910,209 1925,205 1945,185 1954,224 2016,270 1987,191 2039,169 2042,110 1911,80 1854,114 1696,71 1661,69 1661,105 1575,106 1564,80 1426,39 1415,59 1479,84 1420,123 1369,119 1335,158 1330,119 1365,86 1318,39 1231,50 1305,103 1287,145 1200,163"
-          onclick="
-            clickedRegion(event, 10, true);
-            return false;
-          "
-          fill="transparent"
-          stroke="blue"
-          stroke-width="0"
-        >
-          <title>CYRILLIC (CLICK TO START REGION ANIMATION)</title>
-        </polygon>
-
-        <polygon
-          class="my-region"
-          id="ara-region"
-          points="915,578 939,555 950,523 974,499 1002,509 1023,488 1075,483 1087,508 1082,523 1119,533 1147,555 1158,529 1184,534 1216,542 1239,537 1251,546 1262,571 1269,561 1274,536 1273,525 1262,520 1263,503 1281,492 1324,491 1325,466 1335,471 1345,467 1363,480 1396,484 1404,474 1435,482 1451,494 1460,499 1478,477 1492,475 1504,479 1515,469 1522,478 1535,474 1518,486 1522,496 1528,493 1554,530 1549,541 1549,561 1525,571 1540,606 1523,609 1505,597 1439,596 1428,583 1420,592 1376,552 1355,551 1356,564 1374,577 1394,603 1420,606 1429,588 1443,615 1466,627 1452,658 1430,687 1349,726 1331,697 1321,668 1294,628 1263,576 1256,579 1244,561 1284,633 1292,676 1274,695 1276,721 1256,777 1279,811 1256,820 1223,810 1178,723 1190,701 1187,667 1123,626 1087,625 1034,664 946,581"
-          onclick="
-            clickedRegion(event, 0, true);
-            return false;
-          "
-          fill="transparent"
-          stroke="blue"
-          stroke-width="0"
-        >
-          <title>ARABIC (CLICK TO START REGION ANIMATION)</title>
+          <title>CHINESE (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -579,16 +583,16 @@
 
         <polygon
           class="my-region"
-          points="1254,541 1262,567 1269,558 1268,540 1272,529 1262,522"
+          points="1291,429 1299,435 1298,443 1309,447 1324,445 1332,445 1328,434 1314,427 1301,423"
           onclick="
-            clickedRegion(event, 6, true);
+            clickedRegion(event, 4, true);
             return false;
           "
           fill="transparent"
           stroke="blue"
           stroke-width="0"
         >
-          <title>HEBREW (CLICK TO START REGION ANIMATION)</title>
+          <title>GEORGIAN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -607,30 +611,16 @@
 
         <polygon
           class="my-region"
-          points="1518,486 1542,475 1552,492 1565,493 1598,544 1651,559 1732,553 1742,562 1745,602 1760,593 1771,605 1770,619 1786,626 1791,617 1814,629 1816,646 1834,668 1853,702 1833,738 1796,710 1792,746 1825,789 1809,793 1796,781 1782,765 1766,671 1746,684 1713,617 1681,628 1629,702 1634,743 1658,785 1640,793 1627,761 1620,775 1603,755 1565,668 1559,625 1554,645 1532,626 1525,609 1544,607 1528,585 1528,570 1551,561 1551,539 1557,532 1541,504 1528,489 1523,497"
+          points="1254,541 1262,567 1269,558 1268,540 1272,529 1262,522"
           onclick="
-            clickedRegion(event, 11, true);
+            clickedRegion(event, 6, true);
             return false;
           "
           fill="transparent"
           stroke="blue"
           stroke-width="0"
         >
-          <title>BRAHMIC (CLICK TO START REGION ANIMATION)</title>
-        </polygon>
-
-        <polygon
-          class="my-region"
-          points="1583,353 1561,374 1548,398 1568,424 1531,444 1542,467 1554,490 1567,492 1599,544 1653,558 1692,554 1735,553 1748,562 1747,599 1759,593 1772,606 1772,619 1785,625 1787,611 1817,599 1832,618 1850,619 1843,643 1859,650 1867,628 1874,617 1913,570 1930,609 1942,586 1928,557 1920,531 1870,460 1873,436 1845,427 1850,406 1869,420 1876,409 1882,391 1904,375 1894,354 1894,324 1882,332 1810,299 1797,282 1772,289 1783,318 1771,323 1770,336 1781,346 1789,340 1799,343 1793,358 1768,375 1772,387 1767,399 1738,414 1706,407 1664,412 1642,388 1624,389 1613,370"
-          onclick="
-            clickedRegion(event, 2, true);
-            return false;
-          "
-          fill="transparent"
-          stroke="blue"
-          stroke-width="0"
-        >
-          <title>CHINESE (CLICK TO START REGION ANIMATION)</title>
+          <title>HEBREW (CLICK TO START REGION ANIMATION)</title>
         </polygon>
 
         <polygon
@@ -688,6 +678,7 @@
         >
           <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
+
         <polygon
           class="my-region"
           points="977,201 945,200 922,201 931,226 963,225 980,211"
@@ -701,6 +692,7 @@
         >
           <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
+
         <polygon
           class="my-region"
           points="955,485 977,496 1014,476 1043,430 1062,432 1067,468 1080,468 1083,443 1109,454 1119,474 1093,479 1113,495 1125,481 1142,464 1111,437 1103,408 1134,434 1143,451 1147,461 1170,449 1169,435 1162,420 1172,426 1184,421 1199,424 1207,422 1210,409 1203,407 1199,392 1181,386 1161,385 1169,357 1172,328 1188,270 1201,235 1182,161 1149,157 1107,200 1062,242 1069,286 1089,268 1105,308 1128,295 1142,265 1125,249 1148,223 1151,205 1164,208 1151,232 1154,253 1166,265 1164,290 1154,284 1150,308 1131,311 1113,327 1105,316 1087,317 1090,292 1075,296 1073,326 1049,333 1038,350 1019,276 1000,293 968,342 994,342 1002,315 1012,330 997,355 1029,354 1011,364 990,368 1018,402 1011,425 968,418 952,471"
@@ -714,6 +706,7 @@
         >
           <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
+
         <polygon
           class="my-region"
           points="1241,437 1224,448 1215,446 1212,452 1199,457 1191,464 1197,476 1206,492 1223,498 1249,497 1263,489 1265,499 1279,491 1323,490 1323,461 1316,460 1314,453 1305,445 1283,447 1266,447"
@@ -727,6 +720,7 @@
         >
           <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
+
         <polygon
           class="my-region"
           points="1193,453 1197,442 1206,442 1209,447 1201,452 1194,459"
@@ -740,6 +734,7 @@
         >
           <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
+
         <polygon
           class="my-region"
           points="1346,1016 1341,1033 1345,1048 1331,1072 1335,1079 1335,1101 1344,1112 1351,1108 1362,1106 1371,1072 1385,1040 1392,1013 1399,1006 1386,970"
@@ -753,6 +748,7 @@
         >
           <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
+
         <polygon
           class="my-region"
           points="903,590 879,691 891,759 932,807 990,802 1019,783 1038,807 1070,812 1050,858 1084,961 1082,1031 1137,1168 1149,1207 1207,1188 1327,1005 1318,903 1397,800 1405,732 1349,749 1339,735 1335,756 1376,778 1347,809 1306,829 1282,812 1255,826 1236,817 1219,814 1212,790 1173,723 1188,701 1188,670 1125,631 1087,626 1046,663 1031,670 1002,636 947,585 918,581 918,581"
@@ -766,6 +762,7 @@
         >
           <title>LATIN (CLICK TO START REGION ANIMATION)</title>
         </polygon>
+
         <polygon
           class="my-region"
           points="94,120 0,186 243,198 147,436 214,648 359,769 342,887 400,1019 455,1077 528,1373 638,1441 679,1383 578,1330 636,1195 703,1072 740,925 513,730 434,694 359,677 361,614 422,655 513,667 429,544 366,583 260,610 284,544 378,516 398,552 429,499 549,414 636,376 699,376 626,205 542,284 511,231 583,193 699,222 735,171 711,101 766,80 805,130 769,214 805,258 920,181 1012,53 952,22 829,22 696,31 518,55 448,106 313,80 202,87 202,87 202,87"
@@ -778,6 +775,34 @@
           stroke-width="0"
         >
           <title>LATIN (CLICK TO START REGION ANIMATION)</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1188,168 1204,235 1174,328 1172,355 1165,384 1201,392 1210,406 1213,416 1207,425 1168,428 1170,447 1190,448 1204,439 1204,430 1213,419 1213,401 1226,393 1238,416 1256,408 1290,425 1309,422 1332,435 1333,448 1357,468 1359,450 1326,411 1337,397 1368,385 1371,397 1357,404 1381,431 1392,470 1407,471 1441,482 1461,498 1480,472 1504,477 1513,466 1523,475 1540,473 1528,444 1555,429 1561,419 1547,395 1555,375 1584,348 1605,359 1622,382 1643,387 1656,395 1671,406 1705,403 1733,411 1752,402 1768,387 1766,375 1783,360 1796,346 1779,348 1770,342 1766,322 1779,318 1769,289 1799,279 1810,295 1848,315 1883,331 1894,322 1898,350 1905,372 1916,370 1927,341 1926,309 1912,294 1894,269 1878,261 1871,271 1844,263 1854,239 1849,219 1866,210 1907,209 1891,256 1957,331 1969,324 1900,256 1910,209 1925,205 1945,185 1954,224 2016,270 1987,191 2039,169 2042,110 1911,80 1854,114 1696,71 1661,69 1661,105 1575,106 1564,80 1426,39 1415,59 1479,84 1420,123 1369,119 1335,158 1330,119 1365,86 1318,39 1231,50 1305,103 1287,145 1200,163"
+          onclick="
+            clickedRegion(event, 10, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>CYRILLIC (CLICK TO START REGION ANIMATION)</title>
+        </polygon>
+
+        <polygon
+          class="my-region"
+          points="1518,486 1542,475 1552,492 1565,493 1598,544 1651,559 1732,553 1742,562 1745,602 1760,593 1771,605 1770,619 1786,626 1791,617 1814,629 1816,646 1834,668 1853,702 1833,738 1796,710 1792,746 1825,789 1809,793 1796,781 1782,765 1766,671 1746,684 1713,617 1681,628 1629,702 1634,743 1658,785 1640,793 1627,761 1620,775 1603,755 1565,668 1559,625 1554,645 1532,626 1525,609 1544,607 1528,585 1528,570 1551,561 1551,539 1557,532 1541,504 1528,489 1523,497"
+          onclick="
+            clickedRegion(event, 11, true);
+            return false;
+          "
+          fill="transparent"
+          stroke="blue"
+          stroke-width="0"
+        >
+          <title>BRAHMIC (CLICK TO START REGION ANIMATION)</title>
         </polygon>
       </g>
     </svg>
@@ -941,12 +966,8 @@
           region.
         </li>
         <li style="margin-bottom: 10px">
-          <strong>HOME:</strong> Only local signs can start in their home regions, 
-          however than they can spread around the world.
-        </li>
-        <li style="margin-bottom: 10px">
-          <strong>RANDOM:</strong> No connection with original location. 
-          Any signs can start in any location freely and randomly.
+          <strong>RANDOM:</strong> Toggle between home origins (signs start in
+          their original regions) and random origins (signs may start anywhere).
         </li>
 
         <li style="margin-bottom: 10px">
@@ -958,6 +979,37 @@
         <li style="margin-bottom: 10px">
           <strong>HELP:</strong> Shows or hides this help.
         </li>
+      </ul>
+
+      <h3>Keyboard Shortcuts</h3>
+      <ul style="padding-left: 20px">
+        <li><strong>A:</strong> Toggle AUTORUN</li>
+        <li><strong>S:</strong> Cycle SOUND modes (Default → Chromatic → Silent)</li>
+        <li><strong>M:</strong> Toggle MORE CONTROLS (menu)</li>
+        <li><strong>R:</strong> Toggle RANDOM origins</li>
+        <li><strong>X:</strong> STOP / resume all animations</li>
+        <li><strong>C:</strong> CLEAR (reset regions)</li>
+        <li><strong>F:</strong> Toggle FAST mode</li>
+        <li><strong>H:</strong> Toggle HELP</li>
+        <li><strong>B:</strong> Toggle BORDERS</li>
+        <li><strong>G:</strong> Toggle REGIONS (colours)</li>
+        <li><strong>1..9,0,-,= :</strong> Start/stop regions
+          <ul style="margin:4px 0 0 12px; padding-left:0">
+            <li>1: ARABIC</li>
+            <li>2: ARMENIAN</li>
+            <li>3: CHINESE</li>
+            <li>4: ETIOPIAN</li>
+            <li>5: GEORGIAN</li>
+            <li>6: GREEK</li>
+            <li>7: HEBREW</li>
+            <li>8: JAPANESE</li>
+            <li>9: KOREAN</li>
+            <li>0: LATIN</li>
+            <li>-: RUSSIAN</li>
+            <li>=: BRAHMIC/SANSKRIT</li>
+          </ul>
+        </li>
+      </ul>
       </ul>
       <div style="text-align: center; margin-top: 20px">
         <a
@@ -972,6 +1024,8 @@
         >
       </div>
     </div>
+
+    <div id="toast" aria-live="polite" role="status"></div>
 
     <script>
       // DOM Elements: Links for controlling specific regions
@@ -2051,14 +2105,18 @@
       }
 
       function toggleRandomOrigin(e, randomOriginsIn, onReset) {
-        randomOrigins = randomOriginsIn;
+        // If caller provided explicit boolean, use it; otherwise toggle state
+        if (typeof randomOriginsIn === 'boolean') {
+          randomOrigins = randomOriginsIn;
+        } else {
+          randomOrigins = !randomOrigins;
+        }
 
-        const allLink = document.getElementById("all-link");
         const randomLink = document.getElementById("random-link");
-        allLink.style.background = randomOrigins ? "#ffffff" : "#1eff00";
-        randomLink.style.background = randomOrigins ? "#1eff00" : "#ffffff";
+        if (randomLink) randomLink.style.background = randomOrigins ? "#1eff00" : "#ffffff";
 
-       // resetRegions(e);
+        // optionally reset regions when origin behavior changes
+        // resetRegions(e);
       }
 
       let isMenuVisible = false;
@@ -2121,6 +2179,119 @@
         }
       }
 
+      // Keyboard shortcuts (global)
+      // Main mappings:
+      // A: AUTORUN, S: SOUND, M: MORE CONTROLS, R: RANDOM, X: STOP all,
+      // C: CLEAR, F: FAST, H: HELP, B: BORDERS, G: REGIONS
+      // 1..9,0,-,= : region buttons 0..11
+      const keyToRegion = {
+        '1': 0,
+        '2': 1,
+        '3': 2,
+        '4': 3,
+        '5': 4,
+        '6': 5,
+        '7': 6,
+        '8': 7,
+        '9': 8,
+        '0': 9,
+        '-': 10,
+        '=': 11,
+      };
+
+      // toast helper
+      let _toastTimer = null;
+      function showToast(msg, duration = 1100) {
+        const t = document.getElementById('toast');
+        if (!t) return;
+        t.textContent = msg;
+        t.classList.add('visible');
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(() => {
+          t.classList.remove('visible');
+          _toastTimer = null;
+        }, duration);
+      }
+
+      window.addEventListener('keydown', (e) => {
+        // ignore repeating events and when typing into inputs
+        if (e.repeat) return;
+        const active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+
+        const k = e.key;
+        // handle region keys
+        if (k in keyToRegion) {
+          const regionIndex = keyToRegion[k];
+          clickedRegion(null, regionIndex, false);
+          // show friendly name derived from imageOriginalCodes if available
+          let name = '';
+          try {
+            if (typeof imageOriginalCodes !== 'undefined' && imageOriginalCodes[regionIndex]) {
+              name = imageOriginalCodes[regionIndex].split(' ').slice(1).join(' ');
+            }
+          } catch (e) {}
+          showToast(name || `Region ${regionIndex}`);
+          e.preventDefault();
+          return;
+        }
+
+        switch (k.toLowerCase()) {
+          case 'a':
+            autoplayToggle(null);
+            showToast(isAutoPlaying ? 'Autoplay: ON' : 'Autoplay: OFF');
+            e.preventDefault();
+            break;
+          case 's':
+            toggleSound(null);
+            showToast(audioEnabled ? 'Sound: ON' : 'Sound: OFF');
+            e.preventDefault();
+            break;
+          case 'm':
+            toggleMenu(null);
+            showToast(isMenuVisible ? 'Menu: OPEN' : 'Menu: CLOSED');
+            e.preventDefault();
+            break;
+          case 'r':
+            toggleRandomOrigin(null);
+            showToast(randomOrigins ? 'Origins: RANDOM' : 'Origins: HOME');
+            e.preventDefault();
+            break;
+          case 'x':
+            toggleStopAll(null, true);
+            showToast('Animations frozen');
+            e.preventDefault();
+            break;
+          case 'c':
+            resetRegions(null);
+            showToast('Cleared');
+            e.preventDefault();
+            break;
+          case 'f':
+            toggleFast(null);
+            showToast(fastMode ? 'FAST: ON' : 'FAST: OFF');
+            e.preventDefault();
+            break;
+          case 'h':
+            toggleHelp(null);
+            showToast(helpIsVisible ? 'Help: CLOSED' : 'Help: OPEN');
+            e.preventDefault();
+            break;
+          case 'b':
+            clickedRegion(null, 12, false);
+            showToast('BORDERS');
+            e.preventDefault();
+            break;
+          case 'g':
+            clickedRegion(null, 13, false);
+            showToast('REGIONS');
+            e.preventDefault();
+            break;
+          default:
+            break;
+        }
+      });
+
       document.getElementById("help-popup").addEventListener("click", (e) => {
         // Only close when clicking on the popup element itself, not on content inside
         if (e.target.id === "help-popup") {
@@ -2129,7 +2300,8 @@
       });
 
       window.addEventListener("load", () => {
-        //autoPlay();
+        //toggleSound(null);
+       autoplayToggle(null);
         animateRipples();
         clickedRegion(null, 12, false);
         /*   clickedRegion(null, 0, false);
