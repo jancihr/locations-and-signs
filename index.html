@@ -150,10 +150,29 @@
         opacity: 1;
         transform: translateX(-50%) translateY(-6px);
       }
+      #gear-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 2000;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border: #000000 2px solid;
+        background: #ffffff;
+        font-size: 20px;
+      }
+      #gear-toggle:hover {
+        border-color: #1eff00;
+      }
     </style>
   </head>
   <body>
-    <div
+    <div id="menu-bar"
       style="
         position: absolute;
         bottom: 20px;
@@ -169,7 +188,25 @@
       "
     >
       <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
-        <a
+      
+        
+         <a
+          id="menu-toggle-link"
+          class="my-button"
+          href="#"
+          style="background: #ffffff"
+          title="SHOW/HIDE MENU (Shortcut: M)"
+          onclick="
+            toggleMenu(event);
+            return false;
+          "
+          >MENU [M]</a
+        >
+      </div>
+      <div id="controls-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
+        
+
+         <a
           id="autoplay-link"
           class="my-button"
           style="background: #1eff00"
@@ -229,46 +266,7 @@
           "
           >FAST [F]</a
         >
-        <a
-          id="menu-toggle-link"
-          class="my-button"
-          href="#"
-          style="background: #ffffff"
-          title="SHOW/HIDE MENU (Shortcut: M)"
-          onclick="
-            toggleMenu(event);
-            return false;
-          "
-          >MORE CONTROLS [M]</a
-        >
-      </div>
-      <div id="controls-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
-        
-
-        <a
-          id="borders-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="SHOW/HIDE ALPHABET BORDERS (Shortcut: B)"
-          onclick="
-            clickedRegion(event, 12, false);
-            return false;
-          "
-          >BORDERS [B]</a
-        >
-        <a
-          id="colours-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="SHOW/HIDE ALPHABET IN THEIR REGIONS (Shortcut: G)"
-          onclick="
-            clickedRegion(event, 13, false);
-            return false;
-          "
-          >REGIONS [G]</a
-        >
+       
 
       
 
@@ -344,6 +342,30 @@
       </div>
       <div id="regions-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
         <a
+          id="borders-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="SHOW/HIDE ALPHABET BORDERS (Shortcut: B)"
+          onclick="
+            clickedRegion(event, 12, false);
+            return false;
+          "
+          >BORDERS [B]</a
+        >
+        <a
+          id="colours-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="SHOW/HIDE ALPHABET IN THEIR REGIONS (Shortcut: G)"
+          onclick="
+            clickedRegion(event, 13, false);
+            return false;
+          "
+          >REGIONS [G]</a
+        >
+         <a
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
           class="region-button"
@@ -511,10 +533,12 @@
             toggleHelp(event);
             return false;
           "
-          >HELP [H]</a
+          >INFO [I]</a
         >
       </div>
     </div>
+    <a id="gear-toggle" href="#" title="SHOW MENU"
+       onclick="toggleCompactView(event); return false;">⚙</a>
     <svg
       viewBox="0 0 2320 1474"
       width="100%"
@@ -1540,6 +1564,7 @@
             paint(index, 100);
           }
         }
+        
       }
 
       // Toggles visibility of regions, optionally with random centers
@@ -1914,11 +1939,26 @@
       let autoPlayTimeout;
 
       function toggleFast(e) {
+        clearTimeout(autoPlayTimeout);
+    
         if (e) e.preventDefault();
         fastMode = !fastMode;
         const link = document.getElementById("fast-link");
         link.style.background = !fastMode ? "#1eff00" : "#ffffff";
-        for (let index = 0; index < 12; index++) {
+
+        clearTimeout(autoPlayTimeout);
+         if (!isAutoPlaying)
+          for (let index = 0; index < 12; index++) {
+            if (isRevealing[index] || isHiding[index]) {
+              if (!isFrozen[index]) {
+                isFrozen[index] = true;
+                stopTone(index);
+              }
+            }
+            paint(index, 100);
+          }
+        else {
+           for (let index = 0; index < 12; index++) {
           if (isHidden[index]) {
             //isHidden[index] = false;
             //isRevealing[index] = true;
@@ -1930,12 +1970,17 @@
 
             stopTone(index);
 
-            //paint(index, 100);
+            paint(index, 100);
           }
 
           //paint(index, slowMode ? 200 : 2000);
           //stopTone(index);
         }
+          autoPlay();
+        }
+        
+        
+        
       }
 
       // Pauses all currently animating regions
@@ -2130,10 +2175,12 @@
         const regions = document.getElementById("regions-container");
         const link = document.getElementById("menu-toggle-link");
 
-        controls.style.display = isMenuVisible ? "flex" : "none";
-        regions.style.display = isMenuVisible ? "flex" : "none";
+        controls.style = isMenuVisible ? "display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center" : "display:none";
+        regions.style = isMenuVisible ? "display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center" : "display:none";
         link.style.background = isMenuVisible ? "#1eff00" : "#ffffff";
       }
+
+      
 
       function showHelp(e) {
         if (e) e.preventDefault();
@@ -2275,7 +2322,7 @@
             showToast(fastMode ? 'FAST: ON' : 'FAST: OFF');
             e.preventDefault();
             break;
-          case 'h':
+          case 'i':
             toggleHelp(null);
             showToast(helpIsVisible ? 'Help: CLOSED' : 'Help: OPEN');
             e.preventDefault();
