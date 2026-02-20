@@ -110,6 +110,17 @@
         border: #000000 2px solid;
       }
 
+        .inter-button-text {
+        overflow-wrap:normal;
+        flex-grow: 0;
+        border-radius: 15px;
+        padding: 3px 3px;
+        margin: 0px;
+        border: #ffffff 2px solid;
+        background-color: #ffffff;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
       .region-button:hover {
         border-color: #1eff00;
       }
@@ -188,22 +199,22 @@
       "
     >
       <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
-      
+   <div   id="word1-inner-menu-text"    class="inter-button-text">        SIGNS   </div>
         
          <a
           id="menu-toggle-link"
           class="my-button"
           href="#"
           style="background: #ffffff"
-          title="SHOW/HIDE MENU (Shortcut: M)"
+          title="SHOW/HIDE MENU (Shortcut: +)"
           onclick="
             toggleMenu(event);
             return false;
           "
-          >MENU [M]</a
+          >MENU [+]</a
         >
       </div>
-      <div id="controls-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
+      <div id="controls-container" style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center">
         
 
          <a
@@ -347,16 +358,16 @@
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="TOGGLE INFO SCREEN (Shortcut: I)"
+          title="TOGGLE INFO SCREEN (Shortcut: ?)"
           onclick="
             toggleHelp(event);
             return false;
           "
-          >INFO [I]</a
+          >INFO [?]</a
         >
       </div>
 
-      <div id="regions-container" style="display: none;">
+      <div id="regions-container" style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center">
         <a
           id="borders-link"
           class="my-button"
@@ -381,6 +392,9 @@
           "
           >REGIONS [G]</a
         >
+
+      <div     id="word2-inner-menu-text"    class="inter-button-text">        AND  
+         </div>
          <a
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
@@ -536,6 +550,7 @@
           "
           >BRAHMIC [=]</a
         >
+<div     id="word3-inner-menu-text"    class="inter-button-text">        LOCATIONS   </div>
       </div>
 
      
@@ -960,11 +975,12 @@
       </ul>
       <h3>Menu Buttons</h3>
       <ul style="padding-left: 20px">
-        <li style="margin-bottom: 10px">
+      
 
             <li style="margin-bottom: 10px">
           <strong>MENU:</strong> Shows or hides more control buttons.
         </li>
+        <li style="margin-bottom: 10px">
           <strong>AUTORUN:</strong> Toggles automatic playback, where regions
           are randomly activated. When animations are running, this button
           freezes/unfreezes them.
@@ -1012,16 +1028,18 @@
 
       <h3>Keyboard Shortcuts</h3>
       <ul style="padding-left: 20px">
+          <li><strong>+:</strong> Toggle FULL/MINIMAL CONTROL (menu)</li>
         <li><strong>A:</strong> Toggle AUTORUN</li>
         <li><strong>S:</strong> Toggle SOUND</li>
-        <li><strong>M:</strong> Toggle CONTROL (menu)</li>
-        <li><strong>R:</strong> Toggle RANDOM origins</li>
-        <li><strong>X:</strong> STOP / resume all animations</li>
+       
+        <li><strong>X:</strong> STOP/resume all animations</li>
         <li><strong>C:</strong> CLEAR (reset regions)</li>
         <li><strong>F:</strong> Toggle FAST mode</li>
-        <li><strong>I:</strong> Toggle INFO</li>
+      <li><strong>R:</strong> Toggle RANDOM origins</li>
+         <li><strong>?:</strong> Toggle INFO</li>
         <li><strong>B:</strong> Toggle BORDERS</li>
         <li><strong>G:</strong> Toggle REGIONS (colours)</li>
+        
         <li><strong>1..9,0,-,= :</strong> Start/stop regions
           <ul style="margin:4px 0 0 12px; padding-left:0">
             <li>1: ARABIC</li>
@@ -2187,17 +2205,33 @@
         // resetRegions(e);
       }
 
-      let isMenuVisible = false;
+      let isFullLabels = false;
+
+      function initButtonLabels() {
+        const buttons = document.querySelectorAll('.my-button, .region-button');
+        buttons.forEach(btn => {
+           if (!btn.dataset.fullText) {
+             btn.dataset.fullText = btn.innerText;
+             const match = btn.innerText.match(/\[(.+)\]/);
+             btn.dataset.shortcut = match ? match[1] : btn.innerText;
+           }
+           btn.innerText = isFullLabels ? btn.dataset.fullText : btn.dataset.shortcut;
+        });
+      }
 
       function toggleMenu(e) {
-        isMenuVisible = !isMenuVisible;
-        const controls = document.getElementById("controls-container");
-        const regions = document.getElementById("regions-container");
+        isFullLabels = !isFullLabels;
+        initButtonLabels();
         const link = document.getElementById("menu-toggle-link");
+        link.style.background = isFullLabels ? "#1eff00" : "#ffffff";
 
-        controls.style = isMenuVisible ? "display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center" : "display:none";
-        regions.style = isMenuVisible ? "display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center" : "display:none";
-        link.style.background = isMenuVisible ? "#1eff00" : "#ffffff";
+        const word1Link = document.getElementById("word1-inner-menu-text");
+        word1Link.style.display = isFullLabels ? "none" : "block"; 
+        const word2Link = document.getElementById("word2-inner-menu-text");
+        word2Link.style.display = isFullLabels ? "none" : "block"; 
+        const word3Link = document.getElementById("word3-inner-menu-text");
+        word3Link.style.display = isFullLabels ? "none" : "block"; 
+
       }
 
       
@@ -2317,9 +2351,9 @@
             showToast(audioEnabled ? 'Sound: ON' : 'Sound: OFF');
             e.preventDefault();
             break;
-          case 'm':
+          case '+':
             toggleMenu(null);
-            showToast(isMenuVisible ? 'Menu: OPEN' : 'Menu: CLOSED');
+            showToast(isFullLabels ? 'Menu: FULL' : 'Menu: COMPACT');
             e.preventDefault();
             break;
           case 'r':
@@ -2342,19 +2376,19 @@
             showToast(fastMode ? 'FAST: ON' : 'FAST: OFF');
             e.preventDefault();
             break;
-          case 'i':
+          case '?':
             toggleHelp(null);
             showToast(helpIsVisible ? 'Help: CLOSED' : 'Help: OPEN');
             e.preventDefault();
             break;
           case 'b':
             clickedRegion(null, 12, false);
-            showToast('BORDERS');
+            showToast(isHiding[12] ? 'BORDERS ARE HIDING' : 'BORDERS ARE BEING SHOWIN');
             e.preventDefault();
             break;
           case 'g':
             clickedRegion(null, 13, false);
-            showToast('REGIONS');
+            showToast(isHiding[13] ? 'REGIONS IS HIDING' : 'REGIONS ARE SHOWING');
             e.preventDefault();
             break;
           default:
@@ -2372,6 +2406,7 @@
       window.addEventListener("load", () => {
         //toggleSound(null);
        autoplayToggle(null);
+       initButtonLabels();
         animateRipples();
         clickedRegion(null, 12, false);
         /*   clickedRegion(null, 0, false);
