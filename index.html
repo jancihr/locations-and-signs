@@ -92,8 +92,8 @@
         flex-grow: 0;
         overflow-wrap: break-word;
         border-radius: 3px;
-        padding: 5px 5px;
-        margin: auto;
+        padding: 3px 3px;
+        margin: 0px;
         border: #000000 2px solid;
       }
 
@@ -105,8 +105,8 @@
         overflow-wrap: break-word;
         flex-grow: 0;
         border-radius: 15px;
-        padding: 5px 5px;
-        margin: auto;
+        padding: 3px 3px;
+        margin: 0px;
         border: #000000 2px solid;
       }
 
@@ -340,28 +340,44 @@
           >RANDOM [R]</a
         >
       </div>
-      <div id="regions-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center">
+
+       <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
         <a
-          id="borders-link"
+          id="help-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
+          title="TOGGLE INFO SCREEN (Shortcut: I)"
+          onclick="
+            toggleHelp(event);
+            return false;
+          "
+          >INFO [I]</a
+        >
+      </div>
+
+      <div id="regions-container" style="display: none;">
+        <a
+          id="borders-link"
+          class="my-button"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto;"
+          href="#"
           title="SHOW/HIDE ALPHABET BORDERS (Shortcut: B)"
           onclick="
-            clickedRegion(event, 12, false);
-            return false;
+        clickedRegion(event, 12, false);
+        return false;
           "
           >BORDERS [B]</a
         >
         <a
           id="colours-link"
           class="my-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto;"
           href="#"
           title="SHOW/HIDE ALPHABET IN THEIR REGIONS (Shortcut: G)"
           onclick="
-            clickedRegion(event, 13, false);
-            return false;
+        clickedRegion(event, 13, false);
+        return false;
           "
           >REGIONS [G]</a
         >
@@ -369,11 +385,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #91CA49;"
           href="#"
           onclick="
-            clickedRegion(event, 0, false);
-            return false;
+        clickedRegion(event, 0, false);
+        return false;
           "
           >ARABIC [1]</a
         >
@@ -381,12 +397,12 @@
         <a
           id="arm-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #857768;"
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 2)"
           href="#"
           onclick="
-            clickedRegion(event, 1, false);
-            return false;
+        clickedRegion(event, 1, false);
+        return false;
           "
           >ARMENIAN [2]</a
         >
@@ -395,11 +411,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 3)"
           id="chi-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #A045AD;"
           href="#"
           onclick="
-            clickedRegion(event, 2, false);
-            return false;
+        clickedRegion(event, 2, false);
+        return false;
           "
           >CHINESE [3]</a
         >
@@ -408,11 +424,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 4)"
           id="eth-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #EB4628;"
           href="#"
           onclick="
-            clickedRegion(event, 3, false);
-            return false;
+        clickedRegion(event, 3, false);
+        return false;
           "
           >ETHIOPIAN [4]</a
         >
@@ -421,11 +437,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 5)"
           id="geo-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #8280AE;"
           href="#"
           onclick="
-            clickedRegion(event, 4, false);
-            return false;
+        clickedRegion(event, 4, false);
+        return false;
           "
           >GEORGIAN [5]</a
         >
@@ -434,11 +450,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 6)"
           id="gre-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #92FA8D;"
           href="#"
           onclick="
-            clickedRegion(event, 5, false);
-            return false;
+        clickedRegion(event, 5, false);
+        return false;
           "
           >GREEK [6]</a
         >
@@ -447,11 +463,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 7)"
           id="heb-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #95D7DB;"
           href="#"
           onclick="
-            clickedRegion(event, 6, false);
-            return false;
+        clickedRegion(event, 6, false);
+        return false;
           "
           >HEBREW [7]</a
         >
@@ -460,11 +476,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 8)"
           id="jap-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #65B55B;"
           href="#"
           onclick="
-            clickedRegion(event, 7, false);
-            return false;
+        clickedRegion(event, 7, false);
+        return false;
           "
           >JAPANESE [8]</a
         >
@@ -473,11 +489,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 9)"
           id="kor-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #7077F7;"
           href="#"
           onclick="
-            clickedRegion(event, 8, false);
-            return false;
+        clickedRegion(event, 8, false);
+        return false;
           "
           >KOREAN [9]</a
         >
@@ -486,11 +502,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 0)"
           id="lat-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #6A6A6A;"
           href="#"
           onclick="
-            clickedRegion(event, 9, false);
-            return false;
+        clickedRegion(event, 9, false);
+        return false;
           "
           >LATIN [0]</a
         >
@@ -499,11 +515,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: -)"
           id="rus-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #AA5249;"
           href="#"
           onclick="
-            clickedRegion(event, 10, false);
-            return false;
+        clickedRegion(event, 10, false);
+        return false;
           "
           >CYRILLIC [-]</a
         >
@@ -512,30 +528,17 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: =)"
           id="san-link"
           class="region-button"
-          style="background: #ffffff"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #A0BD5F;"
           href="#"
           onclick="
-            clickedRegion(event, 11, false);
-            return false;
+        clickedRegion(event, 11, false);
+        return false;
           "
           >BRAHMIC [=]</a
         >
       </div>
 
-      <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
-        <a
-          id="help-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="TOGGLE HELP (Shortcut: H)"
-          onclick="
-            toggleHelp(event);
-            return false;
-          "
-          >INFO [I]</a
-        >
-      </div>
+     
     </div>
     <a id="gear-toggle" href="#" title="SHOW MENU"
        onclick="toggleCompactView(event); return false;">⚙</a>
@@ -543,7 +546,7 @@
       viewBox="0 0 2320 1474"
       width="100%"
       height="100%"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMin meet"
       xmlns="http://www.w3.org/2000/svg"
       style="position: absolute; left: 0; top: 0; z-index: 300"
     >
@@ -925,7 +928,7 @@
         transform: translate(-50%, -50%);
         width: 700px;
         max-width: 90%;
-        max-height: 90vh;
+        max-height: 80vh;
         overflow-y: auto;
         box-sizing: border-box;
         background: white;
@@ -1282,6 +1285,25 @@
         false,
       ];
 
+      function getCoverDimensions(cw, ch, iw, ih) {
+        if (!iw || !ih) return { x: 0, y: 0, w: cw, h: ch };
+        const rC = cw / ch;
+        const rI = iw / ih;
+        let w, h, x, y;
+        if (rC > rI) {
+          h = ch;
+          w = ch * rI;
+          x = (cw - w) / 2;
+          y = 0;
+        } else {
+          w = cw;
+          h = cw / rI;
+          x = 0;
+          y = 0;
+        }
+        return { x, y, w, h };
+      }
+
       let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
       // --- Ripple Effect on Click ---
@@ -1453,13 +1475,11 @@
       // Recalculates default starting coordinates based on current window size
       function calculateStarts() {
         for (let index = 0; index < clickX.length; index++) {
-          clickX[index] = Math.round(
-            (imageOriginalX[index] * canvas[index].width) / images[index].width,
-          );
-          clickY[index] = Math.round(
-            (imageOriginalY[index] * canvas[index].height) /
-              images[index].height,
-          );
+          const dim = getCoverDimensions(canvas[index].width, canvas[index].height, images[index].width, images[index].height);
+          if (images[index].width > 0) {
+            clickX[index] = Math.round(imageOriginalX[index] * (dim.w / images[index].width) + dim.x);
+            clickY[index] = Math.round(imageOriginalY[index] * (dim.h / images[index].height) + dim.y);
+          }
         }
       }
 
@@ -1683,14 +1703,11 @@
               clickX[index] = Math.round(Math.random() * canvas[index].width);
               clickY[index] = Math.round(Math.random() * canvas[index].height);
             } else {
-              clickX[index] = Math.round(
-                (imageOriginalX[index] * canvas[index].width) /
-                  images[index].width,
-              );
-              clickY[index] = Math.round(
-                (imageOriginalY[index] * canvas[index].height) /
-                  images[index].height,
-              );
+              const dim = getCoverDimensions(canvas[index].width, canvas[index].height, images[index].width, images[index].height);
+              if (images[index].width > 0) {
+                clickX[index] = Math.round(imageOriginalX[index] * (dim.w / images[index].width) + dim.x);
+                clickY[index] = Math.round(imageOriginalY[index] * (dim.h / images[index].height) + dim.y);
+              }
             }
           }
         }
@@ -1843,12 +1860,13 @@
             Math.PI * 2,
           );
           ctx[region].clip();
+          const dim = getCoverDimensions(canvas[region].width, canvas[region].height, images[region].width, images[region].height);
           ctx[region].drawImage(
             images[region],
-            0,
-            0,
-            canvas[region].width,
-            canvas[region].height,
+            dim.x,
+            dim.y,
+            dim.w,
+            dim.h,
           );
           ctx[region].restore();
 
@@ -2177,8 +2195,8 @@
         const regions = document.getElementById("regions-container");
         const link = document.getElementById("menu-toggle-link");
 
-        controls.style = isMenuVisible ? "display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center" : "display:none";
-        regions.style = isMenuVisible ? "display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center" : "display:none";
+        controls.style = isMenuVisible ? "display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center" : "display:none";
+        regions.style = isMenuVisible ? "display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center" : "display:none";
         link.style.background = isMenuVisible ? "#1eff00" : "#ffffff";
       }
 
