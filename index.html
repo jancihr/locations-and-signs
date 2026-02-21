@@ -80,7 +80,7 @@
       }
       a {
         text-decoration: none;
-        color: #000000;
+        color: #1b00b3;
         font-family: Arial, sans-serif;
         font-size: 16px;
       }
@@ -94,7 +94,7 @@
         border-radius: 3px;
         padding: 3px 3px;
         margin: 0px;
-        border: #000000 2px solid;
+        border: #1b00b3 2px solid;
       }
 
       .my-button:hover {
@@ -107,7 +107,11 @@
         border-radius: 15px;
         padding: 3px 3px;
         margin: 0px;
-        border: #000000 2px solid;
+        border: #1b00b3 2px solid;
+      }
+
+        .region-button:hover {
+        border-color: #1eff00;
       }
 
         .inter-button-text {
@@ -119,11 +123,10 @@
         border: #ffffff 2px solid;
         background-color: #ffffff;
         font-family: Arial, Helvetica, sans-serif;
+        color: #1b00b3;
       }
 
-      .region-button:hover {
-        border-color: #1eff00;
-      }
+    
 
       @keyframes blinker {
         50% {
@@ -220,7 +223,7 @@
          <a
           id="autoplay-link"
           class="my-button"
-          style="background: #1eff00"
+          style="background: #ffffff"
           href="#"
           title="AUTOCLICK RANDOMLY ALL REGIONS (Shortcut: A)"
           onclick="
@@ -308,35 +311,20 @@
           "
           >SHRINK</a
         >
-
+-->
   
         <a
           id="melody-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="PLAY MELODY"
+          title="PLAY MELODY (Shortcut: M)"
           onclick="
             toggleMelody(event);
             return false;
           "
-          >MELODY</a
+          >MELODY [M]</a
         >
--->
-
-        <!--    <a
-          id="ripple-link"
-          class="my-button"
-          style="background: #1eff00"
-          href="#"
-          title="TOGGLE RIPPLE EFFECT"
-          onclick="
-            toggleRipple(event);
-            return false;
-          "
-          >RIPPLE</a
-        >
--->
 
         <a
           id="random-link"
@@ -349,6 +337,18 @@
             return false;
           "
           >RANDOM [R]</a
+        >
+        <a
+          id="colour-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="TOGGLE RANDOM COLOURS (Shortcut: K)"
+          onclick="
+            toggleColour(event);
+            return false;
+          "
+          >COLOUR [K]</a
         >
       </div>
 
@@ -393,13 +393,13 @@
           >REGIONS [G]</a
         >
 
-      <div     id="word2-inner-menu-text"    class="inter-button-text">        AND  
+      <div     id="word2-inner-menu-text"    class="inter-button-text"> AND  
          </div>
          <a
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #91CA49;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 0, false);
@@ -411,7 +411,7 @@
         <a
           id="arm-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #857768;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 2)"
           href="#"
           onclick="
@@ -425,7 +425,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 3)"
           id="chi-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #A045AD;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 2, false);
@@ -438,7 +438,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 4)"
           id="eth-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #EB4628;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 3, false);
@@ -451,7 +451,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 5)"
           id="geo-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #8280AE;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 4, false);
@@ -464,7 +464,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 6)"
           id="gre-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #92FA8D;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 5, false);
@@ -477,7 +477,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 7)"
           id="heb-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #95D7DB;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 6, false);
@@ -490,7 +490,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 8)"
           id="jap-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #65B55B;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 7, false);
@@ -503,7 +503,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 9)"
           id="kor-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #7077F7;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 8, false);
@@ -516,7 +516,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 0)"
           id="lat-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #6A6A6A;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 9, false);
@@ -529,7 +529,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: -)"
           id="rus-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #AA5249;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 10, false);
@@ -542,7 +542,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: =)"
           id="san-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; color: #A0BD5F;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
           href="#"
           onclick="
         clickedRegion(event, 11, false);
@@ -1004,6 +1004,9 @@
           <strong>RANDOM:</strong> Toggle between home origins (signs start in
           their original regions) and random origins (signs may start anywhere).
         </li>
+        <li style="margin-bottom: 10px">
+          <strong>COLOUR:</strong> Toggle between original and random pastel colors for scripts.
+        </li>
 
         <li style="margin-bottom: 10px">
           <strong>BORDERS:</strong> Toggles a layer showing the boundaries of
@@ -1036,6 +1039,7 @@
         <li><strong>C:</strong> CLEAR (reset regions)</li>
         <li><strong>F:</strong> Toggle FAST mode</li>
       <li><strong>R:</strong> Toggle RANDOM origins</li>
+      <li><strong>K:</strong> Toggle COLOURS</li>
          <li><strong>?:</strong> Toggle INFO</li>
         <li><strong>B:</strong> Toggle BORDERS</li>
         <li><strong>G:</strong> Toggle REGIONS (colours)</li>
@@ -1323,6 +1327,7 @@
       }
 
       let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let regionHues = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
       // --- Ripple Effect on Click ---
       const rippleCanvas = document.getElementById("ripple-canvas");
@@ -1335,7 +1340,7 @@
       function toggleRipple(e) {
         ripplesEnabled = !ripplesEnabled;
         const link = document.getElementById("ripple-link");
-        link.style.background = ripplesEnabled ? "#1eff00" : "#ffffff";
+        link.style.background = ripplesEnabled ? "#ffff00" : "#ffffff";
       }
 
       function createRipple(x, y, options = {}) {
@@ -1386,24 +1391,24 @@
       const regionOscillators = new Array(14).fill(null);
       const regionGains = new Array(14).fill(null);
 
-      // Harmonic base frequencies (C Major Scale for Ode to Joy)
+
       const baseFrequencies = [
-        246.94, // 0: B3
-        261.63, // 1: C4 
-        293.66, // 2: D4
-        329.63, // 3: E4
-        349.23, // 4: F4
-        392.0, // 5: G4
-        440.0, // 6: A4
-        493.88, // 7: B4
-        523.25, // 8: C5
-        587.33, // 9: D5
-        659.25, // 10: E5
-        698.46, // 11: F5 
+        130.81, // 0: C3
+        146.83, // 1: D3
+        164.81, // 2: E3
+        174.61, // 3: F3
+        196.00, // 4: G3
+        220.00, // 5: A3
+        246.94, // 6: B3
+        261.63, // 7: C4
+        293.66, // 8: D4
+        329.63, // 9: E4
+        349.23, // 10: F4
+        392.00, // 11: G4
         
 
-        1318.51, // 11: E6 (Borders)
-        783.99, // 12: C3 (Colours)
+        659.25, // 12: E5 (Borders)
+        65.41, // 13: C2 (Colours - lower bass)
       ];
       const defaultFrequencies = [...baseFrequencies];
 
@@ -1420,9 +1425,16 @@
       function updateTone(region, currentRadius, maxR) {
         if (!audioEnabled || !audioCtx) return;
 
-        const progress = Math.min(1, Math.max(0, currentRadius / maxR));
-        const pitchMultiplier = 1 + progress * 0.5; // Pitch goes up as radius increases
-        const frequency = baseFrequencies[region] * pitchMultiplier;
+        let frequency;
+        if (isMelodyMode) {
+          // In melody mode, keep pitch constant for correct note playback
+          frequency = baseFrequencies[region];
+        } else {
+          // In animation mode, vary pitch based on animation progress
+          const progress = Math.min(1, Math.max(0, currentRadius / maxR));
+          const pitchMultiplier = 1 + progress * 0.5; // Pitch goes up as radius increases
+          frequency = baseFrequencies[region] * pitchMultiplier;
+        }
 
         if (!regionOscillators[region]) {
           const osc = audioCtx.createOscillator();
@@ -1467,7 +1479,7 @@
       function toggleSound(e) {
         audioEnabled = !audioEnabled;
         const link = document.getElementById("sound-link");
-        link.style.background = audioEnabled ? "#1eff00" : "#ffffff";
+        link.style.background = audioEnabled ? "#ffff00" : "#ffffff";
 
         if (audioEnabled) {
           initAudio();
@@ -1480,6 +1492,9 @@
       }
 
       function toggleStopAll(e, stopAutorunAlso) {
+        if (isMelodyPlaying) {
+          toggleMelody(null);
+        }
         if (isAutoPlaying && stopAutorunAlso) {
           autoplayToggle(e);
         } else {
@@ -1512,7 +1527,7 @@
         }
 
         const link = document.getElementById("autoplay-link");
-        link.style.background = isAutoPlaying ? "#1eff00" : "#ffffff";
+        link.style.background = isAutoPlaying ? "#ff3333" : "#ffffff";
         if (isAutoPlaying) {
           autoPlay();
         } else {
@@ -1536,6 +1551,7 @@
             isHidden[index] = false;
             isShown[index] = false;
             isRevealing[index] = true;
+            regionHues[index] = Math.floor(Math.random() * 360);
             isHiding[index] = false;
 
             maxRadius[index] = Math.sqrt(
@@ -1621,6 +1637,7 @@
             isHidden[index] = false;
             isShown[index] = false;
             isRevealing[index] = true;
+            regionHues[index] = Math.floor(Math.random() * 360);
             isHiding[index] = false;
 
             canvas[index].width / images[index].width;
@@ -1704,8 +1721,8 @@
             speed = 1000;
           }
         }
-        // Apply slow mode multiplier (10x slower)
-        if (fastMode) {
+        // Apply slow mode multiplier (10x slower) - but NOT during melody playback
+        if (fastMode && !isMelodyMode) {
           speed *= 10;
         }
         if (e) e.stopPropagation();
@@ -1756,6 +1773,7 @@
         if (isHidden[index]) {
           isHidden[index] = false;
           isRevealing[index] = true;
+          regionHues[index] = Math.floor(Math.random() * 360);
         } else if (isShown[index]) {
           isShown[index] = false;
           isHiding[index] = true;
@@ -1844,6 +1862,7 @@
           isHidden[index] = false;
           isShown[index] = false;
           revealRadius[index] = 0;
+          regionHues[index] = Math.floor(Math.random() * 360);
           createRipple(clickX[index], clickY[index], {
             startRadius: 0,
             speed: maxRadius[index] / 90,
@@ -1878,6 +1897,10 @@
             Math.PI * 2,
           );
           ctx[region].clip();
+          // Change color scheme of the script images
+          if (region < 12 && isColourEnabled) {
+            ctx[region].filter = `hue-rotate(${regionHues[region]}deg) saturate(0.6) brightness(1.3)`;
+          }
           const dim = getCoverDimensions(canvas[region].width, canvas[region].height, images[region].width, images[region].height);
           ctx[region].drawImage(
             images[region],
@@ -1895,14 +1918,14 @@
                 Math.max(0, (revealRadius[region] / maxRadius[region]) * 100),
               );
               links[region].style.background =
-                `linear-gradient(to right, #1eff00 ${pct}%, #ffffff ${pct}%)`;
+                `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
               revealRadius[region] += maxRadius[region] / speed;
               updateTone(region, revealRadius[region], maxRadius[region]);
               requestAnimationFrame(() => paint(region, speed));
             } else {
               //console.log("Region fully revealed:", region);
-              links[region].style.background = "#1eff00";
+              links[region].style.background = "#ffff00";
               links[region].style.animation = "";
               stopTone(region);
 
@@ -1973,6 +1996,15 @@
       let isAutoPlaying = false;
       let randomOrigins = false;
       let fastMode = true;
+      let isColourEnabled = false;
+
+      function toggleColour(e) {
+        if (e) e.preventDefault();
+        isColourEnabled = !isColourEnabled;
+        const link = document.getElementById("colour-link");
+        link.style.background = isColourEnabled ? "#ffff00" : "#ffffff";
+      }
+
       let helpIsVisible = false;
       let autoPlayTimeout;
 
@@ -1982,7 +2014,7 @@
         if (e) e.preventDefault();
         fastMode = !fastMode;
         const link = document.getElementById("fast-link");
-        link.style.background = !fastMode ? "#1eff00" : "#ffffff";
+        link.style.background = !fastMode ? "#ffff00" : "#ffffff";
 
         clearTimeout(autoPlayTimeout);
          if (!isAutoPlaying)
@@ -2023,6 +2055,9 @@
 
       // Pauses all currently animating regions
       function autoplayToggle(e) {
+        if (isMelodyPlaying) {
+          toggleMelody(null);
+        }
         clearTimeout(autoPlayTimeout);
         isAutoPlaying = !isAutoPlaying;
 
@@ -2041,7 +2076,7 @@
         }
 
         const link = document.getElementById("autoplay-link");
-        link.style.background = isAutoPlaying ? "#1eff00" : "#ffffff";
+        link.style.background = isAutoPlaying ? "#ffff00" : "#ffffff";
       }
 
       function autoPlay() {
@@ -2068,78 +2103,87 @@
       }
 
       let isMelodyPlaying = false;
+      let isMelodyMode = false;
       let melodyTimeout;
       let melodyIndex = 0;
+      let melodyToneTimer = null; // Timer for exact note duration
 
       const SONG = [
-        // Ode to Joy
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 3, duration: 400, delay: 400 }, // F
-        { region: 4, duration: 400, delay: 400 }, // G
-        { region: 4, duration: 400, delay: 400 }, // G
-        { region: 3, duration: 400, delay: 400 }, // F
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 2, duration: 600, delay: 600 }, // E.
-        { region: 1, duration: 200, delay: 200 }, // D
-        { region: 1, duration: 800, delay: 800 }, // D
+        // Ode to Joy with Harmonies
+        // Phrase 1
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3 (C Major)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3 (G7)
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3 (C Major)
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3 (G Major)
+        
+        // Phrase 2
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3 (C Major)
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 0, 4], duration: 600, delay: 600 }, // E4 + C3 + G3 (dotted)
+        { regions: [8, 4], duration: 200, delay: 200 },    // D4 + G3 (short)
+        { regions: [8, 4, 6], duration: 800, delay: 800 }, // D4 + G3 + B3 (long)
 
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 3, duration: 400, delay: 400 }, // F
-        { region: 4, duration: 400, delay: 400 }, // G
-        { region: 4, duration: 400, delay: 400 }, // G
-        { region: 3, duration: 400, delay: 400 }, // F
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 1, duration: 600, delay: 600 }, // D.
-        { region: 0, duration: 200, delay: 200 }, // C
-        { region: 0, duration: 800, delay: 800 }, // C
+        // Phrase 3 (Repeat of 1 with different ending)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        
+        // Phrase 4
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
+        { regions: [7, 0], duration: 200, delay: 200 },    // C4 + C3 (short)
+        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
 
-        // Part 3 (Bridge)
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 2, duration: 200, delay: 200 }, // E
-        { region: 3, duration: 200, delay: 200 }, // F
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 2, duration: 200, delay: 200 }, // E
-        { region: 3, duration: 200, delay: 200 }, // F
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 4, duration: 800, delay: 800, frequency: 196.0 }, // G3 (Low G)
+        // Bridge
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
+        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
+        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [4, 1, 6], duration: 800, delay: 800 }, // G3 + D3 + B3 (Low G)
 
-        // Part 4 (Repeat of Part 2)
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 3, duration: 400, delay: 400 }, // F
-        { region: 4, duration: 400, delay: 400 }, // G
-        { region: 4, duration: 400, delay: 400 }, // G
-        { region: 3, duration: 400, delay: 400 }, // F
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 0, duration: 400, delay: 400 }, // C
-        { region: 1, duration: 400, delay: 400 }, // D
-        { region: 2, duration: 400, delay: 400 }, // E
-        { region: 1, duration: 600, delay: 600 }, // D.
-        { region: 0, duration: 200, delay: 200 }, // C
-        { region: 0, duration: 800, delay: 800 }, // C
+        // Finale (Repeat of Phrase 3 & 4)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
+        { regions: [7, 0], duration: 200, delay: 200 },    // C4 + C3 (short)
+        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
       ];
 
       function playMelody() {
@@ -2150,24 +2194,38 @@
         }
 
         const note = SONG[melodyIndex];
-        const region = note.region;
+        // Support both single region and multiple regions (harmony)
+        const regions = note.regions || (note.region ? [note.region] : []);
 
         if (note.frequency) {
-          baseFrequencies[region] = note.frequency;
+          regions.forEach(region => {
+            baseFrequencies[region] = note.frequency;
+          });
         }
 
-        if (isRevealing[region] || isHiding[region]) {
-          stopTone(region);
-          isRevealing[region] = false;
-          isHiding[region] = false;
-          isShown[region] = false;
-          isHidden[region] = true;
-          isFrozen[region] = false;
-        }
+        // Play all regions in parallel
+        regions.forEach(region => {
+          if (isRevealing[region] || isHiding[region]) {
+            stopTone(region);
+            isRevealing[region] = false;
+            isHiding[region] = false;
+            isShown[region] = false;
+            isHidden[region] = true;
+            isFrozen[region] = false;
+          }
 
-        if (images[region].complete) {
-          clickedRegion(null, region, false, note.duration);
-        }
+          if (images[region].complete) {
+            clickedRegion(null, region, false, note.duration);
+          }
+        });
+
+        // Set a timer to stop all tones after exact note duration
+        if (melodyToneTimer) clearTimeout(melodyToneTimer);
+        melodyToneTimer = setTimeout(() => {
+          regions.forEach(region => {
+            stopTone(region);
+          });
+        }, note.duration + 200); // Add small buffer for fade out
 
         melodyIndex = (melodyIndex + 1) % SONG.length;
         melodyTimeout = setTimeout(playMelody, note.delay);
@@ -2175,17 +2233,22 @@
 
       function toggleMelody(e) {
         isMelodyPlaying = !isMelodyPlaying;
+        isMelodyMode = isMelodyPlaying;
         const link = document.getElementById("melody-link");
-        link.style.background = isMelodyPlaying ? "#1eff00" : "#ffffff";
+        link.style.background = isMelodyPlaying ? "#ffff00" : "#ffffff";
 
         if (isMelodyPlaying) {
-          //if (isAutoPlaying) toggleAutoPlay(null, true);
+          if (!audioEnabled) toggleSound(null);
+          if (isAutoPlaying) autoplayToggle(null);
           melodyIndex = 0;
           playMelody();
         } else {
+          isMelodyMode = false;
           clearTimeout(melodyTimeout);
+          if (melodyToneTimer) clearTimeout(melodyToneTimer);
           for (let i = 0; i < 14; i++) {
             baseFrequencies[i] = defaultFrequencies[i];
+            stopTone(i); // Stop any lingering tones
           }
         }
       }
@@ -2199,7 +2262,7 @@
         }
 
         const randomLink = document.getElementById("random-link");
-        if (randomLink) randomLink.style.background = randomOrigins ? "#1eff00" : "#ffffff";
+        if (randomLink) randomLink.style.background = randomOrigins ? "#ffff00" : "#ffffff";
 
         // optionally reset regions when origin behavior changes
         // resetRegions(e);
@@ -2223,7 +2286,7 @@
         isFullLabels = !isFullLabels;
         initButtonLabels();
         const link = document.getElementById("menu-toggle-link");
-        link.style.background = isFullLabels ? "#1eff00" : "#ffffff";
+        link.style.background = isFullLabels ? "#ffff00" : "#ffffff";
 
         const word1Link = document.getElementById("word1-inner-menu-text");
         word1Link.style.display = isFullLabels ? "none" : "block"; 
@@ -2245,7 +2308,7 @@
         helpPopup.style.transform = "translate(-50%, -50%)";
         helpPopup.style.display = "block";
         helpIsVisible = true;
-        helpLink.style.background = "#1eff00";
+        helpLink.style.background = "#ffff00";
 
         // measure after paint — if content is taller than the viewport,
         // pin the dialog near the top and allow internal scrolling (max-height handles the scrollbar)
@@ -2361,6 +2424,11 @@
             showToast(randomOrigins ? 'Origins: RANDOM' : 'Origins: HOME');
             e.preventDefault();
             break;
+          case 'k':
+            toggleColour(null);
+            showToast(isColourEnabled ? 'Colour: RANDOM' : 'Colour: ORIGINAL');
+            e.preventDefault();
+            break;
           case 'x':
             toggleStopAll(null, true);
             showToast('Animations frozen');
@@ -2389,6 +2457,11 @@
           case 'g':
             clickedRegion(null, 13, false);
             showToast(isHiding[13] ? 'REGIONS IS HIDING' : 'REGIONS ARE SHOWING');
+            e.preventDefault();
+            break;
+          case 'm':
+            toggleMelody(null);
+            showToast(isMelodyPlaying ? 'Melody: PLAYING' : 'Melody: STOPPED');
             e.preventDefault();
             break;
           default:
