@@ -65,7 +65,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LOCATION AND SIGNS</title>
+    <title>SIGNS AND LOCATIONS</title>
     <style>
       body {
         margin: 0;
@@ -202,7 +202,7 @@
       "
     >
       <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
-   <div   id="word1-inner-menu-text"    class="inter-button-text">        SIGNS   </div>
+ 
         
          <a
           id="menu-toggle-link"
@@ -393,8 +393,10 @@
           >REGIONS [G]</a
         >
 
+          <div   id="word1-inner-menu-text"    class="inter-button-text">        SIGNS   </div>
       <div     id="word2-inner-menu-text"    class="inter-button-text"> AND  
          </div>
+         <div     id="word3-inner-menu-text"    class="inter-button-text">        LOCATIONS   </div>
          <a
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
@@ -550,7 +552,7 @@
           "
           >BRAHMIC [=]</a
         >
-<div     id="word3-inner-menu-text"    class="inter-button-text">        LOCATIONS   </div>
+
       </div>
 
      
@@ -1157,18 +1159,24 @@
         new Image(),
       ];
 
-      images[0].src = "img/ara_full.png";
-      images[1].src = "img/arm_full.png";
-      images[2].src = "img/cin_full.png";
-      images[3].src = "img/eti_full.png";
-      images[4].src = "img/geo_full.png";
-      images[5].src = "img/gre_full.png";
-      images[6].src = "img/heb_full.png";
-      images[7].src = "img/jap_full.png";
-      images[8].src = "img/kor_full.png";
-      images[9].src = "img/lat_full.png";
-      images[10].src = "img/rus_full.png";
-      images[11].src = "img/san_full.png";
+      const imageFilenames = [
+        "ara_full.png",
+        "arm_full.png",
+        "cin_full.png",
+        "eti_full.png",
+        "geo_full.png",
+        "gre_full.png",
+        "heb_full.png",
+        "jap_full.png",
+        "kor_full.png",
+        "lat_full.png",
+        "rus_full.png",
+        "san_full.png",
+      ];
+
+      imageFilenames.forEach((name, i) => {
+        images[i].src = "img/" + name;
+      });
       images[12].src = "img/hranice.gif";
       images[13].src = "img/farby.png";
 
@@ -1897,10 +1905,6 @@
             Math.PI * 2,
           );
           ctx[region].clip();
-          // Change color scheme of the script images
-          if (region < 12 && isColourEnabled) {
-            ctx[region].filter = `hue-rotate(${regionHues[region]}deg) saturate(0.6) brightness(1.3)`;
-          }
           const dim = getCoverDimensions(canvas[region].width, canvas[region].height, images[region].width, images[region].height);
           ctx[region].drawImage(
             images[region],
@@ -2003,6 +2007,11 @@
         isColourEnabled = !isColourEnabled;
         const link = document.getElementById("colour-link");
         link.style.background = isColourEnabled ? "#ffff00" : "#ffffff";
+
+        const folder = isColourEnabled ? "img_blue" : "img";
+        for (let i = 0; i < 12; i++) {
+          images[i].src = folder + "/" + imageFilenames[i];
+        }
       }
 
       let helpIsVisible = false;
