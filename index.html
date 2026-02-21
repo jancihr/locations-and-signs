@@ -209,15 +209,15 @@
           class="my-button"
           href="#"
           style="background: #ffffff"
-          title="SHOW/HIDE MENU (Shortcut: +)"
+          title="SHOW/HIDE MENU (Shortcut: M)"
           onclick="
             toggleMenu(event);
             return false;
           "
-          >MENU [+]</a
+          >MENU [M]</a
         >
       </div>
-      <div id="controls-container" style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center">
+      <div id="controls-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center">
         
 
          <a
@@ -323,7 +323,7 @@
             toggleMelody(event);
             return false;
           "
-          >MELODY [M]</a
+          >MELODY [L]</a
         >
 
         <a
@@ -341,7 +341,7 @@
         <a
           id="colour-link"
           class="my-button"
-          style="background: #ffffff"
+          style="background: #ffff00"
           href="#"
           title="TOGGLE RANDOM COLOURS (Shortcut: K)"
           onclick="
@@ -350,9 +350,7 @@
           "
           >COLOUR [K]</a
         >
-      </div>
-
-       <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
+     
         <a
           id="help-link"
           class="my-button"
@@ -363,12 +361,9 @@
             toggleHelp(event);
             return false;
           "
-          >INFO [?]</a
+          >INFO [H]</a
         >
-      </div>
-
-      <div id="regions-container" style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center">
-        <a
+         <a
           id="borders-link"
           class="my-button"
           style="background: #ffffff; flex-grow: 0; flex: 0 0 auto;"
@@ -393,10 +388,10 @@
           >REGIONS [G]</a
         >
 
-          <div   id="word1-inner-menu-text"    class="inter-button-text">        SIGNS   </div>
-      <div     id="word2-inner-menu-text"    class="inter-button-text"> AND  
-         </div>
-         <div     id="word3-inner-menu-text"    class="inter-button-text">        LOCATIONS   </div>
+ </div>
+
+      <div id="regions-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center">
+    
          <a
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
@@ -537,7 +532,7 @@
         clickedRegion(event, 10, false);
         return false;
           "
-          >CYRILLIC [-]</a
+          >CYRILLIC [O]</a
         >
 
         <a
@@ -550,7 +545,7 @@
         clickedRegion(event, 11, false);
         return false;
           "
-          >BRAHMIC [=]</a
+          >BRAHMIC [P]</a
         >
 
       </div>
@@ -1033,16 +1028,18 @@
 
       <h3>Keyboard Shortcuts</h3>
       <ul style="padding-left: 20px">
-          <li><strong>+:</strong> Toggle FULL/MINIMAL CONTROL (menu)</li>
+          <li><strong>M:</strong> Toggle FULL/MINIMAL CONTROL (menu)</li>
         <li><strong>A:</strong> Toggle AUTORUN</li>
         <li><strong>S:</strong> Toggle SOUND</li>
        
         <li><strong>X:</strong> STOP/resume all animations</li>
         <li><strong>C:</strong> CLEAR (reset regions)</li>
         <li><strong>F:</strong> Toggle FAST mode</li>
+        <li><strong>L:</strong> Play Melody</li>
+        
       <li><strong>R:</strong> Toggle RANDOM origins</li>
       <li><strong>K:</strong> Toggle COLOURS</li>
-         <li><strong>?:</strong> Toggle INFO</li>
+         <li><strong>H:</strong> Toggle INFO</li>
         <li><strong>B:</strong> Toggle BORDERS</li>
         <li><strong>G:</strong> Toggle REGIONS (colours)</li>
         
@@ -1058,8 +1055,8 @@
             <li>8: JAPANESE</li>
             <li>9: KOREAN</li>
             <li>0: LATIN</li>
-            <li>-: RUSSIAN</li>
-            <li>=: BRAHMIC/SANSKRIT</li>
+            <li>O: RUSSIAN</li>
+            <li>P: BRAHMIC/SANSKRIT</li>
           </ul>
         </li>
       </ul>
@@ -1172,13 +1169,14 @@
         "lat_full.png",
         "rus_full.png",
         "san_full.png",
+        "borders.gif",
+        "origins.png",
       ];
 
       imageFilenames.forEach((name, i) => {
         images[i].src = "img/" + name;
       });
-      images[12].src = "img/hranice.gif";
-      images[13].src = "img/farby.png";
+     
 
       // Set styles for images (z-index layering)
       images.forEach((image, index) => {
@@ -1335,8 +1333,7 @@
       }
 
       let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      let regionHues = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
+    
       // --- Ripple Effect on Click ---
       const rippleCanvas = document.getElementById("ripple-canvas");
       const rippleCtx = rippleCanvas.getContext("2d");
@@ -1344,6 +1341,7 @@
       rippleCanvas.height = window.innerHeight;
       let ripples = [];
       let ripplesEnabled = true;
+      let isMenuVisible = false;
 
       function toggleRipple(e) {
         ripplesEnabled = !ripplesEnabled;
@@ -1357,7 +1355,7 @@
           x,
           y,
           radius: options.startRadius !== undefined ? options.startRadius : 5,
-          speed: options.speed || 0.83,
+          speed: 15 || 0.83,
           growing: options.growing !== undefined ? options.growing : true,
           opacity: 1,
           decay: 0.01,
@@ -1506,9 +1504,21 @@
         if (isAutoPlaying && stopAutorunAlso) {
           autoplayToggle(e);
         } else {
-          for (let i = 0; i < isFrozen.length; i++) {
-            isFrozen[i] = true;
-            stopTone(i);
+          let anyMoving = false;
+          for (let i = 0; i < 12; i++) {
+            if ((isRevealing[i] || isHiding[i]) && !isFrozen[i]) {
+              anyMoving = true;
+              break;
+            }
+          }
+
+          if (!anyMoving) {
+            startFrozenVisibleRegions(e, false);
+          } else {
+            for (let i = 0; i < 12; i++) {
+              isFrozen[i] = true;
+              stopTone(i);
+            }
           }
         }
       }
@@ -1524,29 +1534,10 @@
         }
       }
 
-      /* function toggleAutoPlay(e, resetAutoplay) {
-        if (resetAutoplay) {
-          isAutoPlaying = false;
-        } else {
-          if (!isAutoPlaying && isMelodyPlaying) {
-            toggleMelody(null);
-          }
-          isAutoPlaying = !isAutoPlaying;
-        }
-
-        const link = document.getElementById("autoplay-link");
-        link.style.background = isAutoPlaying ? "#ff3333" : "#ffffff";
-        if (isAutoPlaying) {
-          autoPlay();
-        } else {
-          clearTimeout(autoPlayTimeout);
-        }
-
-
-      }*/
+     
 
       function growAllRegions(e) {
-        //toggleAutoPlay(e, true);
+      
         if (isMelodyPlaying) {
           toggleMelody(e);
         }
@@ -1559,7 +1550,6 @@
             isHidden[index] = false;
             isShown[index] = false;
             isRevealing[index] = true;
-            regionHues[index] = Math.floor(Math.random() * 360);
             isHiding[index] = false;
 
             maxRadius[index] = Math.sqrt(
@@ -1578,7 +1568,7 @@
       }
 
       function shrinkAllRegions(e) {
-        //toggleAutoPlay(e, true);
+      
         if (isMelodyPlaying) {
           toggleMelody(e);
         }
@@ -1600,24 +1590,18 @@
 
       // Resets all regions to hidden state
       function resetRegions(e) {
-        //toggleAutoPlay(e, true);
+       
         if (isMelodyPlaying) {
           toggleMelody(e);
         }
-        //    randomOrigins = false;
-
-        //  const allLink = document.getElementById("all-link");
-        //  const randomLink = document.getElementById("random-link");
-        //  allLink.style.background = randomOrigins ? "#ffffff" : "#1eff00";
-        //  randomLink.style.background = randomOrigins ? "#1eff00" : "#ffffff";
-
+      
         if (!randomOrigins) {
           calculateStarts();
         }
         for (let index = 0; index < 12; index++) {
           isFrozen[index] = false;
         }
-
+        
         for (let index = 0; index < 12; index++) {
           if (!isHidden[index]) {
             isHiding[index] = true;
@@ -1627,6 +1611,59 @@
             isFrozen[index] = false;
             paint(index, 100);
           }
+        }
+        
+      }
+
+
+    
+      function startFrozenVisibleRegions(e, includingBordersAndColours) {
+
+        if (isMelodyPlaying) {
+          toggleMelody(e);
+        }
+  let indexEnd = includingBordersAndColours ? 14 : 12;
+        
+        for (let index = 0; index < indexEnd; index++) {
+
+          let speed = 100;
+       
+          if (index > 11) {
+            speed = 10;
+          } else {
+            speed = 1000;
+          }
+        
+        // Apply slow mode multiplier (10x slower) - but NOT during melody playback
+        if (fastMode && !isMelodyMode) {
+          speed *= 10;
+        }
+
+        if (includingBordersAndColours && (index == 12 || index == 13)) {
+            isFrozen[index] = false;
+            isHidden[index] = false;
+            isShown[index] = false;
+            isRevealing[index] = false;
+            isHiding[index] = true;
+            paint(index, speed);
+          }
+          else if (isFrozen[index]) {
+            isFrozen[index] = false;
+            paint(index, speed);
+          } else if (isShown[index]) {
+          isShown[index] = false;
+              isHiding[index] = true;
+            
+            isFrozen[index] = false;
+            paint(index, speed);
+          } 
+          else if (isHidden[index]) {
+          isHidden[index] = false;
+              isRevealing[index] = true;
+            
+            isFrozen[index] = false;
+            paint(index, speed);
+          } 
         }
         
       }
@@ -1645,7 +1682,6 @@
             isHidden[index] = false;
             isShown[index] = false;
             isRevealing[index] = true;
-            regionHues[index] = Math.floor(Math.random() * 360);
             isHiding[index] = false;
 
             canvas[index].width / images[index].width;
@@ -1781,8 +1817,7 @@
         if (isHidden[index]) {
           isHidden[index] = false;
           isRevealing[index] = true;
-          regionHues[index] = Math.floor(Math.random() * 360);
-        } else if (isShown[index]) {
+         } else if (isShown[index]) {
           isShown[index] = false;
           isHiding[index] = true;
         } else if (isRevealing[index]) {
@@ -1870,7 +1905,6 @@
           isHidden[index] = false;
           isShown[index] = false;
           revealRadius[index] = 0;
-          regionHues[index] = Math.floor(Math.random() * 360);
           createRipple(clickX[index], clickY[index], {
             startRadius: 0,
             speed: maxRadius[index] / 90,
@@ -2000,18 +2034,22 @@
       let isAutoPlaying = false;
       let randomOrigins = false;
       let fastMode = true;
-      let isColourEnabled = false;
+      let isColourEnabled = true;
 
       function toggleColour(e) {
         if (e) e.preventDefault();
+       
         isColourEnabled = !isColourEnabled;
         const link = document.getElementById("colour-link");
-        link.style.background = isColourEnabled ? "#ffff00" : "#ffffff";
+        link.style.background = isColourEnabled ? "#ffff00":"#ffffff";
 
-        const folder = isColourEnabled ? "img_blue" : "img";
-        for (let i = 0; i < 12; i++) {
+        const folder = isColourEnabled ? "img" : "img_blue";
+        for (let i = 0; i < 14; i++) {
           images[i].src = folder + "/" + imageFilenames[i];
         }
+        
+         startFrozenVisibleRegions(e, true);
+        
       }
 
       let helpIsVisible = false;
@@ -2277,32 +2315,21 @@
         // resetRegions(e);
       }
 
-      let isFullLabels = false;
-
-      function initButtonLabels() {
-        const buttons = document.querySelectorAll('.my-button, .region-button');
-        buttons.forEach(btn => {
-           if (!btn.dataset.fullText) {
-             btn.dataset.fullText = btn.innerText;
-             const match = btn.innerText.match(/\[(.+)\]/);
-             btn.dataset.shortcut = match ? match[1] : btn.innerText;
-           }
-           btn.innerText = isFullLabels ? btn.dataset.fullText : btn.dataset.shortcut;
-        });
-      }
+     
 
       function toggleMenu(e) {
-        isFullLabels = !isFullLabels;
-        initButtonLabels();
-        const link = document.getElementById("menu-toggle-link");
-        link.style.background = isFullLabels ? "#ffff00" : "#ffffff";
+        if (e) e.preventDefault();
 
-        const word1Link = document.getElementById("word1-inner-menu-text");
-        word1Link.style.display = isFullLabels ? "none" : "block"; 
-        const word2Link = document.getElementById("word2-inner-menu-text");
-        word2Link.style.display = isFullLabels ? "none" : "block"; 
-        const word3Link = document.getElementById("word3-inner-menu-text");
-        word3Link.style.display = isFullLabels ? "none" : "block"; 
+        isMenuVisible = !isMenuVisible;
+        const link = document.getElementById("menu-toggle-link");
+        link.style.background = isMenuVisible ? "#ffff00" : "#ffffff";
+
+        const controlsContainer = document.getElementById("controls-container");
+        controlsContainer.style.display = isMenuVisible ? "flex" : "none";
+
+        const regionsContainer = document.getElementById("regions-container");
+        regionsContainer.style.display = isMenuVisible ? "flex" : "none";
+         
 
       }
 
@@ -2359,7 +2386,7 @@
       // Main mappings:
       // A: AUTORUN, S: SOUND, M: MORE CONTROLS, R: RANDOM, X: STOP all,
       // C: CLEAR, F: FAST, H: HELP, B: BORDERS, G: REGIONS
-      // 1..9,0,-,= : region buttons 0..11
+      // 1..9,0,o,p : region buttons 0..11
       const keyToRegion = {
         '1': 0,
         '2': 1,
@@ -2371,8 +2398,8 @@
         '8': 7,
         '9': 8,
         '0': 9,
-        '-': 10,
-        '=': 11,
+        'o': 10,
+        'p': 11,
       };
 
       // toast helper
@@ -2423,9 +2450,9 @@
             showToast(audioEnabled ? 'Sound: ON' : 'Sound: OFF');
             e.preventDefault();
             break;
-          case '+':
+          case 'm':
             toggleMenu(null);
-            showToast(isFullLabels ? 'Menu: FULL' : 'Menu: COMPACT');
+            showToast(isMenuVisible ? 'Menu shown' : 'Menu hidden ');
             e.preventDefault();
             break;
           case 'r':
@@ -2440,7 +2467,13 @@
             break;
           case 'x':
             toggleStopAll(null, true);
-            showToast('Animations frozen');
+            showToast('Animations on/off');
+            e.preventDefault();
+            break;
+
+            case ' ':
+            toggleStopAll(null, true);
+            showToast('Animations on/off');
             e.preventDefault();
             break;
           case 'c':
@@ -2450,10 +2483,10 @@
             break;
           case 'f':
             toggleFast(null);
-            showToast(fastMode ? 'FAST: ON' : 'FAST: OFF');
+            showToast(fastMode ? 'FAST: OFF' : 'FAST: ON');
             e.preventDefault();
             break;
-          case '?':
+          case 'h':
             toggleHelp(null);
             showToast(helpIsVisible ? 'Help: CLOSED' : 'Help: OPEN');
             e.preventDefault();
@@ -2468,7 +2501,7 @@
             showToast(isHiding[13] ? 'REGIONS IS HIDING' : 'REGIONS ARE SHOWING');
             e.preventDefault();
             break;
-          case 'm':
+          case 'l':
             toggleMelody(null);
             showToast(isMelodyPlaying ? 'Melody: PLAYING' : 'Melody: STOPPED');
             e.preventDefault();
@@ -2488,7 +2521,7 @@
       window.addEventListener("load", () => {
         //toggleSound(null);
        autoplayToggle(null);
-       initButtonLabels();
+     
         animateRipples();
         clickedRegion(null, 12, false);
         /*   clickedRegion(null, 0, false);
