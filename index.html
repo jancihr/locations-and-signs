@@ -250,12 +250,12 @@
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="STOP/RESUME ALL ANIMATIONS (Shortcut: X)"
+          title="PAUSE/RESUME ANIMATIONS (Shortcut: X)"
           onclick="
             toggleStopAll(event, true);
             return false;
           "
-          >STOP [X]</a        >
+          >PAUSE/RESUME [X]</a        >
          <a
           id="reset-link"
           class="my-button"
@@ -988,7 +988,7 @@
         </li>
       
         <li style="margin-bottom: 10px">
-          <strong>STOP:</strong> Freezes all running animations and audio.
+          <strong>PAUSE/RESUME:</strong> Pauses/resumes all running animations and audio.
         </li>
          <li style="margin-bottom: 10px">
           <strong>CLEAR:</strong> Resets the map to its empty state, clearing all animations and audio.
@@ -1032,7 +1032,7 @@
         <li><strong>A:</strong> Toggle AUTORUN</li>
         <li><strong>S:</strong> Toggle SOUND</li>
        
-        <li><strong>X:</strong> STOP/resume all animations</li>
+        <li><strong>X:</strong> PAUSE/RESUME all animations</li>
         <li><strong>C:</strong> CLEAR (reset regions)</li>
         <li><strong>F:</strong> Toggle FAST mode</li>
         <li><strong>L:</strong> Play Melody</li>
@@ -1432,7 +1432,7 @@
         if (!audioEnabled || !audioCtx) return;
 
         let frequency;
-        if (isMelodyMode) {
+        if (isMelodyPlaying) {
           // In melody mode, keep pitch constant for correct note playback
           frequency = baseFrequencies[region];
         } else {
@@ -1635,7 +1635,7 @@
           }
         
         // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-        if (fastMode && !isMelodyMode) {
+        if (fastMode && !isMelodyPlaying) {
           speed *= 10;
         }
 
@@ -1766,7 +1766,7 @@
           }
         }
         // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-        if (fastMode && !isMelodyMode) {
+        if (fastMode && !isMelodyPlaying) {
           speed *= 10;
         }
         if (e) e.stopPropagation();
@@ -2101,8 +2101,8 @@
       }
 
       // Pauses all currently animating regions
-      function autoplayToggle(e) {
-        if (isMelodyPlaying) {
+      function autoplayToggle(e, stopFromMelody = false) {
+        if (isMelodyPlaying && !stopFromMelody) {
           toggleMelody(null);
         }
         clearTimeout(autoPlayTimeout);
@@ -2150,7 +2150,6 @@
       }
 
       let isMelodyPlaying = false;
-      let isMelodyMode = false;
       let melodyTimeout;
       let melodyIndex = 0;
       let melodyToneTimer = null; // Timer for exact note duration
@@ -2279,18 +2278,18 @@
       }
 
       function toggleMelody(e) {
+
+         if (e) e.preventDefault();
         isMelodyPlaying = !isMelodyPlaying;
-        isMelodyMode = isMelodyPlaying;
         const link = document.getElementById("melody-link");
         link.style.background = isMelodyPlaying ? "#ffff00" : "#ffffff";
 
         if (isMelodyPlaying) {
           if (!audioEnabled) toggleSound(null);
-          if (isAutoPlaying) autoplayToggle(null);
+          if (isAutoPlaying) autoplayToggle(null, stopFromMelody = true);
           melodyIndex = 0;
           playMelody();
         } else {
-          isMelodyMode = false;
           clearTimeout(melodyTimeout);
           if (melodyToneTimer) clearTimeout(melodyToneTimer);
           for (let i = 0; i < 14; i++) {
