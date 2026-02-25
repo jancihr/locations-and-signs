@@ -289,12 +289,12 @@
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="TOGGLE FAST MODE (10X FASTER) (Shortcut: F)"
+          title="TOGGLE SLOW ANIMATION MODE (10X SLOWER) (Shortcut: W)"
           onclick="
-            toggleFast(event);
+            toggleSlow(event);
             return false;
           "
-          >FAST [F]</a
+          >SLOW [W]</a
         >
 
         <a
@@ -336,7 +336,7 @@
           >BORDERS [B]</a
         >
         <a
-          id="colours-link"
+          id="regions-link"
           class="my-button"
           style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
@@ -995,7 +995,7 @@
         </li>
 
         <li style="margin-bottom: 10px">
-          <strong>FAST:</strong> Toggles fast mode (10x faster).
+          <strong>SLOW:</strong> Toggles slow mode (10x slower).
         </li>
 
         <li style="margin-bottom: 10px">
@@ -1042,7 +1042,7 @@
         <li><strong>A:</strong> Toggle AUTORUN</li>
         <li><strong>J:</strong> Play ODE FOR JOY.</li>
         <li><strong>S:</strong> Toggle SOUND</li>
-        <li><strong>F:</strong> Toggle FAST/SLOW mode</li>
+        <li><strong>W:</strong> Toggle SLOW/FAST mode</li>
         <li><strong>L:</strong> Toggle BLUE/COLORFULL</li>
         <li><strong>R:</strong> Toggle RANDOM/ORIGINAL origins</li>
 
@@ -1102,7 +1102,7 @@
         document.getElementById("rus-link"),
         document.getElementById("san-link"),
         document.getElementById("borders-link"),
-        document.getElementById("colours-link"),
+        document.getElementById("regions-link"),
       ];
 
       // DOM Elements: Canvas layers for each region
@@ -1224,11 +1224,11 @@
         "13 COLOURS",
       ];
       imageOriginalX = [
-        1404, 1343, 1728, 1315, 1316, 1164, 1263, 1994, 1912, 279, 1517, 1609,
+        1404, 1343, 1728, 1315, 1316, 1164, 1263, 1994, 1912, 1106, 1517, 1609,
         1160, 1160,
       ];
       imageOriginalY = [
-        596, 455, 490, 795, 438, 476, 547, 415, 422, 336, 272, 609, 737, 737,
+        596, 455, 490, 795, 438, 476, 547, 415, 422, 448, 272, 609, 737, 737,
       ];
 
       // Animation States: True if expanding
@@ -1531,9 +1531,10 @@
           }
 
           if (!anyMoving) {
-            startFrozenVisibleRegions(e, false);
+              startFrozenVisibleRegions(e, false);
           } else {
             for (let i = 0; i < 12; i++) {
+              
               isFrozen[i] = true;
               stopTone(i);
             }
@@ -1652,7 +1653,7 @@
           }
 
           // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-          if (fastMode && !isMelodyPlaying) {
+          if (slowMode && !isMelodyPlaying) {
             speed *= 10;
           }
 
@@ -1665,6 +1666,7 @@
             paint(index, speed);
           } else if (isFrozen[index]) {
             isFrozen[index] = false;
+            
             paint(index, speed);
           } else if (isShown[index]) {
             isShown[index] = false;
@@ -1780,7 +1782,7 @@
           }
         }
         // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-        if (fastMode && !isMelodyPlaying) {
+        if (slowMode && !isMelodyPlaying) {
           speed *= 10;
         }
         if (e) e.stopPropagation();
@@ -2086,7 +2088,7 @@
 
       let isAutoPlaying = false;
       let randomOrigins = false;
-      let fastMode = true;
+      let slowMode = false;
       let isColourEnabled = true;
 
       function toggleColour(e) {
@@ -2107,13 +2109,13 @@
       let helpIsVisible = false;
       let autoPlayTimeout;
 
-      function toggleFast(e) {
+      function toggleSlow(e) {
         clearTimeout(autoPlayTimeout);
 
         if (e) e.preventDefault();
-        fastMode = !fastMode;
+        slowMode = !slowMode;
         const link = document.getElementById("fast-link");
-        link.style.background = !fastMode ? "#ffff00" : "#ffffff";
+        link.style.background = slowMode ? "#ffff00" : "#ffffff";
 
         clearTimeout(autoPlayTimeout);
         if (!isAutoPlaying)
@@ -2194,7 +2196,7 @@
         });
         autoPlayTimeout = setTimeout(
           autoPlay,
-          (fastMode ? 2000 : 200) * (Math.floor(Math.random() * 6) + 1),
+          (!slowMode ? 200 : 2000) * (Math.floor(Math.random() * 6) + 1),
         );
       }
 
@@ -2535,9 +2537,9 @@
             showToast("Cleared");
             e.preventDefault();
             break;
-          case "f":
-            toggleFast(null);
-            showToast(fastMode ? "FAST: OFF" : "FAST: ON");
+          case "w":
+            toggleSlow(null);
+            showToast(slowMode ? "SLOW: ON" : "SLOW: OFF");
             e.preventDefault();
             break;
           case "i":
@@ -2582,6 +2584,7 @@
 
         // animateRipples(); // Removed: started on demand
         clickedRegion(null, 12, false);
+        clickedRegion(null, 13, false);
         /*   clickedRegion(null, 0, false);
         clickedRegion(null, 1, false);
         clickedRegion(null, 2, false);
