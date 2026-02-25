@@ -233,7 +233,7 @@
           align-content: center;
         "
       >
-       <a
+        <a
           id="help-link"
           class="my-button"
           style="background: #ffffff"
@@ -243,7 +243,7 @@
             toggleHelp(event);
             return false;
           "
-          >INFO [H]</a
+          >INFO [I]</a
         >
         <a
           id="autoplay-link"
@@ -258,7 +258,7 @@
           >AUTORUN [A]</a
         >
 
-          <a
+        <a
           id="melody-link"
           class="my-button"
           style="background: #ffffff"
@@ -268,7 +268,7 @@
             toggleMelody(event);
             return false;
           "
-          >MELODY [L]</a
+          >JOY [J]</a
         >
 
         <a
@@ -283,8 +283,7 @@
           "
           >SOUND [S]</a
         >
-       
-     
+
         <a
           id="fast-link"
           class="my-button"
@@ -298,7 +297,7 @@
           >FAST [F]</a
         >
 
-          <a
+        <a
           id="colour-link"
           class="my-button"
           style="background: #ffffff"
@@ -308,9 +307,8 @@
             toggleColour(event);
             return false;
           "
-          >BLUE [K]</a
+          >BLUE [L]</a
         >
-      
 
         <a
           id="random-link"
@@ -324,9 +322,7 @@
           "
           >RANDOM [R]</a
         >
-      
 
-       
         <a
           id="borders-link"
           class="my-button"
@@ -352,7 +348,7 @@
           >REGIONS [G]</a
         >
 
-           <a
+        <a
           id="reset-link"
           class="my-button"
           style="background: #ffffff"
@@ -365,7 +361,7 @@
           >CLEAR [C]</a
         >
 
-         <a
+        <a
           id="stop-all-link"
           class="my-button"
           style="background: #ffffff"
@@ -375,7 +371,7 @@
             toggleStopAll(event, true);
             return false;
           "
-          >PAUSE/RESUME [X]</a
+          >PAUSE/RESUME [SPACE]</a
         >
       </div>
 
@@ -977,76 +973,86 @@
         <li style="margin-bottom: 10px">
           <strong>MENU:</strong> Shows or hides more control buttons.
         </li>
+
+        <li style="margin-bottom: 10px">
+          <strong>INFO:</strong> Shows or hides this description.
+        </li>
+
         <li style="margin-bottom: 10px">
           <strong>AUTORUN:</strong> Toggles automatic playback, where regions
           are randomly activated. When animations are running, this button
           freezes/unfreezes them.
         </li>
+
+        <li style="margin-bottom: 10px">
+          <strong>JOY:</strong> Play Ode to Joy, No 9. by Beethoven. The pitch
+          changes as regions expand and contract.
+        </li>
+
         <li style="margin-bottom: 10px">
           <strong>SOUND:</strong> Toggles sound on/off. The pitch changes as a
           region expands or contracts.
         </li>
 
         <li style="margin-bottom: 10px">
-          <strong>PAUSE/RESUME:</strong> Pauses/resumes all running animations
-          and audio.
-        </li>
-        <li style="margin-bottom: 10px">
-          <strong>CLEAR:</strong> Resets the map to its empty state, clearing
-          all animations and audio.
+          <strong>FAST:</strong> Toggles fast mode (10x faster).
         </li>
 
         <li style="margin-bottom: 10px">
-          <strong>FAST:</strong> Toggles fast mode (10x faster).
+          <strong>BLUE:</strong> Toggle between BLUE and COLORFULL palettes for
+          scripts.
         </li>
+
         <li style="margin-bottom: 10px">
           <strong>RANDOM:</strong> Toggle between home origins (signs start in
           their original regions) and random origins (signs may start anywhere).
-        </li>
-        <li style="margin-bottom: 10px">
-          <strong>BLUE:</strong> Toggle between BLUE and COLOURFULL
-          palettes for scripts.
         </li>
 
         <li style="margin-bottom: 10px">
           <strong>BORDERS:</strong> Toggles a layer showing the boundaries of
           the script regions.
         </li>
+
         <li style="margin-bottom: 10px">
           <strong>REGIONS:</strong> Toggles a colored overlay for each script
           region.
         </li>
 
         <li style="margin-bottom: 10px">
-          <strong>Region Buttons:</strong> Starts or stops the animation for a
-          specific region. The origin is either on selected region or random
-          spot if RANDOM ORIGIN is selected
+          <strong>CLEAR:</strong> Resets the map to its empty state, clearing
+          all animations and audio.
         </li>
 
         <li style="margin-bottom: 10px">
-          <strong>INFO:</strong> Shows or hides this description.
+          <strong>PAUSE/RESUME:</strong> Pauses/resumes all running animations
+          and audio.
+        </li>
+
+        <li style="margin-bottom: 10px">
+          <strong>Region Buttons:</strong> Starts or stops the animation for a
+          specific region. The origin is either on a predefined point in the
+          region or at a random spot on the globe if RANDOM [R] is selected
         </li>
       </ul>
 
       <h3>Keyboard Shortcuts</h3>
       <ul style="padding-left: 20px">
-        <li><strong>M:</strong> Toggle FULL/MINIMAL CONTROL (menu)</li>
+        <li><strong>M:</strong> Toggle FULL/MINIMAL MENU</li>
+        <li><strong>I:</strong> Toggle INFO</li>
         <li><strong>A:</strong> Toggle AUTORUN</li>
+        <li><strong>J:</strong> Play ODE FOR JOY.</li>
         <li><strong>S:</strong> Toggle SOUND</li>
-
-        <li><strong>X:</strong> PAUSE/RESUME all animations</li>
-        <li><strong>C:</strong> CLEAR (reset regions)</li>
         <li><strong>F:</strong> Toggle FAST/SLOW mode</li>
-        <li><strong>L:</strong> Play Melody</li>
-
+        <li><strong>L:</strong> Toggle BLUE/COLORFULL</li>
         <li><strong>R:</strong> Toggle RANDOM/ORIGINAL origins</li>
-        <li><strong>K:</strong> Toggle BLUE/COLOURFULL</li>
-        <li><strong>H:</strong> Toggle INFO</li>
+
         <li><strong>B:</strong> Toggle BORDERS</li>
         <li><strong>G:</strong> Toggle REGIONS</li>
+        <li><strong>C:</strong> CLEAR (reset regions)</li>
+        <li><strong>SPACE:</strong> PAUSE/RESUME all animations</li>
 
         <li>
-          <strong>1..9,0,-,= :</strong> Start/stop regions
+          <strong>1..9,0,O,P :</strong> Start/stop regions
           <ul style="margin: 4px 0 0 12px; padding-left: 0">
             <li>1: ARABIC</li>
             <li>2: ARMENIAN</li>
@@ -1631,7 +1637,7 @@
       }
 
       function startFrozenVisibleRegions(e, includingBordersAndColours) {
-        if (isMelodyPlaying) {
+        if (isMelodyPlaying && !includingBordersAndColours) {
           toggleMelody(e);
         }
         let indexEnd = includingBordersAndColours ? 14 : 12;
@@ -2508,7 +2514,7 @@
             showToast(randomOrigins ? "Origins: RANDOM" : "Origins: HOME");
             e.preventDefault();
             break;
-          case "k":
+          case "l":
             toggleColour(null);
             showToast(isColourEnabled ? "Colour: RANDOM" : "Colour: ORIGINAL");
             e.preventDefault();
@@ -2534,9 +2540,9 @@
             showToast(fastMode ? "FAST: OFF" : "FAST: ON");
             e.preventDefault();
             break;
-          case "h":
+          case "i":
             toggleHelp(null);
-            showToast(helpIsVisible ? "Help: CLOSED" : "Help: OPEN");
+            showToast(helpIsVisible ? "Info: CLOSED" : "Info: OPEN");
             e.preventDefault();
             break;
           case "b":
@@ -2553,7 +2559,7 @@
             );
             e.preventDefault();
             break;
-          case "l":
+          case "j":
             toggleMelody(null);
             showToast(isMelodyPlaying ? "Melody: PLAYING" : "Melody: STOPPED");
             e.preventDefault();
