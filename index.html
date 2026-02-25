@@ -110,12 +110,12 @@
         border: #1b00b3 2px solid;
       }
 
-        .region-button:hover {
+      .region-button:hover {
         border-color: #1eff00;
       }
 
-        .inter-button-text {
-        overflow-wrap:normal;
+      .inter-button-text {
+        overflow-wrap: normal;
         flex-grow: 0;
         border-radius: 15px;
         padding: 3px 3px;
@@ -125,8 +125,6 @@
         font-family: Arial, Helvetica, sans-serif;
         color: #1b00b3;
       }
-
-    
 
       @keyframes blinker {
         50% {
@@ -149,7 +147,7 @@
         left: 50%;
         top: 24px;
         transform: translateX(-50%);
-        background: rgba(0,0,0,0.8);
+        background: rgba(0, 0, 0, 0.8);
         color: #fff;
         padding: 8px 12px;
         border-radius: 6px;
@@ -157,7 +155,9 @@
         font-size: 14px;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 180ms ease, transform 180ms ease;
+        transition:
+          opacity 180ms ease,
+          transform 180ms ease;
         z-index: 3000;
       }
       #toast.visible {
@@ -186,25 +186,31 @@
     </style>
   </head>
   <body>
-    <div id="menu-bar"
+    <div
+      id="menu-bar"
       style="
         position: absolute;
         bottom: 20px;
-        
+
         width: 100%;
 
         z-index: 1000;
-      
+
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
         justify-content: center;
       "
     >
-      <div style="display: flex; gap: 5px ; flex-wrap: wrap; justify-content: center">
- 
-        
-         <a
+      <div
+        style="
+          display: flex;
+          gap: 5px;
+          flex-wrap: wrap;
+          justify-content: center;
+        "
+      >
+        <a
           id="menu-toggle-link"
           class="my-button"
           href="#"
@@ -217,10 +223,17 @@
           >MENU [M]</a
         >
       </div>
-      <div id="controls-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center">
-        
-
-         <a
+      <div
+        id="controls-container"
+        style="
+          display: none;
+          gap: 5px;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-content: center;
+        "
+      >
+        <a
           id="autoplay-link"
           class="my-button"
           style="background: #ffffff"
@@ -245,7 +258,7 @@
           "
           >SOUND [S]</a
         >
-<a
+        <a
           id="stop-all-link"
           class="my-button"
           style="background: #ffffff"
@@ -255,8 +268,9 @@
             toggleStopAll(event, true);
             return false;
           "
-          >PAUSE/RESUME [X]</a        >
-         <a
+          >PAUSE/RESUME [X]</a
+        >
+        <a
           id="reset-link"
           class="my-button"
           style="background: #ffffff"
@@ -280,39 +294,7 @@
           "
           >FAST [F]</a
         >
-       
 
-      
-
-       
-      
-         <!--
-        <a
-          id="grow-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="GROW ALL REGIONS"
-          onclick="
-            growAllRegions(event);
-            return false;
-          "
-          >GROW</a
-        >
-        <a
-          id="shrink-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="SHRINK ALL REGIONS"
-          onclick="
-            shrinkAllRegions(event);
-            return false;
-          "
-          >SHRINK</a
-        >
--->
-  
         <a
           id="melody-link"
           class="my-button"
@@ -350,7 +332,7 @@
           "
           >COLOUR [K]</a
         >
-     
+
         <a
           id="help-link"
           class="my-button"
@@ -363,44 +345,51 @@
           "
           >INFO [H]</a
         >
-         <a
+        <a
           id="borders-link"
           class="my-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           title="SHOW/HIDE ALPHABET BORDERS (Shortcut: B)"
           onclick="
-        clickedRegion(event, 12, false);
-        return false;
+            clickedRegion(event, 12, false);
+            return false;
           "
           >BORDERS [B]</a
         >
         <a
           id="colours-link"
           class="my-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto;"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           title="SHOW/HIDE ALPHABET IN THEIR REGIONS (Shortcut: G)"
           onclick="
-        clickedRegion(event, 13, false);
-        return false;
+            clickedRegion(event, 13, false);
+            return false;
           "
           >REGIONS [G]</a
         >
+      </div>
 
- </div>
-
-      <div id="regions-container" style="display: none; gap: 5px ; flex-wrap: wrap; justify-content: center; align-content: center">
-    
-         <a
+      <div
+        id="regions-container"
+        style="
+          display: none;
+          gap: 5px;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-content: center;
+        "
+      >
+        <a
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 0, false);
-        return false;
+            clickedRegion(event, 0, false);
+            return false;
           "
           >ARABIC [1]</a
         >
@@ -408,12 +397,12 @@
         <a
           id="arm-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 2)"
           href="#"
           onclick="
-        clickedRegion(event, 1, false);
-        return false;
+            clickedRegion(event, 1, false);
+            return false;
           "
           >ARMENIAN [2]</a
         >
@@ -422,11 +411,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 3)"
           id="chi-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 2, false);
-        return false;
+            clickedRegion(event, 2, false);
+            return false;
           "
           >CHINESE [3]</a
         >
@@ -435,11 +424,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 4)"
           id="eth-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 3, false);
-        return false;
+            clickedRegion(event, 3, false);
+            return false;
           "
           >ETHIOPIAN [4]</a
         >
@@ -448,11 +437,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 5)"
           id="geo-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 4, false);
-        return false;
+            clickedRegion(event, 4, false);
+            return false;
           "
           >GEORGIAN [5]</a
         >
@@ -461,11 +450,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 6)"
           id="gre-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 5, false);
-        return false;
+            clickedRegion(event, 5, false);
+            return false;
           "
           >GREEK [6]</a
         >
@@ -474,11 +463,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 7)"
           id="heb-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 6, false);
-        return false;
+            clickedRegion(event, 6, false);
+            return false;
           "
           >HEBREW [7]</a
         >
@@ -487,11 +476,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 8)"
           id="jap-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 7, false);
-        return false;
+            clickedRegion(event, 7, false);
+            return false;
           "
           >JAPANESE [8]</a
         >
@@ -500,11 +489,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 9)"
           id="kor-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 8, false);
-        return false;
+            clickedRegion(event, 8, false);
+            return false;
           "
           >KOREAN [9]</a
         >
@@ -513,11 +502,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 0)"
           id="lat-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 9, false);
-        return false;
+            clickedRegion(event, 9, false);
+            return false;
           "
           >LATIN [0]</a
         >
@@ -526,11 +515,11 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: -)"
           id="rus-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 10, false);
-        return false;
+            clickedRegion(event, 10, false);
+            return false;
           "
           >CYRILLIC [O]</a
         >
@@ -539,21 +528,26 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: =)"
           id="san-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto; "
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
-        clickedRegion(event, 11, false);
-        return false;
+            clickedRegion(event, 11, false);
+            return false;
           "
           >BRAHMIC [P]</a
         >
-
       </div>
-
-     
     </div>
-    <a id="gear-toggle" href="#" title="SHOW MENU"
-       onclick="toggleCompactView(event); return false;">⚙</a>
+    <a
+      id="gear-toggle"
+      href="#"
+      title="SHOW MENU"
+      onclick="
+        toggleCompactView(event);
+        return false;
+      "
+      >⚙</a
+    >
     <svg
       viewBox="0 0 2320 1474"
       width="100%"
@@ -972,9 +966,7 @@
       </ul>
       <h3>Menu Buttons</h3>
       <ul style="padding-left: 20px">
-      
-
-            <li style="margin-bottom: 10px">
+        <li style="margin-bottom: 10px">
           <strong>MENU:</strong> Shows or hides more control buttons.
         </li>
         <li style="margin-bottom: 10px">
@@ -986,23 +978,26 @@
           <strong>SOUND:</strong> Toggles sound on/off. The pitch changes as a
           region expands or contracts.
         </li>
-      
+
         <li style="margin-bottom: 10px">
-          <strong>PAUSE/RESUME:</strong> Pauses/resumes all running animations and audio.
+          <strong>PAUSE/RESUME:</strong> Pauses/resumes all running animations
+          and audio.
         </li>
-         <li style="margin-bottom: 10px">
-          <strong>CLEAR:</strong> Resets the map to its empty state, clearing all animations and audio.
+        <li style="margin-bottom: 10px">
+          <strong>CLEAR:</strong> Resets the map to its empty state, clearing
+          all animations and audio.
         </li>
 
         <li style="margin-bottom: 10px">
           <strong>FAST:</strong> Toggles fast mode (10x faster).
         </li>
-         <li style="margin-bottom: 10px">
+        <li style="margin-bottom: 10px">
           <strong>RANDOM:</strong> Toggle between home origins (signs start in
           their original regions) and random origins (signs may start anywhere).
         </li>
         <li style="margin-bottom: 10px">
-          <strong>COLOUR:</strong> Toggle between original and random pastel colors for scripts.
+          <strong>COLOUR:</strong> Toggle between original and random pastel
+          colors for scripts.
         </li>
 
         <li style="margin-bottom: 10px">
@@ -1013,12 +1008,11 @@
           <strong>REGIONS:</strong> Toggles a colored overlay for each script
           region.
         </li>
-       
 
         <li style="margin-bottom: 10px">
-          <strong>Region Buttons:</strong> Starts or stops the
-          animation for a specific region. The origin is either on selected
-          region or random spot if RANDOM ORIGIN is selected
+          <strong>Region Buttons:</strong> Starts or stops the animation for a
+          specific region. The origin is either on selected region or random
+          spot if RANDOM ORIGIN is selected
         </li>
 
         <li style="margin-bottom: 10px">
@@ -1028,23 +1022,24 @@
 
       <h3>Keyboard Shortcuts</h3>
       <ul style="padding-left: 20px">
-          <li><strong>M:</strong> Toggle FULL/MINIMAL CONTROL (menu)</li>
+        <li><strong>M:</strong> Toggle FULL/MINIMAL CONTROL (menu)</li>
         <li><strong>A:</strong> Toggle AUTORUN</li>
         <li><strong>S:</strong> Toggle SOUND</li>
-       
+
         <li><strong>X:</strong> PAUSE/RESUME all animations</li>
         <li><strong>C:</strong> CLEAR (reset regions)</li>
         <li><strong>F:</strong> Toggle FAST mode</li>
         <li><strong>L:</strong> Play Melody</li>
-        
-      <li><strong>R:</strong> Toggle RANDOM origins</li>
-      <li><strong>K:</strong> Toggle COLOURS</li>
-         <li><strong>H:</strong> Toggle INFO</li>
+
+        <li><strong>R:</strong> Toggle RANDOM origins</li>
+        <li><strong>K:</strong> Toggle COLOURS</li>
+        <li><strong>H:</strong> Toggle INFO</li>
         <li><strong>B:</strong> Toggle BORDERS</li>
         <li><strong>G:</strong> Toggle REGIONS (colours)</li>
-        
-        <li><strong>1..9,0,-,= :</strong> Start/stop regions
-          <ul style="margin:4px 0 0 12px; padding-left:0">
+
+        <li>
+          <strong>1..9,0,-,= :</strong> Start/stop regions
+          <ul style="margin: 4px 0 0 12px; padding-left: 0">
             <li>1: ARABIC</li>
             <li>2: ARMENIAN</li>
             <li>3: CHINESE</li>
@@ -1060,7 +1055,7 @@
           </ul>
         </li>
       </ul>
-      </ul>
+
       <div style="text-align: center; margin-top: 20px">
         <a
           href="#"
@@ -1176,7 +1171,6 @@
       imageFilenames.forEach((name, i) => {
         images[i].src = "img/" + name;
       });
-     
 
       // Set styles for images (z-index layering)
       images.forEach((image, index) => {
@@ -1333,7 +1327,7 @@
       }
 
       let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    
+
       // --- Ripple Effect on Click ---
       const rippleCanvas = document.getElementById("ripple-canvas");
       const rippleCtx = rippleCanvas.getContext("2d");
@@ -1397,21 +1391,19 @@
       const regionOscillators = new Array(14).fill(null);
       const regionGains = new Array(14).fill(null);
 
-
       const baseFrequencies = [
         130.81, // 0: C3
         146.83, // 1: D3
         164.81, // 2: E3
         174.61, // 3: F3
-        196.00, // 4: G3
-        220.00, // 5: A3
+        196.0, // 4: G3
+        220.0, // 5: A3
         246.94, // 6: B3
         261.63, // 7: C4
         293.66, // 8: D4
         329.63, // 9: E4
         349.23, // 10: F4
-        392.00, // 11: G4
-        
+        392.0, // 11: G4
 
         659.25, // 12: E5 (Borders)
         65.41, // 13: C2 (Colours - lower bass)
@@ -1526,18 +1518,24 @@
       // Recalculates default starting coordinates based on current window size
       function calculateStarts() {
         for (let index = 0; index < clickX.length; index++) {
-          const dim = getCoverDimensions(canvas[index].width, canvas[index].height, images[index].width, images[index].height);
+          const dim = getCoverDimensions(
+            canvas[index].width,
+            canvas[index].height,
+            images[index].width,
+            images[index].height,
+          );
           if (images[index].width > 0) {
-            clickX[index] = Math.round(imageOriginalX[index] * (dim.w / images[index].width) + dim.x);
-            clickY[index] = Math.round(imageOriginalY[index] * (dim.h / images[index].height) + dim.y);
+            clickX[index] = Math.round(
+              imageOriginalX[index] * (dim.w / images[index].width) + dim.x,
+            );
+            clickY[index] = Math.round(
+              imageOriginalY[index] * (dim.h / images[index].height) + dim.y,
+            );
           }
         }
       }
 
-     
-
       function growAllRegions(e) {
-      
         if (isMelodyPlaying) {
           toggleMelody(e);
         }
@@ -1568,7 +1566,6 @@
       }
 
       function shrinkAllRegions(e) {
-      
         if (isMelodyPlaying) {
           toggleMelody(e);
         }
@@ -1590,18 +1587,17 @@
 
       // Resets all regions to hidden state
       function resetRegions(e) {
-       
         if (isMelodyPlaying) {
           toggleMelody(e);
         }
-      
+
         if (!randomOrigins) {
           calculateStarts();
         }
         for (let index = 0; index < 12; index++) {
           isFrozen[index] = false;
         }
-        
+
         for (let index = 0; index < 12; index++) {
           if (!isHidden[index]) {
             isHiding[index] = true;
@@ -1612,60 +1608,52 @@
             paint(index, 100);
           }
         }
-        
       }
 
-
-    
       function startFrozenVisibleRegions(e, includingBordersAndColours) {
-
         if (isMelodyPlaying) {
           toggleMelody(e);
         }
-  let indexEnd = includingBordersAndColours ? 14 : 12;
-        
-        for (let index = 0; index < indexEnd; index++) {
+        let indexEnd = includingBordersAndColours ? 14 : 12;
 
+        for (let index = 0; index < indexEnd; index++) {
           let speed = 100;
-       
+
           if (index > 11) {
             speed = 10;
           } else {
             speed = 1000;
           }
-        
-        // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-        if (fastMode && !isMelodyPlaying) {
-          speed *= 10;
-        }
 
-        if (includingBordersAndColours && (index == 12 || index == 13)) {
+          // Apply slow mode multiplier (10x slower) - but NOT during melody playback
+          if (fastMode && !isMelodyPlaying) {
+            speed *= 10;
+          }
+
+          if (includingBordersAndColours && (index == 12 || index == 13)) {
             isFrozen[index] = false;
             isHidden[index] = false;
             isShown[index] = false;
             isRevealing[index] = false;
             isHiding[index] = true;
             paint(index, speed);
-          }
-          else if (isFrozen[index]) {
+          } else if (isFrozen[index]) {
             isFrozen[index] = false;
             paint(index, speed);
           } else if (isShown[index]) {
-          isShown[index] = false;
-              isHiding[index] = true;
-            
+            isShown[index] = false;
+            isHiding[index] = true;
+
             isFrozen[index] = false;
             paint(index, speed);
-          } 
-          else if (isHidden[index]) {
-          isHidden[index] = false;
-              isRevealing[index] = true;
-            
+          } else if (isHidden[index]) {
+            isHidden[index] = false;
+            isRevealing[index] = true;
+
             isFrozen[index] = false;
             paint(index, speed);
-          } 
+          }
         }
-        
       }
 
       // Toggles visibility of regions, optionally with random centers
@@ -1782,10 +1770,20 @@
               clickX[index] = Math.round(Math.random() * canvas[index].width);
               clickY[index] = Math.round(Math.random() * canvas[index].height);
             } else {
-              const dim = getCoverDimensions(canvas[index].width, canvas[index].height, images[index].width, images[index].height);
+              const dim = getCoverDimensions(
+                canvas[index].width,
+                canvas[index].height,
+                images[index].width,
+                images[index].height,
+              );
               if (images[index].width > 0) {
-                clickX[index] = Math.round(imageOriginalX[index] * (dim.w / images[index].width) + dim.x);
-                clickY[index] = Math.round(imageOriginalY[index] * (dim.h / images[index].height) + dim.y);
+                clickX[index] = Math.round(
+                  imageOriginalX[index] * (dim.w / images[index].width) + dim.x,
+                );
+                clickY[index] = Math.round(
+                  imageOriginalY[index] * (dim.h / images[index].height) +
+                    dim.y,
+                );
               }
             }
           }
@@ -1817,7 +1815,7 @@
         if (isHidden[index]) {
           isHidden[index] = false;
           isRevealing[index] = true;
-         } else if (isShown[index]) {
+        } else if (isShown[index]) {
           isShown[index] = false;
           isHiding[index] = true;
         } else if (isRevealing[index]) {
@@ -1826,9 +1824,9 @@
             isRevealing[index] = false;
           }
           //if (isFrozen[index]) {
-            isFrozen[index] = !isFrozen[index];
+          isFrozen[index] = !isFrozen[index];
           //}
-          
+
           if (isFrozen[index]) stopTone(index);
         } else if (isHiding[index]) {
           if (!isFrozen[index]) {
@@ -1939,14 +1937,13 @@
             Math.PI * 2,
           );
           ctx[region].clip();
-          const dim = getCoverDimensions(canvas[region].width, canvas[region].height, images[region].width, images[region].height);
-          ctx[region].drawImage(
-            images[region],
-            dim.x,
-            dim.y,
-            dim.w,
-            dim.h,
+          const dim = getCoverDimensions(
+            canvas[region].width,
+            canvas[region].height,
+            images[region].width,
+            images[region].height,
           );
+          ctx[region].drawImage(images[region], dim.x, dim.y, dim.w, dim.h);
           ctx[region].restore();
 
           if (isRevealing[region])
@@ -2038,18 +2035,17 @@
 
       function toggleColour(e) {
         if (e) e.preventDefault();
-       
+
         isColourEnabled = !isColourEnabled;
         const link = document.getElementById("colour-link");
-        link.style.background = isColourEnabled ? "#ffff00":"#ffffff";
+        link.style.background = isColourEnabled ? "#ffff00" : "#ffffff";
 
         const folder = isColourEnabled ? "img" : "img_blue";
         for (let i = 0; i < 14; i++) {
           images[i].src = folder + "/" + imageFilenames[i];
         }
-        
-         startFrozenVisibleRegions(e, true);
-        
+
+        startFrozenVisibleRegions(e, true);
       }
 
       let helpIsVisible = false;
@@ -2057,14 +2053,14 @@
 
       function toggleFast(e) {
         clearTimeout(autoPlayTimeout);
-    
+
         if (e) e.preventDefault();
         fastMode = !fastMode;
         const link = document.getElementById("fast-link");
         link.style.background = !fastMode ? "#ffff00" : "#ffffff";
 
         clearTimeout(autoPlayTimeout);
-         if (!isAutoPlaying)
+        if (!isAutoPlaying)
           for (let index = 0; index < 12; index++) {
             if (isRevealing[index] || isHiding[index]) {
               if (!isFrozen[index]) {
@@ -2075,29 +2071,26 @@
             paint(index, 100);
           }
         else {
-           for (let index = 0; index < 12; index++) {
-          if (isHidden[index]) {
-            //isHidden[index] = false;
-            //isRevealing[index] = true;
-          } else if (isShown[index]) {
-            //isShown[index] = false;
-            //isHiding[index] = true;
-          } else {
-            isFrozen[index] = true;
+          for (let index = 0; index < 12; index++) {
+            if (isHidden[index]) {
+              //isHidden[index] = false;
+              //isRevealing[index] = true;
+            } else if (isShown[index]) {
+              //isShown[index] = false;
+              //isHiding[index] = true;
+            } else {
+              isFrozen[index] = true;
 
-            stopTone(index);
+              stopTone(index);
 
-            paint(index, 100);
+              paint(index, 100);
+            }
+
+            //paint(index, slowMode ? 200 : 2000);
+            //stopTone(index);
           }
-
-          //paint(index, slowMode ? 200 : 2000);
-          //stopTone(index);
-        }
           autoPlay();
         }
-        
-        
-        
       }
 
       // Pauses all currently animating regions
@@ -2128,10 +2121,10 @@
 
       function autoPlay() {
         if (!isAutoPlaying) return;
-        const numberOfRegions = Math.floor(Math.pow(Math.random(), 0.5) * 5) + 1;
+        const numberOfRegions =
+          Math.floor(Math.pow(Math.random(), 0.5) * 5) + 1;
 
-
-          //toggleStopAll(null, false);
+        //toggleStopAll(null, false);
 
         const indices = [];
         while (indices.length < numberOfRegions) {
@@ -2165,14 +2158,14 @@
         { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
         { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
         { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3 (G Major)
-        
+
         // Phrase 2
         { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3 (C Major)
         { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
         { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
         { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
         { regions: [9, 0, 4], duration: 600, delay: 600 }, // E4 + C3 + G3 (dotted)
-        { regions: [8, 4], duration: 200, delay: 200 },    // D4 + G3 (short)
+        { regions: [8, 4], duration: 200, delay: 200 }, // D4 + G3 (short)
         { regions: [8, 4, 6], duration: 800, delay: 800 }, // D4 + G3 + B3 (long)
 
         // Phrase 3 (Repeat of 1 with different ending)
@@ -2184,14 +2177,14 @@
         { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
         { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
         { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        
+
         // Phrase 4
         { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
         { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
         { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
         { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
         { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
-        { regions: [7, 0], duration: 200, delay: 200 },    // C4 + C3 (short)
+        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
         { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
 
         // Bridge
@@ -2222,13 +2215,13 @@
         { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
         { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
         { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        
+
         { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
         { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
         { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
         { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
         { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
-        { regions: [7, 0], duration: 200, delay: 200 },    // C4 + C3 (short)
+        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
         { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
       ];
 
@@ -2244,13 +2237,13 @@
         const regions = note.regions || (note.region ? [note.region] : []);
 
         if (note.frequency) {
-          regions.forEach(region => {
+          regions.forEach((region) => {
             baseFrequencies[region] = note.frequency;
           });
         }
 
         // Play all regions in parallel
-        regions.forEach(region => {
+        regions.forEach((region) => {
           if (isRevealing[region] || isHiding[region]) {
             stopTone(region);
             isRevealing[region] = false;
@@ -2268,7 +2261,7 @@
         // Set a timer to stop all tones after exact note duration
         if (melodyToneTimer) clearTimeout(melodyToneTimer);
         melodyToneTimer = setTimeout(() => {
-          regions.forEach(region => {
+          regions.forEach((region) => {
             stopTone(region);
           });
         }, note.duration + 200); // Add small buffer for fade out
@@ -2278,15 +2271,14 @@
       }
 
       function toggleMelody(e) {
-
-         if (e) e.preventDefault();
+        if (e) e.preventDefault();
         isMelodyPlaying = !isMelodyPlaying;
         const link = document.getElementById("melody-link");
         link.style.background = isMelodyPlaying ? "#ffff00" : "#ffffff";
 
         if (isMelodyPlaying) {
           if (!audioEnabled) toggleSound(null);
-          if (isAutoPlaying) autoplayToggle(null, stopFromMelody = true);
+          if (isAutoPlaying) autoplayToggle(null, (stopFromMelody = true));
           melodyIndex = 0;
           playMelody();
         } else {
@@ -2301,20 +2293,19 @@
 
       function toggleRandomOrigin(e, randomOriginsIn, onReset) {
         // If caller provided explicit boolean, use it; otherwise toggle state
-        if (typeof randomOriginsIn === 'boolean') {
+        if (typeof randomOriginsIn === "boolean") {
           randomOrigins = randomOriginsIn;
         } else {
           randomOrigins = !randomOrigins;
         }
 
         const randomLink = document.getElementById("random-link");
-        if (randomLink) randomLink.style.background = randomOrigins ? "#ffff00" : "#ffffff";
+        if (randomLink)
+          randomLink.style.background = randomOrigins ? "#ffff00" : "#ffffff";
 
         // optionally reset regions when origin behavior changes
         // resetRegions(e);
       }
-
-     
 
       function toggleMenu(e) {
         if (e) e.preventDefault();
@@ -2328,11 +2319,7 @@
 
         const regionsContainer = document.getElementById("regions-container");
         regionsContainer.style.display = isMenuVisible ? "flex" : "none";
-         
-
       }
-
-      
 
       function showHelp(e) {
         if (e) e.preventDefault();
@@ -2387,39 +2374,45 @@
       // C: CLEAR, F: FAST, H: HELP, B: BORDERS, G: REGIONS
       // 1..9,0,o,p : region buttons 0..11
       const keyToRegion = {
-        '1': 0,
-        '2': 1,
-        '3': 2,
-        '4': 3,
-        '5': 4,
-        '6': 5,
-        '7': 6,
-        '8': 7,
-        '9': 8,
-        '0': 9,
-        'o': 10,
-        'p': 11,
+        1: 0,
+        2: 1,
+        3: 2,
+        4: 3,
+        5: 4,
+        6: 5,
+        7: 6,
+        8: 7,
+        9: 8,
+        0: 9,
+        o: 10,
+        p: 11,
       };
 
       // toast helper
       let _toastTimer = null;
       function showToast(msg, duration = 1100) {
-        const t = document.getElementById('toast');
+        const t = document.getElementById("toast");
         if (!t) return;
         t.textContent = msg;
-        t.classList.add('visible');
+        t.classList.add("visible");
         if (_toastTimer) clearTimeout(_toastTimer);
         _toastTimer = setTimeout(() => {
-          t.classList.remove('visible');
+          t.classList.remove("visible");
           _toastTimer = null;
         }, duration);
       }
 
-      window.addEventListener('keydown', (e) => {
+      window.addEventListener("keydown", (e) => {
         // ignore repeating events and when typing into inputs
         if (e.repeat) return;
         const active = document.activeElement;
-        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+        if (
+          active &&
+          (active.tagName === "INPUT" ||
+            active.tagName === "TEXTAREA" ||
+            active.isContentEditable)
+        )
+          return;
 
         const k = e.key;
         // handle region keys
@@ -2427,10 +2420,16 @@
           const regionIndex = keyToRegion[k];
           clickedRegion(null, regionIndex, false);
           // show friendly name derived from imageOriginalCodes if available
-          let name = '';
+          let name = "";
           try {
-            if (typeof imageOriginalCodes !== 'undefined' && imageOriginalCodes[regionIndex]) {
-              name = imageOriginalCodes[regionIndex].split(' ').slice(1).join(' ');
+            if (
+              typeof imageOriginalCodes !== "undefined" &&
+              imageOriginalCodes[regionIndex]
+            ) {
+              name = imageOriginalCodes[regionIndex]
+                .split(" ")
+                .slice(1)
+                .join(" ");
             }
           } catch (e) {}
           showToast(name || `Region ${regionIndex}`);
@@ -2439,70 +2438,74 @@
         }
 
         switch (k.toLowerCase()) {
-          case 'a':
+          case "a":
             autoplayToggle(null);
-            showToast(isAutoPlaying ? 'Autoplay: ON' : 'Autoplay: OFF');
+            showToast(isAutoPlaying ? "Autoplay: ON" : "Autoplay: OFF");
             e.preventDefault();
             break;
-          case 's':
+          case "s":
             toggleSound(null);
-            showToast(audioEnabled ? 'Sound: ON' : 'Sound: OFF');
+            showToast(audioEnabled ? "Sound: ON" : "Sound: OFF");
             e.preventDefault();
             break;
-          case 'm':
+          case "m":
             toggleMenu(null);
-            showToast(isMenuVisible ? 'Menu shown' : 'Menu hidden ');
+            showToast(isMenuVisible ? "Menu shown" : "Menu hidden ");
             e.preventDefault();
             break;
-          case 'r':
+          case "r":
             toggleRandomOrigin(null);
-            showToast(randomOrigins ? 'Origins: RANDOM' : 'Origins: HOME');
+            showToast(randomOrigins ? "Origins: RANDOM" : "Origins: HOME");
             e.preventDefault();
             break;
-          case 'k':
+          case "k":
             toggleColour(null);
-            showToast(isColourEnabled ? 'Colour: RANDOM' : 'Colour: ORIGINAL');
+            showToast(isColourEnabled ? "Colour: RANDOM" : "Colour: ORIGINAL");
             e.preventDefault();
             break;
-          case 'x':
+          case "x":
             toggleStopAll(null, true);
-            showToast('Animations on/off');
+            showToast("Animations on/off");
             e.preventDefault();
             break;
 
-            case ' ':
+          case " ":
             toggleStopAll(null, true);
-            showToast('Animations on/off');
+            showToast("Animations on/off");
             e.preventDefault();
             break;
-          case 'c':
+          case "c":
             resetRegions(null);
-            showToast('Cleared');
+            showToast("Cleared");
             e.preventDefault();
             break;
-          case 'f':
+          case "f":
             toggleFast(null);
-            showToast(fastMode ? 'FAST: OFF' : 'FAST: ON');
+            showToast(fastMode ? "FAST: OFF" : "FAST: ON");
             e.preventDefault();
             break;
-          case 'h':
+          case "h":
             toggleHelp(null);
-            showToast(helpIsVisible ? 'Help: CLOSED' : 'Help: OPEN');
+            showToast(helpIsVisible ? "Help: CLOSED" : "Help: OPEN");
             e.preventDefault();
             break;
-          case 'b':
+          case "b":
             clickedRegion(null, 12, false);
-            showToast(isHiding[12] ? 'BORDERS ARE HIDING' : 'BORDERS ARE BEING SHOWIN');
+            showToast(
+              isHiding[12] ? "BORDERS ARE HIDING" : "BORDERS ARE BEING SHOWIN",
+            );
             e.preventDefault();
             break;
-          case 'g':
+          case "g":
             clickedRegion(null, 13, false);
-            showToast(isHiding[13] ? 'REGIONS IS HIDING' : 'REGIONS ARE SHOWING');
+            showToast(
+              isHiding[13] ? "REGIONS IS HIDING" : "REGIONS ARE SHOWING",
+            );
             e.preventDefault();
             break;
-          case 'l':
+          case "l":
             toggleMelody(null);
-            showToast(isMelodyPlaying ? 'Melody: PLAYING' : 'Melody: STOPPED');
+            showToast(isMelodyPlaying ? "Melody: PLAYING" : "Melody: STOPPED");
             e.preventDefault();
             break;
           default:
@@ -2519,8 +2522,8 @@
 
       window.addEventListener("load", () => {
         //toggleSound(null);
-       autoplayToggle(null);
-     
+        autoplayToggle(null);
+
         animateRipples();
         clickedRegion(null, 12, false);
         /*   clickedRegion(null, 0, false);
