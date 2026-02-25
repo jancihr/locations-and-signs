@@ -233,6 +233,18 @@
           align-content: center;
         "
       >
+       <a
+          id="help-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="TOGGLE INFO SCREEN (Shortcut: ?)"
+          onclick="
+            toggleHelp(event);
+            return false;
+          "
+          >INFO [H]</a
+        >
         <a
           id="autoplay-link"
           class="my-button"
@@ -244,6 +256,19 @@
             return false;
           "
           >AUTORUN [A]</a
+        >
+
+          <a
+          id="melody-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="PLAY MELODY (Shortcut: M)"
+          onclick="
+            toggleMelody(event);
+            return false;
+          "
+          >MELODY [L]</a
         >
 
         <a
@@ -258,30 +283,8 @@
           "
           >SOUND [S]</a
         >
-        <a
-          id="stop-all-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="PAUSE/RESUME ANIMATIONS (Shortcut: X)"
-          onclick="
-            toggleStopAll(event, true);
-            return false;
-          "
-          >PAUSE/RESUME [X]</a
-        >
-        <a
-          id="reset-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="CLEAR ALL REGIONS (Shortcut: C)"
-          onclick="
-            resetRegions(event);
-            return false;
-          "
-          >CLEAR [C]</a
-        >
+       
+     
         <a
           id="fast-link"
           class="my-button"
@@ -295,18 +298,19 @@
           >FAST [F]</a
         >
 
-        <a
-          id="melody-link"
+          <a
+          id="colour-link"
           class="my-button"
           style="background: #ffffff"
           href="#"
-          title="PLAY MELODY (Shortcut: M)"
+          title="TOGGLE RANDOM COLOURS (Shortcut: K)"
           onclick="
-            toggleMelody(event);
+            toggleColour(event);
             return false;
           "
-          >MELODY [L]</a
+          >BLUE [K]</a
         >
+      
 
         <a
           id="random-link"
@@ -320,31 +324,9 @@
           "
           >RANDOM [R]</a
         >
-        <a
-          id="colour-link"
-          class="my-button"
-          style="background: #ffff00"
-          href="#"
-          title="TOGGLE RANDOM COLOURS (Shortcut: K)"
-          onclick="
-            toggleColour(event);
-            return false;
-          "
-          >COLOUR [K]</a
-        >
+      
 
-        <a
-          id="help-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="TOGGLE INFO SCREEN (Shortcut: ?)"
-          onclick="
-            toggleHelp(event);
-            return false;
-          "
-          >INFO [H]</a
-        >
+       
         <a
           id="borders-link"
           class="my-button"
@@ -368,6 +350,32 @@
             return false;
           "
           >REGIONS [G]</a
+        >
+
+           <a
+          id="reset-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="CLEAR ALL REGIONS (Shortcut: C)"
+          onclick="
+            resetRegions(event);
+            return false;
+          "
+          >CLEAR [C]</a
+        >
+
+         <a
+          id="stop-all-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="PAUSE/RESUME ANIMATIONS (Shortcut: X)"
+          onclick="
+            toggleStopAll(event, true);
+            return false;
+          "
+          >PAUSE/RESUME [X]</a
         >
       </div>
 
@@ -996,8 +1004,8 @@
           their original regions) and random origins (signs may start anywhere).
         </li>
         <li style="margin-bottom: 10px">
-          <strong>COLOUR:</strong> Toggle between original and random pastel
-          colors for scripts.
+          <strong>BLUE:</strong> Toggle between BLUE and COLOURFULL
+          palettes for scripts.
         </li>
 
         <li style="margin-bottom: 10px">
@@ -1028,14 +1036,14 @@
 
         <li><strong>X:</strong> PAUSE/RESUME all animations</li>
         <li><strong>C:</strong> CLEAR (reset regions)</li>
-        <li><strong>F:</strong> Toggle FAST mode</li>
+        <li><strong>F:</strong> Toggle FAST/SLOW mode</li>
         <li><strong>L:</strong> Play Melody</li>
 
-        <li><strong>R:</strong> Toggle RANDOM origins</li>
-        <li><strong>K:</strong> Toggle COLOURS</li>
+        <li><strong>R:</strong> Toggle RANDOM/ORIGINAL origins</li>
+        <li><strong>K:</strong> Toggle BLUE/COLOURFULL</li>
         <li><strong>H:</strong> Toggle INFO</li>
         <li><strong>B:</strong> Toggle BORDERS</li>
-        <li><strong>G:</strong> Toggle REGIONS (colours)</li>
+        <li><strong>G:</strong> Toggle REGIONS</li>
 
         <li>
           <strong>1..9,0,-,= :</strong> Start/stop regions
@@ -1343,6 +1351,8 @@
         link.style.background = ripplesEnabled ? "#ffff00" : "#ffffff";
       }
 
+      let rippleLoopRunning = false;
+
       function createRipple(x, y, options = {}) {
         if (!ripplesEnabled) return;
         ripples.push({
@@ -1355,9 +1365,19 @@
           decay: 0.01,
           lineWidth: 1,
         });
+        if (!rippleLoopRunning) {
+          rippleLoopRunning = true;
+          animateRipples();
+        }
       }
 
       function animateRipples() {
+        if (ripples.length === 0) {
+          rippleCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
+          rippleLoopRunning = false;
+          return;
+        }
+
         rippleCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
 
         for (let i = ripples.length - 1; i >= 0; i--) {
@@ -1913,10 +1933,40 @@
         paint(index, speed);
       }
 
+      let regionSpeeds = new Array(14).fill(100);
+      let animationLoopRunning = false;
+
+      function startAnimationLoop() {
+        if (!animationLoopRunning) {
+          animationLoopRunning = true;
+          requestAnimationFrame(processAnimations);
+        }
+      }
+
+      function processAnimations() {
+        let active = false;
+        for (let i = 0; i < 14; i++) {
+          if ((isRevealing[i] || isHiding[i]) && !isFrozen[i]) {
+            paint(i);
+            active = true;
+          }
+        }
+
+        if (active) {
+          requestAnimationFrame(processAnimations);
+        } else {
+          animationLoopRunning = false;
+        }
+      }
+
       // Main animation loop for a specific region
       // Uses requestAnimationFrame for smooth rendering
       function paint(region, speed) {
-        if (speed === undefined) speed = 100;
+        if (speed !== undefined) {
+          regionSpeeds[region] = speed;
+        }
+        const currentSpeed = regionSpeeds[region];
+
         if (!isFrozen[region]) {
           //console.log("Drawing region:", region);
 
@@ -1955,9 +2005,9 @@
               links[region].style.background =
                 `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
-              revealRadius[region] += maxRadius[region] / speed;
+              revealRadius[region] += maxRadius[region] / currentSpeed;
               updateTone(region, revealRadius[region], maxRadius[region]);
-              requestAnimationFrame(() => paint(region, speed));
+              startAnimationLoop();
             } else {
               //console.log("Region fully revealed:", region);
               links[region].style.background = "#ffff00";
@@ -1968,7 +2018,7 @@
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = true;
-              requestAnimationFrame(() => paint(region, speed));
+              startAnimationLoop();
             }
 
           if (isHiding[region])
@@ -1980,9 +2030,9 @@
               links[region].style.background =
                 `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
-              revealRadius[region] -= maxRadius[region] / speed;
+              revealRadius[region] -= maxRadius[region] / currentSpeed;
               updateTone(region, revealRadius[region], maxRadius[region]);
-              requestAnimationFrame(() => paint(region, speed));
+              startAnimationLoop();
             } else {
               //console.log("Region hidden:", region);
               revealRadius[region] = 0;
@@ -1995,7 +2045,7 @@
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = false;
-              requestAnimationFrame(() => paint(region));
+              startAnimationLoop();
             }
         }
       }
@@ -2022,7 +2072,7 @@
           }
 
           if (image.complete) {
-            paint(index, 5);
+            paint(index);
           }
         });
         calculateStarts();
@@ -2038,7 +2088,7 @@
 
         isColourEnabled = !isColourEnabled;
         const link = document.getElementById("colour-link");
-        link.style.background = isColourEnabled ? "#ffff00" : "#ffffff";
+        link.style.background = isColourEnabled ? "#ffffff" : "#ffff00";
 
         const folder = isColourEnabled ? "img" : "img_blue";
         for (let i = 0; i < 14; i++) {
@@ -2524,7 +2574,7 @@
         //toggleSound(null);
         autoplayToggle(null);
 
-        animateRipples();
+        // animateRipples(); // Removed: started on demand
         clickedRegion(null, 12, false);
         /*   clickedRegion(null, 0, false);
         clickedRegion(null, 1, false);
