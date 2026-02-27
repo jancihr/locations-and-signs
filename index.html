@@ -1449,16 +1449,7 @@
       function updateTone(region, currentRadius, maxR) {
         if (!audioEnabled || !audioCtx) return;
 
-        let frequency;
-        if (isMelodyPlaying) {
-          // In melody mode, keep pitch constant for correct note playback
-          frequency = baseFrequencies[region];
-        } else {
-          // In animation mode, vary pitch based on animation progress
-          const progress = Math.min(1, Math.max(0, currentRadius / maxR));
-          const pitchMultiplier = 1 + progress * 0.5; // Pitch goes up as radius increases
-          frequency = baseFrequencies[region] * pitchMultiplier;
-        }
+        const frequency = baseFrequencies[region];
 
         if (!regionOscillators[region]) {
           const osc = audioCtx.createOscillator();
