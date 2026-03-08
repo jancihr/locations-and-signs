@@ -1448,8 +1448,13 @@
 
       function updateTone(region, currentRadius, maxR) {
         if (!audioEnabled || !audioCtx) return;
+        if (audioCtx.state === "suspended") return;
 
-        const frequency = baseFrequencies[region];
+        let frequency = baseFrequencies[region];
+
+        if (maxR > 0) {
+          frequency *= 1 + (currentRadius / maxR) * 0.2;
+        }
 
         if (!regionOscillators[region]) {
           const osc = audioCtx.createOscillator();
@@ -1656,7 +1661,7 @@
             paint(index, speed);
           } else if (isFrozen[index]) {
             isFrozen[index] = false;
-
+           
             paint(index, speed);
           } else if (isShown[index]) {
             isShown[index] = false;
@@ -2022,7 +2027,9 @@
                 `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
               revealRadius[region] += maxRadius[region] / currentSpeed;
-              updateTone(region, revealRadius[region], maxRadius[region]);
+              if (revealRadius[region] < maxRadius[region]) {
+                updateTone(region, revealRadius[region], maxRadius[region]);
+              }
               startAnimationLoop();
             } else {
               //console.log("Region fully revealed:", region);
@@ -2047,7 +2054,9 @@
                 `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
               revealRadius[region] -= maxRadius[region] / currentSpeed;
-              updateTone(region, revealRadius[region], maxRadius[region]);
+              if (revealRadius[region] > 0) {
+                updateTone(region, revealRadius[region], maxRadius[region]);
+              }
               startAnimationLoop();
             } else {
               //console.log("Region hidden:", region);
@@ -2587,25 +2596,11 @@
       });
 
       window.addEventListener("load", () => {
-        //toggleSound(null);
         autoplayToggle(null);
 
-        // animateRipples(); // Removed: started on demand
-        clickedRegion(null, 12, false);
+        //clickedRegion(null, 12, false);
         clickedRegion(null, 13, false);
-        /*   clickedRegion(null, 0, false);
-        clickedRegion(null, 1, false);
-        clickedRegion(null, 2, false);
-        clickedRegion(null, 3, false);
-        clickedRegion(null, 4, false);
-        clickedRegion(null, 5, false);
-        clickedRegion(null, 6, false);
-        clickedRegion(null, 7, false);
-        clickedRegion(null, 8, false);
-        clickedRegion(null, 9, false);
-        clickedRegion(null, 10, false);
-        clickedRegion(null, 11, false);
-        */
+        //toggleSound(null);
       });
 
       window.addEventListener("click", (e) => {
