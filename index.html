@@ -1980,42 +1980,46 @@
             canvas[region].width,
             canvas[region].height,
           );
-          const dim = getCoverDimensions(
-            canvas[region].width,
-            canvas[region].height,
-            images[region].width,
-            images[region].height,
-          );
-          ctx[region].drawImage(images[region], dim.x, dim.y, dim.w, dim.h);
-
-          // Use destination-in to create a mask effect
-          ctx[region].globalCompositeOperation = "destination-in";
 
           const radius = Math.max(0, revealRadius[region]);
-          const fuzziness = 80; // Width of the fuzzy edge
-          const innerRadius = Math.max(0, radius - fuzziness);
 
-          const gradient = ctx[region].createRadialGradient(
-            clickX[region],
-            clickY[region],
-            innerRadius,
-            clickX[region],
-            clickY[region],
-            radius,
-          );
-          gradient.addColorStop(0, "rgba(0, 0, 0, 1)");
-          gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+          if (radius > 0) {
+            const dim = getCoverDimensions(
+              canvas[region].width,
+              canvas[region].height,
+              images[region].width,
+              images[region].height,
+            );
+            ctx[region].drawImage(images[region], dim.x, dim.y, dim.w, dim.h);
 
-          ctx[region].fillStyle = gradient;
-          ctx[region].fillRect(
-            0,
-            0,
-            canvas[region].width,
-            canvas[region].height,
-          );
+            // Use destination-in to create a mask effect
+            ctx[region].globalCompositeOperation = "destination-in";
 
-          // Reset composite operation
-          ctx[region].globalCompositeOperation = "source-over";
+            const fuzziness = 80; // Width of the fuzzy edge
+            const innerRadius = Math.max(0, radius - fuzziness);
+
+            const gradient = ctx[region].createRadialGradient(
+              clickX[region],
+              clickY[region],
+              innerRadius,
+              clickX[region],
+              clickY[region],
+              radius,
+            );
+            gradient.addColorStop(0, "rgba(0, 0, 0, 1)");
+            gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+            ctx[region].fillStyle = gradient;
+            ctx[region].fillRect(
+              0,
+              0,
+              canvas[region].width,
+              canvas[region].height,
+            );
+
+            // Reset composite operation
+            ctx[region].globalCompositeOperation = "source-over";
+          }
 
           if (isRevealing[region])
             if (revealRadius[region] < maxRadius[region]) {
