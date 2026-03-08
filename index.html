@@ -1087,6 +1087,33 @@
     <div id="toast" aria-live="polite" role="status"></div>
 
     <script>
+      // --- Ripple Effect on Click ---
+      const rippleCanvas = document.getElementById("ripple-canvas");
+      const rippleCtx = rippleCanvas.getContext("2d");
+      rippleCanvas.width = window.innerWidth;
+      rippleCanvas.height = window.innerHeight;
+      let ripples = [];
+      let ripplesEnabled = true;
+
+      // Audio Context and State
+      let audioCtx;
+      let audioEnabled = false;
+      const regionOscillators = new Array(14).fill(null);
+      const regionGains = new Array(14).fill(null);
+
+      let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      let isMenuVisible = false;
+
+       // State Management: Parallel arrays for 14 regions
+      // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
+
+      let revealRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Current radius of the reveal circle
+      let clickX = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center X of the reveal
+      let clickY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center Y of the reveal
+
+     
+
       // DOM Elements: Links for controlling specific regions
       const links = [
         document.getElementById("ara-link"),
@@ -1141,11 +1168,33 @@
         canvas[13].getContext("2d"),
       ];
 
-      // Initialize canvas dimensions to full window size
+       // Initialize canvas dimensions to full window size
       canvas.forEach((element) => {
         element.width = window.innerWidth;
         element.height = window.innerHeight;
       });
+
+      const baseFrequencies = [
+        130.81, // 0: C3
+        146.83, // 1: D3
+        164.81, // 2: E3
+        174.61, // 3: F3
+        196.0, // 4: G3
+        220.0, // 5: A3
+        246.94, // 6: B3
+        261.63, // 7: C4
+        293.66, // 8: D4
+        329.63, // 9: E4
+        349.23, // 10: F4
+        392.0, // 11: G4
+
+        440.0, // 12: A4 
+        493.88, // 13: B4
+      ];
+
+      const defaultFrequencies = [...baseFrequencies];
+
+      
 
       // Image Assets
       const images = [
@@ -1198,12 +1247,7 @@
             : (image.style.zIndex = index + 10);
       });
 
-      // State Management: Parallel arrays for 14 regions
-      // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
-
-      let revealRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Current radius of the reveal circle
-      let clickX = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center X of the reveal
-      let clickY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center Y of the reveal
+     
 
       // Default center coordinates for each region (relative to original image size)
 
@@ -1340,17 +1384,6 @@
         return { x, y, w, h };
       }
 
-      let maxRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-      // --- Ripple Effect on Click ---
-      const rippleCanvas = document.getElementById("ripple-canvas");
-      const rippleCtx = rippleCanvas.getContext("2d");
-      rippleCanvas.width = window.innerWidth;
-      rippleCanvas.height = window.innerHeight;
-      let ripples = [];
-      let ripplesEnabled = true;
-      let isMenuVisible = false;
-
       function toggleRipple(e) {
         ripplesEnabled = !ripplesEnabled;
         const link = document.getElementById("ripple-link");
@@ -1411,31 +1444,6 @@
         requestAnimationFrame(animateRipples);
       }
 
-      // Audio Context and State
-      let audioCtx;
-      let audioEnabled = false;
-      const regionOscillators = new Array(14).fill(null);
-      const regionGains = new Array(14).fill(null);
-
-      const baseFrequencies = [
-        130.81, // 0: C3
-        146.83, // 1: D3
-        164.81, // 2: E3
-        174.61, // 3: F3
-        196.0, // 4: G3
-        220.0, // 5: A3
-        246.94, // 6: B3
-        261.63, // 7: C4
-        293.66, // 8: D4
-        329.63, // 9: E4
-        349.23, // 10: F4
-        392.0, // 11: G4
-
-        659.25, // 12: E5 (Borders)
-        65.41, // 13: C2 (Colours - lower bass)
-      ];
-      const defaultFrequencies = [...baseFrequencies];
-
       function initAudio() {
         if (!audioCtx) {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1451,10 +1459,6 @@
         if (audioCtx.state === "suspended") return;
 
         let frequency = baseFrequencies[region];
-
-        if (maxR > 0) {
-          frequency *= 1 + (currentRadius / maxR) * 0.2;
-        }
 
         if (!regionOscillators[region]) {
           const osc = audioCtx.createOscillator();
@@ -1472,9 +1476,6 @@
 
           regionOscillators[region] = osc;
           regionGains[region] = gain;
-        } else {
-          const osc = regionOscillators[region];
-          osc.frequency.setTargetAtTime(frequency, audioCtx.currentTime, 0.05);
         }
       }
 
@@ -1661,7 +1662,7 @@
             paint(index, speed);
           } else if (isFrozen[index]) {
             isFrozen[index] = false;
-           
+
             paint(index, speed);
           } else if (isShown[index]) {
             isShown[index] = false;
@@ -1938,15 +1939,112 @@
 
       let regionSpeeds = new Array(14).fill(100);
       let animationLoopRunning = false;
+      let lastAnimationTime = 0;
+      const TARGET_FPS = 24;
+      const FRAME_INTERVAL = 1000 / TARGET_FPS;
+      let isMelodyPlaying = false;
+      let melodyTimeout;
+      let melodyIndex = 0;
+      let melodyToneTimer = null; // Timer for exact note duration
+
+      const SONG = [
+        // Ode to Joy with Harmonies
+        // Phrase 1
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3 (C Major)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3 (G7)
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3 (C Major)
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3 (G Major)
+
+        // Phrase 2
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3 (C Major)
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 0, 4], duration: 600, delay: 600 }, // E4 + C3 + G3 (dotted)
+        { regions: [8, 4], duration: 200, delay: 200 }, // D4 + G3 (short)
+        { regions: [8, 4, 6], duration: 800, delay: 800 }, // D4 + G3 + B3 (long)
+
+        // Phrase 3 (Repeat of 1 with different ending)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+
+        // Phrase 4
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
+        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
+        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
+
+        // Bridge
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
+        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
+        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [4, 1, 6], duration: 800, delay: 800 }, // G3 + D3 + B3 (Low G)
+
+        // Finale (Repeat of Phrase 3 & 4)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
+        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
+        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
+      ];
 
       function startAnimationLoop() {
         if (!animationLoopRunning) {
           animationLoopRunning = true;
+          lastAnimationTime = performance.now();
           requestAnimationFrame(processAnimations);
         }
       }
 
-      function processAnimations() {
+      function processAnimations(timestamp) {
+        if (!animationLoopRunning) {
+          return;
+        }
+        requestAnimationFrame(processAnimations);
+
+        const elapsed = timestamp - lastAnimationTime;
+        if (elapsed < FRAME_INTERVAL) {
+          return;
+        }
+        lastAnimationTime = timestamp - (elapsed % FRAME_INTERVAL);
+
         let active = false;
         for (let i = 0; i < 14; i++) {
           if ((isRevealing[i] || isHiding[i]) && !isFrozen[i]) {
@@ -1955,9 +2053,7 @@
           }
         }
 
-        if (active) {
-          requestAnimationFrame(processAnimations);
-        } else {
+        if (!active) {
           animationLoopRunning = false;
         }
       }
@@ -1965,6 +2061,8 @@
       // Main animation loop for a specific region
       // Uses requestAnimationFrame for smooth rendering
       function paint(region, speed) {
+        const speedMultiplier = 60 / TARGET_FPS;
+
         if (speed !== undefined) {
           regionSpeeds[region] = speed;
         }
@@ -2030,7 +2128,8 @@
               links[region].style.background =
                 `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
-              revealRadius[region] += maxRadius[region] / currentSpeed;
+              revealRadius[region] +=
+                (maxRadius[region] / currentSpeed) * speedMultiplier;
               if (revealRadius[region] < maxRadius[region]) {
                 updateTone(region, revealRadius[region], maxRadius[region]);
               }
@@ -2057,7 +2156,8 @@
               links[region].style.background =
                 `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
               links[region].style.animation = "none";
-              revealRadius[region] -= maxRadius[region] / currentSpeed;
+              revealRadius[region] -=
+                (maxRadius[region] / currentSpeed) * speedMultiplier;
               if (revealRadius[region] > 0) {
                 updateTone(region, revealRadius[region], maxRadius[region]);
               }
@@ -2220,89 +2320,6 @@
           (!slowMode ? 200 : 2000) * (Math.floor(Math.random() * 6) + 1),
         );
       }
-
-      let isMelodyPlaying = false;
-      let melodyTimeout;
-      let melodyIndex = 0;
-      let melodyToneTimer = null; // Timer for exact note duration
-
-      const SONG = [
-        // Ode to Joy with Harmonies
-        // Phrase 1
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3 (C Major)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3 (G7)
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3 (C Major)
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3 (G Major)
-
-        // Phrase 2
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3 (C Major)
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [9, 0, 4], duration: 600, delay: 600 }, // E4 + C3 + G3 (dotted)
-        { regions: [8, 4], duration: 200, delay: 200 }, // D4 + G3 (short)
-        { regions: [8, 4, 6], duration: 800, delay: 800 }, // D4 + G3 + B3 (long)
-
-        // Phrase 3 (Repeat of 1 with different ending)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-
-        // Phrase 4
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
-        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
-        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
-
-        // Bridge
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
-        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
-        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [4, 1, 6], duration: 800, delay: 800 }, // G3 + D3 + B3 (Low G)
-
-        // Finale (Repeat of Phrase 3 & 4)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
-        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
-        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
-      ];
 
       function playMelody() {
         if (!isMelodyPlaying) return;
@@ -2578,7 +2595,7 @@
           case "g":
             clickedRegion(null, 13, false);
             showToast(
-              isHiding[13] ? "REGIONS IS HIDING" : "REGIONS ARE SHOWING",
+              isHiding[13] ? "REGIONS ARE HIDING" : "REGIONS ARE SHOWING",
             );
             e.preventDefault();
             break;
