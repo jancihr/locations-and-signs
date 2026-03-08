@@ -1522,10 +1522,9 @@
           }
 
           if (!anyMoving) {
-              startFrozenVisibleRegions(e, false);
+            startFrozenVisibleRegions(e, false);
           } else {
             for (let i = 0; i < 12; i++) {
-              
               isFrozen[i] = true;
               stopTone(i);
             }
@@ -1657,7 +1656,7 @@
             paint(index, speed);
           } else if (isFrozen[index]) {
             isFrozen[index] = false;
-            
+
             paint(index, speed);
           } else if (isShown[index]) {
             isShown[index] = false;
@@ -1976,16 +1975,6 @@
             canvas[region].width,
             canvas[region].height,
           );
-          ctx[region].save();
-          ctx[region].beginPath();
-          ctx[region].arc(
-            clickX[region],
-            clickY[region],
-            revealRadius[region] < 0 ? 0 : revealRadius[region],
-            0,
-            Math.PI * 2,
-          );
-          ctx[region].clip();
           const dim = getCoverDimensions(
             canvas[region].width,
             canvas[region].height,
@@ -1993,7 +1982,35 @@
             images[region].height,
           );
           ctx[region].drawImage(images[region], dim.x, dim.y, dim.w, dim.h);
-          ctx[region].restore();
+
+          // Use destination-in to create a mask effect
+          ctx[region].globalCompositeOperation = "destination-in";
+
+          const radius = Math.max(0, revealRadius[region]);
+          const fuzziness = 80; // Width of the fuzzy edge
+          const innerRadius = Math.max(0, radius - fuzziness);
+
+          const gradient = ctx[region].createRadialGradient(
+            clickX[region],
+            clickY[region],
+            innerRadius,
+            clickX[region],
+            clickY[region],
+            radius,
+          );
+          gradient.addColorStop(0, "rgba(0, 0, 0, 1)");
+          gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+          ctx[region].fillStyle = gradient;
+          ctx[region].fillRect(
+            0,
+            0,
+            canvas[region].width,
+            canvas[region].height,
+          );
+
+          // Reset composite operation
+          ctx[region].globalCompositeOperation = "source-over";
 
           if (isRevealing[region])
             if (revealRadius[region] < maxRadius[region]) {
