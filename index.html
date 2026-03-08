@@ -1105,6 +1105,27 @@
 
       let isMenuVisible = false;
 
+      let rippleLoopRunning = false;
+      let regionSpeeds = new Array(14).fill(100);
+      let animationLoopRunning = false;
+      let lastAnimationTime = 0;
+      const TARGET_FPS = 24;
+      const FRAME_INTERVAL = 1000 / TARGET_FPS;
+      let isMelodyPlaying = false;
+      let melodyTimeout;
+      let melodyIndex = 0;
+      let melodyToneTimer = null; // Timer for exact note duration
+
+      let isAutoPlaying = false;
+      let randomOrigins = false;
+      let slowMode = false;
+      let isColourEnabled = true;
+
+      // toast helper
+      let _toastTimer = null;
+      let helpIsVisible = false;
+      let autoPlayTimeout;ß
+
       // State Management: Parallel arrays for 14 regions
       // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
 
@@ -1359,6 +1380,104 @@
         false,
       ];
 
+      // Keyboard shortcuts (global)
+      // Main mappings:
+      // A: AUTORUN, S: SOUND, M: MORE CONTROLS, R: RANDOM, X: STOP all,
+      // C: CLEAR, F: FAST, H: HELP, B: BORDERS, G: REGIONS
+      // 1..9,0,o,p : region buttons 0..11
+      const keyToRegion = {
+        1: 0,
+        2: 1,
+        3: 2,
+        4: 3,
+        5: 4,
+        6: 5,
+        7: 6,
+        8: 7,
+        9: 8,
+        0: 9,
+        o: 10,
+        p: 11,
+      };
+
+      const SONG = [
+        // Ode to Joy with Harmonies
+        // Phrase 1
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3 (C Major)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3 (G7)
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3 (C Major)
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3 (G Major)
+
+        // Phrase 2
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3 (C Major)
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 0, 4], duration: 600, delay: 600 }, // E4 + C3 + G3 (dotted)
+        { regions: [8, 4], duration: 200, delay: 200 }, // D4 + G3 (short)
+        { regions: [8, 4, 6], duration: 800, delay: 800 }, // D4 + G3 + B3 (long)
+
+        // Phrase 3 (Repeat of 1 with different ending)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+
+        // Phrase 4
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
+        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
+        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
+
+        // Bridge
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
+        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
+        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [4, 1, 6], duration: 800, delay: 800 }, // G3 + D3 + B3 (Low G)
+
+        // Finale (Repeat of Phrase 3 & 4)
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
+        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
+        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
+        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
+        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
+      ];
+
       function getCoverDimensions(cw, ch, iw, ih) {
         if (!iw || !ih) return { x: 0, y: 0, w: cw, h: ch };
         const rC = cw / ch;
@@ -1383,8 +1502,6 @@
         const link = document.getElementById("ripple-link");
         link.style.background = ripplesEnabled ? "#ffff00" : "#ffffff";
       }
-
-      let rippleLoopRunning = false;
 
       function createRipple(x, y, options = {}) {
         if (!ripplesEnabled) return;
@@ -1931,129 +2048,6 @@
         paint(index, speed);
       }
 
-      let regionSpeeds = new Array(14).fill(100);
-      let animationLoopRunning = false;
-      let lastAnimationTime = 0;
-      const TARGET_FPS = 24;
-      const FRAME_INTERVAL = 1000 / TARGET_FPS;
-      let isMelodyPlaying = false;
-      let melodyTimeout;
-      let melodyIndex = 0;
-      let melodyToneTimer = null; // Timer for exact note duration
-
-      let isAutoPlaying = false;
-      let randomOrigins = false;
-      let slowMode = false;
-      let isColourEnabled = true;
-
-      // Keyboard shortcuts (global)
-      // Main mappings:
-      // A: AUTORUN, S: SOUND, M: MORE CONTROLS, R: RANDOM, X: STOP all,
-      // C: CLEAR, F: FAST, H: HELP, B: BORDERS, G: REGIONS
-      // 1..9,0,o,p : region buttons 0..11
-      const keyToRegion = {
-        1: 0,
-        2: 1,
-        3: 2,
-        4: 3,
-        5: 4,
-        6: 5,
-        7: 6,
-        8: 7,
-        9: 8,
-        0: 9,
-        o: 10,
-        p: 11,
-      };
-
-      // toast helper
-      let _toastTimer = null;
-
-      const randomLink = document.getElementById("random-link");
-      if (randomLink)
-        randomLink.style.background = randomOrigins ? "#ffff00" : "#ffffff";
-
-      let helpIsVisible = false;
-      let autoPlayTimeout;
-
-      const SONG = [
-        // Ode to Joy with Harmonies
-        // Phrase 1
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3 (C Major)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3 (G7)
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3 (C Major)
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3 (G Major)
-
-        // Phrase 2
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3 (C Major)
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [9, 0, 4], duration: 600, delay: 600 }, // E4 + C3 + G3 (dotted)
-        { regions: [8, 4], duration: 200, delay: 200 }, // D4 + G3 (short)
-        { regions: [8, 4, 6], duration: 800, delay: 800 }, // D4 + G3 + B3 (long)
-
-        // Phrase 3 (Repeat of 1 with different ending)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-
-        // Phrase 4
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
-        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
-        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
-
-        // Bridge
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
-        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 5, 4], duration: 200, delay: 200 }, // E4 + A3 + G3 (run)
-        { regions: [10, 3, 6], duration: 200, delay: 200 }, // F4 + F3 + B3 (run)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [4, 1, 6], duration: 800, delay: 800 }, // G3 + D3 + B3 (Low G)
-
-        // Finale (Repeat of Phrase 3 & 4)
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [9, 5, 4], duration: 400, delay: 400 }, // E4 + A3 + G3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
-        { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
-        { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 600, delay: 600 }, // D4 + G3 + B3 (dotted)
-        { regions: [7, 0], duration: 200, delay: 200 }, // C4 + C3 (short)
-        { regions: [7, 0, 2], duration: 800, delay: 800 }, // C4 + C3 + E3 (long)
-      ];
-
       function startAnimationLoop() {
         if (!animationLoopRunning) {
           animationLoopRunning = true;
@@ -2380,16 +2374,12 @@
         }
       }
 
-      function toggleRandomOrigin(e, randomOriginsIn, onReset) {
+      function toggleRandomOrigin(e) {
         // If caller provided explicit boolean, use it; otherwise toggle state
-        if (typeof randomOriginsIn === "boolean") {
-          randomOrigins = randomOriginsIn;
-        } else {
-          randomOrigins = !randomOrigins;
-        }
 
-        // optionally reset regions when origin behavior changes
-        // resetRegions(e);
+        randomOrigins = !randomOrigins;
+        const link = document.getElementById("random-link");
+        link.style.background = randomOrigins ? "#ffff00" : "#ffffff";
       }
 
       function toggleMenu(e) {
@@ -2626,7 +2616,7 @@
           }
         });
         calculateStarts();
-      });ß
+      });
     </script>
   </body>
 </html>
