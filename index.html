@@ -1105,14 +1105,12 @@
 
       let isMenuVisible = false;
 
-       // State Management: Parallel arrays for 14 regions
+      // State Management: Parallel arrays for 14 regions
       // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
 
       let revealRadius = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Current radius of the reveal circle
       let clickX = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center X of the reveal
       let clickY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // Center Y of the reveal
-
-     
 
       // DOM Elements: Links for controlling specific regions
       const links = [
@@ -1168,7 +1166,7 @@
         canvas[13].getContext("2d"),
       ];
 
-       // Initialize canvas dimensions to full window size
+      // Initialize canvas dimensions to full window size
       canvas.forEach((element) => {
         element.width = window.innerWidth;
         element.height = window.innerHeight;
@@ -1188,13 +1186,11 @@
         349.23, // 10: F4
         392.0, // 11: G4
 
-        440.0, // 12: A4 
+        440.0, // 12: A4
         493.88, // 13: B4
       ];
 
       const defaultFrequencies = [...baseFrequencies];
-
-      
 
       // Image Assets
       const images = [
@@ -1246,8 +1242,6 @@
             ? (image.style.zIndex = 100)
             : (image.style.zIndex = index + 10);
       });
-
-     
 
       // Default center coordinates for each region (relative to original image size)
 
@@ -1947,6 +1941,41 @@
       let melodyIndex = 0;
       let melodyToneTimer = null; // Timer for exact note duration
 
+      let isAutoPlaying = false;
+      let randomOrigins = false;
+      let slowMode = false;
+      let isColourEnabled = true;
+
+      // Keyboard shortcuts (global)
+      // Main mappings:
+      // A: AUTORUN, S: SOUND, M: MORE CONTROLS, R: RANDOM, X: STOP all,
+      // C: CLEAR, F: FAST, H: HELP, B: BORDERS, G: REGIONS
+      // 1..9,0,o,p : region buttons 0..11
+      const keyToRegion = {
+        1: 0,
+        2: 1,
+        3: 2,
+        4: 3,
+        5: 4,
+        6: 5,
+        7: 6,
+        8: 7,
+        9: 8,
+        0: 9,
+        o: 10,
+        p: 11,
+      };
+
+      // toast helper
+      let _toastTimer = null;
+
+      const randomLink = document.getElementById("random-link");
+      if (randomLink)
+        randomLink.style.background = randomOrigins ? "#ffff00" : "#ffffff";
+
+      let helpIsVisible = false;
+      let autoPlayTimeout;
+
       const SONG = [
         // Ode to Joy with Harmonies
         // Phrase 1
@@ -2179,39 +2208,6 @@
         }
       }
 
-      // Handle window resize events
-      window.addEventListener("resize", () => {
-        rippleCanvas.width = window.innerWidth;
-        rippleCanvas.height = window.innerHeight;
-        images.forEach((image, index) => {
-          canvas[index].width = window.innerWidth;
-          canvas[index].height = window.innerHeight;
-          maxRadius[index] = Math.sqrt(
-            Math.pow(
-              Math.max(clickX[index], window.innerWidth - clickX[index]),
-              2,
-            ) +
-              Math.pow(
-                Math.max(clickY[index], window.innerHeight - clickY[index]),
-                2,
-              ),
-          );
-          if (isShown[index]) {
-            revealRadius[index] = maxRadius[index];
-          }
-
-          if (image.complete) {
-            paint(index);
-          }
-        });
-        calculateStarts();
-      });
-
-      let isAutoPlaying = false;
-      let randomOrigins = false;
-      let slowMode = false;
-      let isColourEnabled = true;
-
       function toggleColour(e) {
         if (e) e.preventDefault();
 
@@ -2226,9 +2222,6 @@
 
         startFrozenVisibleRegions(e, true);
       }
-
-      let helpIsVisible = false;
-      let autoPlayTimeout;
 
       function toggleSlow(e) {
         clearTimeout(autoPlayTimeout);
@@ -2395,10 +2388,6 @@
           randomOrigins = !randomOrigins;
         }
 
-        const randomLink = document.getElementById("random-link");
-        if (randomLink)
-          randomLink.style.background = randomOrigins ? "#ffff00" : "#ffffff";
-
         // optionally reset regions when origin behavior changes
         // resetRegions(e);
       }
@@ -2464,28 +2453,6 @@
         }
       }
 
-      // Keyboard shortcuts (global)
-      // Main mappings:
-      // A: AUTORUN, S: SOUND, M: MORE CONTROLS, R: RANDOM, X: STOP all,
-      // C: CLEAR, F: FAST, H: HELP, B: BORDERS, G: REGIONS
-      // 1..9,0,o,p : region buttons 0..11
-      const keyToRegion = {
-        1: 0,
-        2: 1,
-        3: 2,
-        4: 3,
-        5: 4,
-        6: 5,
-        7: 6,
-        8: 7,
-        9: 8,
-        0: 9,
-        o: 10,
-        p: 11,
-      };
-
-      // toast helper
-      let _toastTimer = null;
       function showToast(msg, duration = 1100) {
         const t = document.getElementById("toast");
         if (!t) return;
@@ -2632,6 +2599,34 @@
         }
         createRipple(e.clientX, e.clientY);
       });
+
+      // Handle window resize events
+      window.addEventListener("resize", () => {
+        rippleCanvas.width = window.innerWidth;
+        rippleCanvas.height = window.innerHeight;
+        images.forEach((image, index) => {
+          canvas[index].width = window.innerWidth;
+          canvas[index].height = window.innerHeight;
+          maxRadius[index] = Math.sqrt(
+            Math.pow(
+              Math.max(clickX[index], window.innerWidth - clickX[index]),
+              2,
+            ) +
+              Math.pow(
+                Math.max(clickY[index], window.innerHeight - clickY[index]),
+                2,
+              ),
+          );
+          if (isShown[index]) {
+            revealRadius[index] = maxRadius[index];
+          }
+
+          if (image.complete) {
+            paint(index);
+          }
+        });
+        calculateStarts();
+      });ß
     </script>
   </body>
 </html>
