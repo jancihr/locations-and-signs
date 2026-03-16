@@ -9,11 +9,11 @@
 
   DESCRIPTION:
   An interactive, single-page web application that presents a world map with
-  clickable regions corresponding to different global writing systems and languages.
-  When a user clicks on a map region or a corresponding menu button, a full-screen
-  image layer representing that script is revealed through a circular, animated
-  clipping mask. The application supports various interaction modes, including
-  manual control, autoplay, and different animation origin points.
+  clickable regions corresponding to different global writing systems. When a
+  user interacts with the map or menu, full-screen image layers representing
+  those scripts are revealed through circular, animated clipping masks. The
+  application is highly interactive, featuring dynamic image generation, audio
+  feedback, and multiple control modes.
 
   ================================================================================
 
@@ -22,14 +22,17 @@
   - INTERACTIVE SVG MAP: A world map rendered as an SVG with clickable <polygon>
     elements defining the regions for each writing system.
 
-  - 12 LANGUAGE/SCRIPT REGIONS:
-    - Armenian, Georgian, Cyrillic, Arabic, Ethiopian, Hebrew, Greek, Brahmic,
-      Chinese, Japanese, Korean, and Latin.
-    - Two additional utility layers: "Borders" and "Regions".
+  - DYNAMIC IMAGE GENERATION:
+    - Script textures are generated on-the-fly using HTML Canvas.
+    - Font size is adjustable via a slider and is randomized with a bias based on
+      script complexity (e.g., larger fonts for Chinese, smaller for Latin).
+    - Supports multiple color modes: randomized, predefined "cheerful" colors, or a
+      uniform blue.
 
   - DYNAMIC REVEAL ANIMATION:
     - Uses HTML <canvas> and the clipping API to create a circular reveal/hide effect.
-    - Each region has its own canvas layer.
+    - Progress of reveal/hide animations is reflected on the corresponding menu
+      buttons.
 
   - MULTIPLE ANIMATION STATES:
     - isHidden: The region is completely invisible.
@@ -38,25 +41,23 @@
     - isHiding: The circular mask is contracting.
     - isFrozen: The animation is paused mid-reveal or mid-hide.
 
-  - Z-INDEX MANAGEMENT:
-    - When a region is activated, its canvas is brought to the highest z-index to
-      ensure it animates over other layers.
-    - The relative order of the other, inactive layers is preserved.
-
   - COMPREHENSIVE CONTROL MENU:
     - AUTOPLAY: Automatically reveals and hides random regions at random intervals.
     - ORIGIN CONTROL ('HOME' vs 'RANDOM'): Toggles the starting point of animations
       between a predefined "home" coordinate for each region and a random point.
+    - COLOUR MODE: A dropdown to select between RANDOM, PREDEFINED, and BLUE
+      color schemes.
+    - FONT SIZE SLIDER: Allows real-time adjustment of the base font size for
+      generated scripts.
     - REGION-SPECIFIC BUTTONS: Allow direct toggling of each language layer.
-    - UTILITY BUTTONS: Toggle 'Borders' and 'Regions' layers.
 
   - STATE MANAGEMENT:
     - Pure JavaScript implementation using parallel arrays to manage the state of
       each region (e.g., `isRevealing`, `isHidden`, `speed`, `clickX`, `clickY`).
 
   - RESPONSIVE DESIGN:
-    - The canvas and SVG elements are configured to fill the viewport (100vw, 100vh)
-      and adapt to window resizing.
+    - The canvas and SVG elements adapt to window resizing, regenerating images
+      as needed.
 
   ================================================================================
 -->
@@ -80,7 +81,7 @@
       }
       a {
         text-decoration: none;
-        color: #1b00b3;
+        color: #000000;
         font-family: Arial, sans-serif;
         font-size: 16px;
       }
@@ -94,7 +95,7 @@
         border-radius: 3px;
         padding: 3px 3px;
         margin: 0px;
-        border: #1b00b3 2px solid;
+        border: #000000 2px solid;
       }
 
       .my-button:hover {
@@ -107,7 +108,7 @@
         border-radius: 15px;
         padding: 3px 3px;
         margin: 0px;
-        border: #1b00b3 2px solid;
+        border: #000000 2px solid;
       }
 
       .region-button:hover {
@@ -123,7 +124,7 @@
         border: #ffffff 2px solid;
         background-color: #ffffff;
         font-family: Arial, Helvetica, sans-serif;
-        color: #1b00b3;
+        color: #000000;
       }
 
       @keyframes blinker {
@@ -283,75 +284,6 @@
           "
           >SOUND [S]</a
         >
-
-        <a
-          id="fast-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="TOGGLE SLOW ANIMATION MODE (10X SLOWER) (Shortcut: W)"
-          onclick="
-            toggleSlow(event);
-            return false;
-          "
-          >SLOW [W]</a
-        >
-
-        <select
-          id="color-mode-select"
-          class="my-button"
-          style="background: #ffffff; color: #1b00b3; font-family: Arial, sans-serif; font-size: 16px; height: 28px; padding: 0 5px; cursor: pointer;"
-          title="SELECT COLOUR MODE (Shortcut: L cycles)"
-          onchange="changeColorMode(this.value)"
-        >
-          <option value="random">RANDOM COLOUR</option>
-          <option value="predefined">PREDEFINED COLOUR</option>
-          <option value="blue">BLUE</option>
-        </select>
-        <div class="my-button" style="padding: 3px 5px; display: flex; align-items: center; gap: 5px;">
-          <span style="font-family: Arial, sans-serif; font-size: 16px; color: #1b00b3;">FONT</span>
-          <input type="range" id="font-slider" min="4" max="24" value="10" title="ADJUST SCRIPT FONT SIZE">
-          <span id="font-size-label" style="font-family: Arial, sans-serif; font-size: 16px; color: #1b00b3; min-width: 28px; text-align: right;">10px</span>
-        </div>
-
-        <a
-          id="random-link"
-          class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="TOGGLE RANDOM/HOME ORIGIN (Shortcut: R)"
-          onclick="
-            toggleRandomOrigin(event);
-            return false;
-          "
-          >RANDOM [R]</a
-        >
-
-        <a
-          id="borders-link"
-          class="my-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
-          href="#"
-          title="SHOW/HIDE ALPHABET BORDERS (Shortcut: B)"
-          onclick="
-            clickedRegion(event, 12, false);
-            return false;
-          "
-          >BORDERS [B]</a
-        >
-        <a
-          id="regions-link"
-          class="my-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
-          href="#"
-          title="SHOW/HIDE ALPHABET IN THEIR REGIONS (Shortcut: G)"
-          onclick="
-            clickedRegion(event, 13, false);
-            return false;
-          "
-          >REGIONS [G]</a
-        >
-
         <a
           id="reset-link"
           class="my-button"
@@ -376,6 +308,136 @@
             return false;
           "
           >PAUSE/RESUME [SPACE]</a
+        >
+        <select
+          id="color-mode-select"
+          class="my-button"
+          style="
+            background: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            height: 28px;
+            padding: 0 5px;
+            cursor: pointer;
+          "
+          title="SELECT COLOUR MODE (Shortcut: L cycles)"
+          onchange="changeColorMode(this.value)"
+        >
+          <option value="random">RANDOM COLOUR [L]</option>
+          <option value="predefined">PREDEFINED COLOUR [L]</option>
+          <option value="blue">BLUE [L]</option>
+        </select>
+
+        <select
+          id="origin-mode-select"
+          class="my-button"
+          style="
+            background: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            height: 28px;
+            padding: 0 5px;
+            cursor: pointer;
+          "
+          title="SELECT ORIGIN MODE (Shortcut: R cycles)"
+          onchange="changeOriginMode(this.value)"
+        >
+          <option value="predefined">PREDEFINED ORIGINS [R]</option>
+          <option value="random">RANDOM ORIGINS [R]</option>
+          <option value="center">CENTER ORIGINS [R]</option>
+        </select>
+        <div
+          class="my-button"
+          style="padding: 3px 5px; display: flex; align-items: center; gap: 5px"
+        >
+          <span
+            style="
+              font-family: Arial, sans-serif;
+              font-size: 16px;
+              color: #000000;
+            "
+            >SLOW</span
+          >
+          <input
+            type="range"
+            id="speed-slider"
+            min="20.5"
+            max="40"
+            step="0.5"
+            value="40"
+            title="ADJUST ANIMATION SPEED"
+          />
+          <span
+            id="speed-label"
+            style="
+              font-family: Arial, sans-serif;
+              font-size: 16px;
+              color: #000000;
+              min-width: 36px;
+              text-align: right;
+            "
+            >FAST</span
+          >
+        </div>
+
+        <div
+          class="my-button"
+          style="padding: 3px 5px; display: flex; align-items: center; gap: 5px"
+        >
+          <span
+            style="
+              font-family: Arial, sans-serif;
+              font-size: 16px;
+              color: #000000;
+            "
+            >SMALL</span
+          >
+          <input
+            type="range"
+            id="font-slider"
+            min="4"
+            max="24"
+            value="10"
+            title="ADJUST SCRIPT FONT SIZE"
+          />
+          <span
+            id="font-size-label"
+            style="
+              font-family: Arial, sans-serif;
+              font-size: 16px;
+              color: #000000;
+              min-width: 28px;
+              text-align: right;
+            "
+            >LARGE</span
+          >
+        </div>
+
+        <a
+          id="borders-link"
+          class="region-button"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          href="#"
+          title="SHOW/HIDE ALPHABET BORDERS (Shortcut: B)"
+          onclick="
+            clickedRegion(event, 12, false);
+            return false;
+          "
+          >BORDERS [B]</a
+        >
+        <a
+          id="regions-link"
+          class="region-button"
+          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          href="#"
+          title="SHOW/HIDE ALPHABET IN THEIR REGIONS (Shortcut: G)"
+          onclick="
+            clickedRegion(event, 13, false);
+            return false;
+          "
+          >REGIONS [G]</a
         >
       </div>
 
@@ -963,8 +1025,8 @@
         For fun, signs spread around the world from their home origin or
         randomly as you choose. You can turn on the sound to hear harmonic tones
         as signs expand or shrink. You can even listen to Ode of Joy, while
-        signs performa a show. The map is based on the scripts' historical and
-        moder origins, but the animations are purely artistic and not meant to
+        signs perform a show. The map is based on the scripts' historical and
+        modern origins, but the animations are purely artistic and not meant to
         be historically accurate.
       </p>
       <h3>Interaction</h3>
@@ -998,16 +1060,50 @@
           region expands or contracts.
         </li>
 
-        <li><strong>SLOW:</strong> Toggles slow mode (10x slower).</li>
-
         <li>
-          <strong>BLUE:</strong> Toggle between BLUE and COLORFULL palettes for
+          <strong>SPEED SLIDER:</strong> Adjusts the animation speed. Drag right
+          for normal speed (1.0x), left for slower.
+        </li>
+        <li>
+          <strong>COLOUR DROPDOWN:</strong> Selects the color palette for the
           scripts.
+          <ul style="padding-left: 20px; margin-top: 5px; margin-bottom: 5px">
+            <li>
+              <strong>RANDOM COLOUR:</strong> Each script gets a new random,
+              vibrant color when images are generated.
+            </li>
+            <li>
+              <strong>PREDEFINED COLOUR:</strong> Uses a curated set of cheerful
+              colors for each region.
+            </li>
+            <li>
+              <strong>BLUE:</strong> All scripts are rendered in shades of blue.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>FONT SLIDER:</strong> Adjusts the base font size used to
+          generate the script images. Images are regenerated when you release
+          the slider.
         </li>
 
         <li>
-          <strong>RANDOM:</strong> Toggle between home origins (signs start in
-          their original regions) and random origins (signs may start anywhere).
+          <strong>ORIGINS DROPDOWN:</strong> Selects the starting point for
+          animations triggered from the menu.
+          <ul style="padding-left: 20px; margin-top: 5px; margin-bottom: 5px">
+            <li>
+              <strong>PREDEFINED ORIGINS:</strong> Animations start from their
+              script's historical/geographical origin point.
+            </li>
+            <li>
+              <strong>RANDOM ORIGINS:</strong> Animations start from a random
+              point on the screen.
+            </li>
+            <li>
+              <strong>CENTER ORIGINS:</strong> All animations start from the
+              center of the screen.
+            </li>
+          </ul>
         </li>
 
         <li>
@@ -1043,9 +1139,14 @@
         <li><strong>A:</strong> Toggle AUTORUN</li>
         <li><strong>J:</strong> Play ODE FOR JOY.</li>
         <li><strong>S:</strong> Toggle SOUND</li>
-        <li><strong>W:</strong> Toggle SLOW mode</li>
-        <li><strong>L:</strong> Toggle COLOURS</li>
-        <li><strong>R:</strong> Toggle RANDOM origins</li>
+        <li>
+          <strong>L:</strong> Cycle through COLOUR modes (Random, Predefined,
+          Blue)
+        </li>
+        <li>
+          <strong>R:</strong> Cycle through ORIGIN modes (Predefined, Random,
+          Center)
+        </li>
 
         <li><strong>B:</strong> Toggle BORDERS</li>
         <li><strong>G:</strong> Toggle REGIONS</li>
@@ -1102,10 +1203,10 @@
       let melodyToneTimer = null; // Timer for exact note duration
 
       let isAutoPlaying = false;
-      let randomOrigins = false;
-      let slowMode = false;
+      let originMode = "predefined";
+      let slowMultiplier = 0.5;
       let colorMode = "random";
-      let scriptFontSize = 10;
+      let scriptFontSize = 12;
 
       // Masking for generated script images
       let processedMaskCanvas = null;
@@ -1239,18 +1340,50 @@
 
       // Character ranges for regions 0-11
       const regionCharRanges = [
-        [[0x0621, 0x064a], [0x0660, 0x0669]], // 0 ARABIC (Letters, Digits)
-        [[0x0531, 0x0556], [0x0561, 0x0587]], // 1 ARMENIAN (Upper, Lower)
+        [
+          [0x0621, 0x064a],
+          [0x0660, 0x0669],
+        ], // 0 ARABIC (Letters, Digits)
+        [
+          [0x0531, 0x0556],
+          [0x0561, 0x0587],
+        ], // 1 ARMENIAN (Upper, Lower)
         [0x4e00, 0x9fa5], // 2 CHINESE (Common Ideographs)
         [0x1200, 0x135a], // 3 ETHIOPIAN (Syllables)
-        [[0x10a0, 0x10c5], [0x10d0, 0x10fa]], // 4 GEORGIAN (Asomtavruli, Mkhedruli)
-        [[0x0391, 0x03a9], [0x03b1, 0x03c9]], // 5 GREEK (Upper, Lower)
+        [
+          [0x10a0, 0x10c5],
+          [0x10d0, 0x10fa],
+        ], // 4 GEORGIAN (Asomtavruli, Mkhedruli)
+        [
+          [0x0391, 0x03a9],
+          [0x03b1, 0x03c9],
+        ], // 5 GREEK (Upper, Lower)
         [0x05d0, 0x05ea], // 6 HEBREW (Letters)
-        [[0x3041, 0x3096], [0x30a1, 0x30fa]], // 7 JAPANESE (Hiragana, Katakana)
+        [
+          [0x3041, 0x3096],
+          [0x30a1, 0x30fa],
+        ], // 7 JAPANESE (Hiragana, Katakana)
         [0xac00, 0xd7a3], // 8 KOREAN (Hangul Syllables)
-        [[0x0041, 0x005a], [0x0061, 0x007a], [0x00c0, 0x00d6], [0x00d8, 0x00f6], [0x00f8, 0x017f]], // 9 LATIN (Upper, Lower, Ext A)
-        [[0x0410, 0x042f], [0x0430, 0x044f]], // 10 CYRILLIC (Upper, Lower)
-        [[0x0905, 0x0939], [0x0985, 0x0994], [0x0b85, 0x0b94], [0x0c05, 0x0c39], [0x0c85, 0x0cb9], [0x0e01, 0x0e3a], [0x0f40, 0x0f6c]], // 11 BRAHMIC (Letters only)
+        [
+          [0x0041, 0x005a],
+          [0x0061, 0x007a],
+          [0x00c0, 0x00d6],
+          [0x00d8, 0x00f6],
+          [0x00f8, 0x017f],
+        ], // 9 LATIN (Upper, Lower, Ext A)
+        [
+          [0x0410, 0x042f],
+          [0x0430, 0x044f],
+        ], // 10 CYRILLIC (Upper, Lower)
+        [
+          [0x0905, 0x0939],
+          [0x0985, 0x0994],
+          [0x0b85, 0x0b94],
+          [0x0c05, 0x0c39],
+          [0x0c85, 0x0cb9],
+          [0x0e01, 0x0e3a],
+          [0x0f40, 0x0f6c],
+        ], // 11 BRAHMIC (Letters only)
       ];
 
       // Distinct colors for regions 0-11
@@ -1347,8 +1480,8 @@
         let fillStyle = isBlueMode ? "#1b00b3" : regionColors[index];
         // Add some variation in blue mode or just keep it distinct blue
         if (isBlueMode) {
-           // slightly vary blue for interest, or keep uniform
-           fillStyle = `hsl(${240}, ${70 + Math.random() * 30}%, ${30 + Math.random() * 20}%)`;
+          // slightly vary blue for interest, or keep uniform
+          fillStyle = `hsl(${240}, ${70 + Math.random() * 30}%, ${30 + Math.random() * 20}%)`;
         }
 
         // Randomize font size based on script complexity
@@ -1365,7 +1498,8 @@
           maxVar = 0;
         }
 
-        const sizeVariation = Math.floor(Math.random() * (maxVar - minVar + 1)) + minVar;
+        const sizeVariation =
+          Math.floor(Math.random() * (maxVar - minVar + 1)) + minVar;
         const actualFontSize = Math.max(4, scriptFontSize + sizeVariation);
 
         tCtx.fillStyle = fillStyle;
@@ -1430,7 +1564,7 @@
 
       function regenerateImages() {
         return new Promise((resolve) => {
-          showToast("Initiating world symbols...", 30000); // Show for up to 30s
+          showToast("Planting letters ...", 30000); // Show for up to 30s
           setTimeout(() => {
             if (colorMode === "random") {
               for (let i = 0; i < 12; i++) {
@@ -1469,6 +1603,72 @@
                 images[i] = c;
               }
             }
+
+            // Generate combined "Origins" image (Index 13) replacing origins.png
+            // We combine all generated region images (0-11) masked by their SVG polygons
+            const combinedCanvas = document.createElement("canvas");
+            combinedCanvas.width = window.innerWidth;
+            combinedCanvas.height = window.innerHeight;
+            const ctxComb = combinedCanvas.getContext("2d");
+
+            const scratchCanvas = document.createElement("canvas");
+            scratchCanvas.width = window.innerWidth;
+            scratchCanvas.height = window.innerHeight;
+            const sCtx = scratchCanvas.getContext("2d");
+
+            const dim = getCoverDimensions(
+              window.innerWidth,
+              window.innerHeight,
+              WIDTH,
+              HEIGHT,
+            );
+            const scale = dim.w / WIDTH;
+            const allPolys = Array.from(document.querySelectorAll("svg polygon"));
+
+            for (let i = 0; i < 12; i++) {
+              // Find polygons for this region by checking the onclick handler index
+              const regex = new RegExp(`clickedRegion\\s*\\(\\s*event\\s*,\\s*${i}\\s*,`);
+              const targetPolys = allPolys.filter((p) => regex.test(p.getAttribute("onclick")));
+
+              if (targetPolys.length > 0) {
+                sCtx.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+
+                // 1. Draw mask (polygons) in white
+                sCtx.globalCompositeOperation = "source-over";
+                sCtx.fillStyle = "#ffffff";
+                sCtx.beginPath();
+                targetPolys.forEach((poly) => {
+                  const points = poly.getAttribute("points").trim().split(/\s+/);
+                  if (points.length > 0) {
+                    const p0 = points[0].split(",");
+                    sCtx.moveTo(p0[0] * scale + dim.x, p0[1] * scale + dim.y);
+                    for (let k = 1; k < points.length; k++) {
+                      const pk = points[k].split(",");
+                      sCtx.lineTo(pk[0] * scale + dim.x, pk[1] * scale + dim.y);
+                    }
+                  }
+                });
+                sCtx.fill();
+
+                // 2. Composite with the generated text texture (source-in keeps intersection)
+                sCtx.globalCompositeOperation = "source-in";
+                if (images[i]) sCtx.drawImage(images[i], 0, 0);
+
+                // 3. Add result to main combined canvas
+                ctxComb.globalCompositeOperation = "source-over";
+                ctxComb.drawImage(scratchCanvas, 0, 0);
+              }
+            }
+
+            // Replace image 13 (origins.png) with our generated canvas
+            const oldOrigins = images[13];
+            combinedCanvas.style.cssText = oldOrigins.style.cssText;
+            if (!combinedCanvas.style.zIndex) combinedCanvas.style.zIndex = "1";
+            combinedCanvas.id = "canvasColours"; // Preserve ID convention
+
+            images[13] = combinedCanvas;
+            imageFilenames[13] = null; // Prevent it from being reset to the static png
+
             showToast("Images ready!", 1200);
             resolve();
           }, 20); // Small delay to allow toast to render
@@ -1933,9 +2133,6 @@
           toggleMelody(e);
         }
 
-        if (!randomOrigins) {
-          calculateStarts();
-        }
         for (let index = 0; index < 12; index++) {
           isFrozen[index] = false;
         }
@@ -1959,17 +2156,17 @@
         let indexEnd = includingBordersAndColours ? 14 : 12;
 
         for (let index = 0; index < indexEnd; index++) {
-          let speed = 100;
+          let delayAnim = 100;
 
           if (index > 11) {
-            speed = 10;
+            delayAnim = 10;
           } else {
-            speed = 1000;
+            delayAnim = 1000;
           }
 
           // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-          if (slowMode && !isMelodyPlaying) {
-            speed *= 10;
+          if (!isMelodyPlaying) {
+            delayAnim *= slowMultiplier;
           }
 
           if (includingBordersAndColours && (index == 12 || index == 13)) {
@@ -1978,23 +2175,23 @@
             isShown[index] = false;
             isRevealing[index] = false;
             isHiding[index] = true;
-            paint(index, speed);
+            paint(index, delayAnim);
           } else if (isFrozen[index]) {
             isFrozen[index] = false;
 
-            paint(index, speed);
+            paint(index, delayAnim);
           } else if (isShown[index]) {
             isShown[index] = false;
             isHiding[index] = true;
 
             isFrozen[index] = false;
-            paint(index, speed);
+            paint(index, delayAnim);
           } else if (isHidden[index]) {
             isHidden[index] = false;
             isRevealing[index] = true;
 
             isFrozen[index] = false;
-            paint(index, speed);
+            paint(index, delayAnim);
           }
         }
       }
@@ -2061,7 +2258,7 @@
       // index: Region ID (0-13)
       // getclick: If true, use mouse coordinates. If false, use default center.
       function clickedRegion(e, index, getclick, duration) {
-        if (index < 12 && randomOrigins && getclick) {
+        if (index < 12 && originMode === "random" && getclick) {
           let attempts = 0;
           let randomIndex = 0;
 
@@ -2097,8 +2294,8 @@
           }
         }
         // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-        if (slowMode && !isMelodyPlaying) {
-          speed *= 10;
+        if (!isMelodyPlaying) {
+          speed *= slowMultiplier;
         }
         if (e) e.stopPropagation();
         if (index > 11) {
@@ -2108,11 +2305,15 @@
           clickX[index] = e.clientX;
           clickY[index] = e.clientY;
         } else {
-          if (isHidden[index] || (isFrozen[index] && !isHiding[index])) {
-            if (randomOrigins) {
-              clickX[index] = Math.round(Math.random() * canvas[index].width);
-              clickY[index] = Math.round(Math.random() * canvas[index].height);
+          if (isHidden[index]) {
+            if (originMode === "random") {
+              clickX[index] = Math.round(Math.random() * window.innerWidth);
+              clickY[index] = Math.round(Math.random() * window.innerHeight);
+            } else if (originMode === "center") {
+              clickX[index] = Math.round(window.innerWidth / 2);
+              clickY[index] = Math.round(window.innerHeight / 2);
             } else {
+              // "predefined"
               // Calculate position relative to the scaled SVG map
               const dim = getCoverDimensions(
                 window.innerWidth,
@@ -2158,8 +2359,8 @@
           isHiding[index] = true;
         } else if (isRevealing[index]) {
           if (!isFrozen[index]) {
-            isHiding[index] = true;
-            isRevealing[index] = false;
+            //isHiding[index] = true;
+            //isRevealing[index] = false;
           }
           //if (isFrozen[index]) {
           isFrozen[index] = !isFrozen[index];
@@ -2168,8 +2369,8 @@
           if (isFrozen[index]) stopTone(index);
         } else if (isHiding[index]) {
           if (!isFrozen[index]) {
-            isHiding[index] = false;
-            isRevealing[index] = true;
+            //isHiding[index] = false;
+            //isRevealing[index] = true;
           }
           isFrozen[index] = !isFrozen[index];
           if (isFrozen[index]) stopTone(index);
@@ -2287,7 +2488,7 @@
       // Main animation loop for a specific region
       // Uses requestAnimationFrame for smooth rendering
       function paint(region, speed) {
-        const speedMultiplier = 60 / TARGET_FPS;
+        const frameRateCorrection = 60 / TARGET_FPS;
 
         if (speed !== undefined) {
           regionSpeeds[region] = speed;
@@ -2351,11 +2552,12 @@
                 100,
                 Math.max(0, (revealRadius[region] / maxRadius[region]) * 100),
               );
-             
+
               if (region < 14) {
                 const fillColor = getRegionFillColor(region);
                 const offColor = getRegionOffColor(region); // This is white
-                links[region].style.background = `linear-gradient(to right, ${fillColor} ${pct}%, ${offColor} ${pct}%)`;
+                links[region].style.background =
+                  `linear-gradient(to right, ${fillColor} ${pct}%, ${offColor} ${pct}%)`;
                 if (pct > 50) {
                   adjustButtonTextColor(links[region], fillColor);
                 } else {
@@ -2364,10 +2566,10 @@
                 links[region].style.animation = "none";
               }
               revealRadius[region] +=
-                (maxRadius[region] / currentSpeed) * speedMultiplier;
+                (maxRadius[region] / currentSpeed) * frameRateCorrection;
               if (revealRadius[region] < maxRadius[region]) {
                 updateTone(region, revealRadius[region], maxRadius[region]);
-               }
+              }
               startAnimationLoop();
             } else {
               if (region < 14) {
@@ -2388,13 +2590,14 @@
           if (isHiding[region])
             if (revealRadius[region] > 0) {
               const pct = Math.min(
-                                100,
+                100,
                 Math.max(0, (revealRadius[region] / maxRadius[region]) * 100),
               );
               if (region < 14) {
                 const fillColor = getRegionFillColor(region);
                 const offColor = getRegionOffColor(region); // This is white
-                links[region].style.background = `linear-gradient(to right, ${fillColor} ${pct}%, ${offColor} ${pct}%)`;
+                links[region].style.background =
+                  `linear-gradient(to right, ${fillColor} ${pct}%, ${offColor} ${pct}%)`;
                 if (pct > 50) {
                   adjustButtonTextColor(links[region], fillColor);
                 } else {
@@ -2403,7 +2606,7 @@
                 links[region].style.animation = "none";
               }
               revealRadius[region] -=
-                (maxRadius[region] / currentSpeed) * speedMultiplier;
+                (maxRadius[region] / currentSpeed) * frameRateCorrection;
 
               if (revealRadius[region] > 0) {
                 updateTone(region, revealRadius[region], maxRadius[region]);
@@ -2448,56 +2651,16 @@
         const currentIndex = modes.indexOf(colorMode);
         const nextMode = modes[(currentIndex + 1) % modes.length];
         changeColorMode(nextMode);
-        showToast("Colour Mode: " + nextMode.toUpperCase().replace("_", " "));
+        showToast(
+          "Colour Mode: " +
+            nextMode.toUpperCase().replace("_", " ") +
+            ". Loading...",
+        );
       }
 
       function toggleColour(e) {
         // Deprecated, redirected to cycleColorMode for backward compatibility if called directly
         cycleColorMode(e);
-      }
-
-    
-
-      function toggleSlow(e) {
-        clearTimeout(autoPlayTimeout);
-
-        if (e) e.preventDefault();
-        slowMode = !slowMode;
-        const link = document.getElementById("fast-link");
-        link.style.background = slowMode ? "#ffff00" : "#ffffff";
-
-        clearTimeout(autoPlayTimeout);
-        if (!isAutoPlaying)
-          for (let index = 0; index < 12; index++) {
-            if (isRevealing[index] || isHiding[index]) {
-              if (!isFrozen[index]) {
-                isFrozen[index] = true;
-                stopTone(index);
-              }
-            }
-            paint(index, 100);
-          }
-        else {
-          for (let index = 0; index < 12; index++) {
-            if (isHidden[index]) {
-              //isHidden[index] = false;
-              //isRevealing[index] = true;
-            } else if (isShown[index]) {
-              //isShown[index] = false;
-              //isHiding[index] = true;
-            } else {
-              isFrozen[index] = true;
-
-              stopTone(index);
-
-              paint(index, 100);
-            }
-
-            //paint(index, slowMode ? 200 : 2000);
-            //stopTone(index);
-          }
-          autoPlay();
-        }
       }
 
       // Pauses all currently animating regions
@@ -2539,13 +2702,17 @@
           if (indices.indexOf(r) === -1) indices.push(r);
         }
         indices.forEach((index) => {
-          if ((images[index].complete || images[index] instanceof HTMLCanvasElement) && images[index].width > 0) {
+          if (
+            (images[index].complete ||
+              images[index] instanceof HTMLCanvasElement) &&
+            images[index].width > 0
+          ) {
             clickedRegion(null, index, false);
           }
         });
         autoPlayTimeout = setTimeout(
           autoPlay,
-          (!slowMode ? 200 : 2000) * (Math.floor(Math.random() * 6) + 1),
+          400 * (Math.floor(Math.random() * 6) + 1),
         );
       }
 
@@ -2577,7 +2744,10 @@
             isFrozen[region] = false;
           }
 
-          if (images[region].complete || images[region] instanceof HTMLCanvasElement) {
+          if (
+            images[region].complete ||
+            images[region] instanceof HTMLCanvasElement
+          ) {
             clickedRegion(null, region, false, note.duration);
           }
         });
@@ -2615,12 +2785,18 @@
         }
       }
 
-      function toggleRandomOrigin(e) {
-        // If caller provided explicit boolean, use it; otherwise toggle state
+      function changeOriginMode(mode) {
+        originMode = mode;
+        document.getElementById("origin-mode-select").value = mode;
+      }
 
-        randomOrigins = !randomOrigins;
-        const link = document.getElementById("random-link");
-        link.style.background = randomOrigins ? "#ffff00" : "#ffffff";
+      function cycleOriginMode(e) {
+        if (e) e.preventDefault();
+        const modes = ["predefined", "random", "center"];
+        const currentIndex = modes.indexOf(originMode);
+        const nextMode = modes[(currentIndex + 1) % modes.length];
+        changeOriginMode(nextMode);
+        showToast("Origin Mode: " + nextMode.toUpperCase().replace("_", " "));
       }
 
       function toggleMenu(e) {
@@ -2748,8 +2924,7 @@
             e.preventDefault();
             break;
           case "r":
-            toggleRandomOrigin(null);
-            showToast(randomOrigins ? "Origins: RANDOM" : "Origins: HOME");
+            cycleOriginMode(null);
             e.preventDefault();
             break;
           case "l":
@@ -2770,11 +2945,6 @@
           case "c":
             resetRegions(null);
             showToast("Cleared");
-            e.preventDefault();
-            break;
-          case "w":
-            toggleSlow(null);
-            showToast(slowMode ? "SLOW: ON" : "SLOW: OFF");
             e.preventDefault();
             break;
           case "i":
@@ -2822,10 +2992,39 @@
         createRipple(e.clientX, e.clientY);
       });
 
+      document
+        .getElementById("speed-slider")
+        .addEventListener("change", (e) => {
+          const newMultiplier = 40.5 - parseFloat(e.target.value);
+          slowMultiplier = newMultiplier;
+
+          for (let i = 0; i < 12; i++) {
+            const baseSpeed = i > 11 ? 10 : 200;
+            const newSpeed = baseSpeed * slowMultiplier;
+
+            if (isFrozen[i]) {
+              isFrozen[i] = false;
+              paint(i, newSpeed);
+            } else if (isHidden[i]) {
+              clickedRegion(null, i, false);
+            } else if (isShown[i]) {
+              clickedRegion(null, i, false);
+            } else if (isRevealing[i]) {
+              isRevealing[i] = false;
+              isHiding[i] = true;
+              paint(i, newSpeed);
+            } else if (isHiding[i]) {
+              isHiding[i] = false;
+              isRevealing[i] = true;
+              paint(i, newSpeed);
+            }
+          }
+        });
+
       document.getElementById("font-slider").addEventListener("input", (e) => {
-        const newSize = parseInt(e.target.value, 10);
+        const newSize = parseInt(e.target.value, 12);
         scriptFontSize = newSize;
-        document.getElementById("font-size-label").textContent = `${newSize}px`;
+        //document.getElementById("font-size-label").textContent = `${newSize}px`;
       });
 
       document.getElementById("font-slider").addEventListener("change", () => {
