@@ -145,8 +145,8 @@
       #toast {
         position: fixed;
         left: 50%;
-        top: 24px;
-        transform: translateX(-50%);
+        top: 50%;
+        transform: translate(-50%, -50%);
         background: rgba(0, 0, 0, 0.8);
         color: #fff;
         padding: 8px 12px;
@@ -162,7 +162,7 @@
       }
       #toast.visible {
         opacity: 1;
-        transform: translateX(-50%) translateY(-6px);
+        transform: translate(-50%, -50%);
       }
       #gear-toggle {
         position: fixed;
@@ -297,18 +297,22 @@
           >SLOW [W]</a
         >
 
-        <a
-          id="colour-link"
+        <select
+          id="color-mode-select"
           class="my-button"
-          style="background: #ffffff"
-          href="#"
-          title="TOGGLE RANDOM COLOURS (Shortcut: K)"
-          onclick="
-            toggleColour(event);
-            return false;
-          "
-          >BLUE [L]</a
+          style="background: #ffffff; color: #1b00b3; font-family: Arial, sans-serif; font-size: 16px; height: 28px; padding: 0 5px; cursor: pointer;"
+          title="SELECT COLOUR MODE (Shortcut: L cycles)"
+          onchange="changeColorMode(this.value)"
         >
+          <option value="random">RANDOM COLOUR</option>
+          <option value="predefined">PREDEFINED COLOUR</option>
+          <option value="blue">BLUE</option>
+        </select>
+        <div class="my-button" style="padding: 3px 5px; display: flex; align-items: center; gap: 5px;">
+          <span style="font-family: Arial, sans-serif; font-size: 16px; color: #1b00b3;">FONT</span>
+          <input type="range" id="font-slider" min="4" max="24" value="10" title="ADJUST SCRIPT FONT SIZE">
+          <span id="font-size-label" style="font-family: Arial, sans-serif; font-size: 16px; color: #1b00b3; min-width: 28px; text-align: right;">10px</span>
+        </div>
 
         <a
           id="random-link"
@@ -389,7 +393,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 0, false);
@@ -401,7 +405,7 @@
         <a
           id="arm-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 2)"
           href="#"
           onclick="
@@ -415,7 +419,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 3)"
           id="san-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 11, false);
@@ -428,7 +432,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 4)"
           id="chi-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 2, false);
@@ -441,7 +445,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 5)"
           id="cyr-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 10, false);
@@ -454,7 +458,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 6)"
           id="eth-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 3, false);
@@ -467,7 +471,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 7)"
           id="geo-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 4, false);
@@ -480,7 +484,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 8)"
           id="gre-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 5, false);
@@ -493,7 +497,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 9)"
           id="heb-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 6, false);
@@ -506,7 +510,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 0)"
           id="jap-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 7, false);
@@ -519,7 +523,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: O)"
           id="kor-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 8, false);
@@ -532,7 +536,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: P)"
           id="lat-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
           href="#"
           onclick="
             clickedRegion(event, 9, false);
@@ -1100,7 +1104,11 @@
       let isAutoPlaying = false;
       let randomOrigins = false;
       let slowMode = false;
-      let isColourEnabled = true;
+      let colorMode = "random";
+      let scriptFontSize = 10;
+
+      // Masking for generated script images
+      let processedMaskCanvas = null;
 
       // toast helper
       let _toastTimer = null;
@@ -1213,24 +1221,199 @@
       ];
 
       const imageFilenames = [
-        "ara_full.png",
-        "arm_full.png",
-        "cin_full.png",
-        "eti_full.png",
-        "geo_full.png",
-        "gre_full.png",
-        "heb_full.png",
-        "jap_full.png",
-        "kor_full.png",
-        "lat_full.png",
-        "cyr_full.png",
-        "san_full.png",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         "borders.gif",
         "origins.png",
       ];
 
+      // Character ranges for regions 0-11
+      const regionCharRanges = [
+        [[0x0621, 0x064a], [0x0660, 0x0669]], // 0 ARABIC (Letters, Digits)
+        [[0x0531, 0x0556], [0x0561, 0x0587]], // 1 ARMENIAN (Upper, Lower)
+        [0x4e00, 0x9fa5], // 2 CHINESE (Common Ideographs)
+        [0x1200, 0x135a], // 3 ETHIOPIAN (Syllables)
+        [[0x10a0, 0x10c5], [0x10d0, 0x10fa]], // 4 GEORGIAN (Asomtavruli, Mkhedruli)
+        [[0x0391, 0x03a9], [0x03b1, 0x03c9]], // 5 GREEK (Upper, Lower)
+        [0x05d0, 0x05ea], // 6 HEBREW (Letters)
+        [[0x3041, 0x3096], [0x30a1, 0x30fa]], // 7 JAPANESE (Hiragana, Katakana)
+        [0xac00, 0xd7a3], // 8 KOREAN (Hangul Syllables)
+        [[0x0041, 0x005a], [0x0061, 0x007a], [0x00c0, 0x00d6], [0x00d8, 0x00f6], [0x00f8, 0x017f]], // 9 LATIN (Upper, Lower, Ext A)
+        [[0x0410, 0x042f], [0x0430, 0x044f]], // 10 CYRILLIC (Upper, Lower)
+        [[0x0905, 0x0939], [0x0985, 0x0994], [0x0b85, 0x0b94], [0x0c05, 0x0c39], [0x0c85, 0x0cb9], [0x0e01, 0x0e3a], [0x0f40, 0x0f6c]], // 11 BRAHMIC (Letters only)
+      ];
+
+      // Distinct colors for regions 0-11
+      const regionColors = [
+        "#007F0E", // 0 ARABIC (Green)
+        "#FF0000", // 1 ARMENIAN (Red)
+        "#FF4500", // 2 CHINESE (OrangeRed)
+        "#FFD700", // 3 ETHIOPIAN (Gold)
+        "#8B0000", // 4 GEORGIAN (DarkRed)
+        "#00BFFF", // 5 GREEK (DeepSkyBlue)
+        "#0000FF", // 6 HEBREW (Blue)
+        "#FF69B4", // 7 JAPANESE (HotPink)
+        "#191970", // 8 KOREAN (MidnightBlue)
+        "#000000", // 9 LATIN (Black)
+        "#A52A2A", // 10 CYRILLIC (Brown)
+        "#FF8C00", // 11 BRAHMIC (DarkOrange)
+      ];
+
+      // Cheerful colors for predefined mode
+      const cheerfulColors = [
+        "#00E676", // 0 ARABIC (Bright Green)
+        "#FF9800", // 1 ARMENIAN (Orange)
+        "#FF0000", // 2 CHINESE (Red)
+        "#FFD700", // 3 ETHIOPIAN (Gold)
+        "#FF1744", // 4 GEORGIAN (Red Accent)
+        "#00B0FF", // 5 GREEK (Light Blue)
+        "#2979FF", // 6 HEBREW (Blue)
+        "#FF4081", // 7 JAPANESE (Pink)
+        "#304FFE", // 8 KOREAN (Indigo)
+        "#00BCD4", // 9 LATIN (Cyan)
+        "#D50000", // 10 CYRILLIC (Red)
+        "#FF6D00", // 11 BRAHMIC (Orange)
+      ];
+
+      function adjustButtonTextColor(button, bgColor) {
+        const r = parseInt(bgColor.slice(1, 3), 16);
+        const g = parseInt(bgColor.slice(3, 5), 16);
+        const b = parseInt(bgColor.slice(5, 7), 16);
+        const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        if (luminance < 128) {
+          button.style.color = "#ffffff"; // White text on dark backgrounds
+        } else {
+          button.style.color = "#000000"; // Black text on light backgrounds
+        }
+      }
+
+      function getRegionOffColor(regionIndex) {
+        return "#ffffff"; // Default "off" color for the button background is white
+      }
+
+      function getRegionFillColor(regionIndex) {
+        if (regionIndex >= 12) return "#1b00b3";
+        return colorMode !== "blue" ? regionColors[regionIndex] : "#1b00b3";
+      }
+
+      // Sets the background and text color for all region buttons
+      function setAllButtonStyles() {
+        for (let i = 0; i < 12; i++) {
+          const button = links[i];
+          if (!button) continue;
+
+          const bgColor = getRegionOffColor(i);
+          button.style.background = bgColor;
+
+          // Adjust text color for better contrast
+          const r = parseInt(bgColor.slice(1, 3), 16);
+          const g = parseInt(bgColor.slice(3, 5), 16);
+          const b = parseInt(bgColor.slice(5, 7), 16);
+          const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+
+          if (luminance < 128) {
+            button.style.color = "#ffffff"; // White text on dark backgrounds
+          } else {
+            button.style.color = "#000000"; // Black text on light backgrounds
+          }
+          adjustButtonTextColor(button, bgColor); // Text will be black on white
+        }
+      }
+
+      const WIDTH = 2320;
+      const HEIGHT = 1474;
+
+      function generateRegionImage(index, isBlueMode, mask, w, h) {
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = w;
+        tempCanvas.height = h;
+        const tCtx = tempCanvas.getContext("2d");
+
+        // Clear
+        tCtx.clearRect(0, 0, w, h);
+
+        // Determine color
+        let fillStyle = isBlueMode ? "#1b00b3" : regionColors[index];
+        // Add some variation in blue mode or just keep it distinct blue
+        if (isBlueMode) {
+           // slightly vary blue for interest, or keep uniform
+           fillStyle = `hsl(${240}, ${70 + Math.random() * 30}%, ${30 + Math.random() * 20}%)`;
+        }
+
+        // Randomize font size based on script complexity
+        let minVar = -2;
+        let maxVar = 2;
+
+        // Complex scripts (Chinese, Japanese, Korean, Ethiopian, Brahmic) prioritize larger sizes
+        if ([2, 3, 7, 8, 11].includes(index)) {
+          minVar = 0;
+          maxVar = 4;
+        } else if ([1, 5, 6, 9, 10].includes(index)) {
+          // Simple scripts (Latin, Hebrew, Greek, Cyrillic, Armenian) prioritize smaller sizes
+          minVar = -4;
+          maxVar = 0;
+        }
+
+        const sizeVariation = Math.floor(Math.random() * (maxVar - minVar + 1)) + minVar;
+        const actualFontSize = Math.max(4, scriptFontSize + sizeVariation);
+
+        tCtx.fillStyle = fillStyle;
+        tCtx.font = `${actualFontSize}px monospace`;
+        tCtx.textAlign = "left";
+        tCtx.textBaseline = "top";
+
+        const rangeData = regionCharRanges[index];
+
+        const charWidth = tCtx.measureText("M").width;
+        const stepY = actualFontSize;
+        const charsPerLine = Math.ceil(w / charWidth) + 1;
+
+        for (let y = 0; y < h; y += stepY) {
+          let line = "";
+          for (let x = 0; x < charsPerLine; x++) {
+            let charCode;
+            if (Array.isArray(rangeData[0])) {
+              const r = rangeData[Math.floor(Math.random() * rangeData.length)];
+              charCode = r[0] + Math.floor(Math.random() * (r[1] - r[0] + 1));
+            } else {
+              const range = rangeData;
+              const rangeLen = range[1] - range[0] + 1;
+              charCode = range[0] + Math.floor(Math.random() * rangeLen);
+            }
+            line += String.fromCharCode(charCode);
+          }
+          tCtx.fillText(line, 0, y);
+        }
+
+        // Apply mask to only show characters on land
+        if (mask) {
+          const dim = getCoverDimensions(w, h, mask.width, mask.height);
+          tCtx.globalCompositeOperation = "destination-in";
+          tCtx.drawImage(mask, dim.x, dim.y, dim.w, dim.h);
+          tCtx.globalCompositeOperation = "source-over"; // reset
+        }
+
+        return tempCanvas;
+      }
+
+      // Initialize images
       imageFilenames.forEach((name, i) => {
-        images[i].src = "img/" + name;
+        if (name) {
+          // Load static asset
+          images[i].src = "img/" + name;
+        }
+        // Dynamic images will be generated on window.load
       });
 
       // Set styles for images (z-index layering)
@@ -1244,6 +1427,53 @@
             ? (image.style.zIndex = 100)
             : (image.style.zIndex = index + 10);
       });
+
+      function regenerateImages() {
+        return new Promise((resolve) => {
+          showToast("Initiating world symbols...", 30000); // Show for up to 30s
+          setTimeout(() => {
+            if (colorMode === "random") {
+              for (let i = 0; i < 12; i++) {
+                // Randomize colors: Darker (L: 30-50%) and Saturated (S: 70-100%)
+                const h = Math.random() * 360;
+                const s = 0.7 + Math.random() * 0.3;
+                const l = 0.3 + Math.random() * 0.2;
+
+                const k = (n) => (n + h / 30) % 12;
+                const a = s * Math.min(l, 1 - l);
+                const f = (n) =>
+                  l -
+                  a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+
+                const toHex = (x) => {
+                  const hex = Math.round(x * 255).toString(16);
+                  return hex.length === 1 ? "0" + hex : hex;
+                };
+                regionColors[i] = `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+              }
+            } else if (colorMode === "predefined") {
+              for (let i = 0; i < 12; i++) {
+                regionColors[i] = cheerfulColors[i];
+              }
+            }
+            for (let i = 0; i < 12; i++) {
+              if (!imageFilenames[i]) {
+                const c = generateRegionImage(
+                  i,
+                  colorMode === "blue",
+                  processedMaskCanvas,
+                  window.innerWidth,
+                  window.innerHeight,
+                );
+                c.style.cssText = images[i].style.cssText;
+                images[i] = c;
+              }
+            }
+            showToast("Images ready!", 1200);
+            resolve();
+          }, 20); // Small delay to allow toast to render
+        });
+      }
 
       // Default center coordinates for each region (relative to original image size)
 
@@ -1632,21 +1862,18 @@
 
       // Recalculates default starting coordinates based on current window size
       function calculateStarts() {
+        // Get the dimensions of the scaled SVG map within the window
+        const dim = getCoverDimensions(
+          window.innerWidth,
+          window.innerHeight,
+          WIDTH,
+          HEIGHT,
+        );
+        const scale = dim.w / WIDTH; // Uniform scale factor
+
         for (let index = 0; index < clickX.length; index++) {
-          const dim = getCoverDimensions(
-            canvas[index].width,
-            canvas[index].height,
-            images[index].width,
-            images[index].height,
-          );
-          if (images[index].width > 0) {
-            clickX[index] = Math.round(
-              imageOriginalX[index] * (dim.w / images[index].width) + dim.x,
-            );
-            clickY[index] = Math.round(
-              imageOriginalY[index] * (dim.h / images[index].height) + dim.y,
-            );
-          }
+          clickX[index] = Math.round(imageOriginalX[index] * scale + dim.x);
+          clickY[index] = Math.round(imageOriginalY[index] * scale + dim.y);
         }
       }
 
@@ -1886,21 +2113,16 @@
               clickX[index] = Math.round(Math.random() * canvas[index].width);
               clickY[index] = Math.round(Math.random() * canvas[index].height);
             } else {
+              // Calculate position relative to the scaled SVG map
               const dim = getCoverDimensions(
-                canvas[index].width,
-                canvas[index].height,
-                images[index].width,
-                images[index].height,
+                window.innerWidth,
+                window.innerHeight,
+                WIDTH,
+                HEIGHT,
               );
-              if (images[index].width > 0) {
-                clickX[index] = Math.round(
-                  imageOriginalX[index] * (dim.w / images[index].width) + dim.x,
-                );
-                clickY[index] = Math.round(
-                  imageOriginalY[index] * (dim.h / images[index].height) +
-                    dim.y,
-                );
-              }
+              const scale = dim.w / WIDTH;
+              clickX[index] = Math.round(imageOriginalX[index] * scale + dim.x);
+              clickY[index] = Math.round(imageOriginalY[index] * scale + dim.y);
             }
           }
         }
@@ -2129,19 +2351,31 @@
                 100,
                 Math.max(0, (revealRadius[region] / maxRadius[region]) * 100),
               );
-              links[region].style.background =
-                `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
-              links[region].style.animation = "none";
+             
+              if (region < 14) {
+                const fillColor = getRegionFillColor(region);
+                const offColor = getRegionOffColor(region); // This is white
+                links[region].style.background = `linear-gradient(to right, ${fillColor} ${pct}%, ${offColor} ${pct}%)`;
+                if (pct > 50) {
+                  adjustButtonTextColor(links[region], fillColor);
+                } else {
+                  adjustButtonTextColor(links[region], offColor);
+                }
+                links[region].style.animation = "none";
+              }
               revealRadius[region] +=
                 (maxRadius[region] / currentSpeed) * speedMultiplier;
               if (revealRadius[region] < maxRadius[region]) {
                 updateTone(region, revealRadius[region], maxRadius[region]);
-              }
+               }
               startAnimationLoop();
             } else {
-              //console.log("Region fully revealed:", region);
-              links[region].style.background = "#ffff00";
-              links[region].style.animation = "";
+              if (region < 14) {
+                const fillColor = getRegionFillColor(region);
+                links[region].style.background = fillColor;
+                adjustButtonTextColor(links[region], fillColor);
+                links[region].style.animation = "";
+              }
               stopTone(region);
 
               isHidden[region] = false;
@@ -2154,14 +2388,23 @@
           if (isHiding[region])
             if (revealRadius[region] > 0) {
               const pct = Math.min(
-                100,
+                                100,
                 Math.max(0, (revealRadius[region] / maxRadius[region]) * 100),
               );
-              links[region].style.background =
-                `linear-gradient(to right, #ffff00 ${pct}%, #ffffff ${pct}%)`;
-              links[region].style.animation = "none";
+              if (region < 14) {
+                const fillColor = getRegionFillColor(region);
+                const offColor = getRegionOffColor(region); // This is white
+                links[region].style.background = `linear-gradient(to right, ${fillColor} ${pct}%, ${offColor} ${pct}%)`;
+                if (pct > 50) {
+                  adjustButtonTextColor(links[region], fillColor);
+                } else {
+                  adjustButtonTextColor(links[region], offColor);
+                }
+                links[region].style.animation = "none";
+              }
               revealRadius[region] -=
                 (maxRadius[region] / currentSpeed) * speedMultiplier;
+
               if (revealRadius[region] > 0) {
                 updateTone(region, revealRadius[region], maxRadius[region]);
               }
@@ -2169,10 +2412,13 @@
             } else {
               //console.log("Region hidden:", region);
               revealRadius[region] = 0;
-              links[region].style.background = "";
-              links[region].style.animation = "";
+              if (region < 14) {
+                links[region].style.background = "";
+                links[region].style.background = getRegionOffColor(region); // Set to white
+                adjustButtonTextColor(links[region], getRegionOffColor(region)); // Set text to black
+                links[region].style.animation = "";
+              }
               stopTone(region);
-              links[region].style.background = "#ffffff";
 
               isHidden[region] = true;
               isHiding[region] = false;
@@ -2183,20 +2429,34 @@
         }
       }
 
-      function toggleColour(e) {
-        if (e) e.preventDefault();
+      function changeColorMode(mode) {
+        colorMode = mode;
+        document.getElementById("color-mode-select").value = mode;
 
-        isColourEnabled = !isColourEnabled;
-        const link = document.getElementById("colour-link");
-        link.style.background = isColourEnabled ? "#ffffff" : "#ffff00";
-
-        const folder = isColourEnabled ? "img" : "img_blue";
         for (let i = 0; i < 14; i++) {
-          images[i].src = folder + "/" + imageFilenames[i];
+          if (imageFilenames[i]) images[i].src = "img/" + imageFilenames[i];
         }
-
-        startFrozenVisibleRegions(e, true);
+        regenerateImages().then(() => {
+          setAllButtonStyles();
+          startFrozenVisibleRegions(null, true);
+        });
       }
+
+      function cycleColorMode(e) {
+        if (e) e.preventDefault();
+        const modes = ["random", "predefined", "blue"];
+        const currentIndex = modes.indexOf(colorMode);
+        const nextMode = modes[(currentIndex + 1) % modes.length];
+        changeColorMode(nextMode);
+        showToast("Colour Mode: " + nextMode.toUpperCase().replace("_", " "));
+      }
+
+      function toggleColour(e) {
+        // Deprecated, redirected to cycleColorMode for backward compatibility if called directly
+        cycleColorMode(e);
+      }
+
+    
 
       function toggleSlow(e) {
         clearTimeout(autoPlayTimeout);
@@ -2279,7 +2539,7 @@
           if (indices.indexOf(r) === -1) indices.push(r);
         }
         indices.forEach((index) => {
-          if (images[index].complete && images[index].width > 0) {
+          if ((images[index].complete || images[index] instanceof HTMLCanvasElement) && images[index].width > 0) {
             clickedRegion(null, index, false);
           }
         });
@@ -2317,7 +2577,7 @@
             isFrozen[region] = false;
           }
 
-          if (images[region].complete) {
+          if (images[region].complete || images[region] instanceof HTMLCanvasElement) {
             clickedRegion(null, region, false, note.duration);
           }
         });
@@ -2493,8 +2753,7 @@
             e.preventDefault();
             break;
           case "l":
-            toggleColour(null);
-            showToast(isColourEnabled ? "Colour: RANDOM" : "Colour: ORIGINAL");
+            cycleColorMode(null);
             e.preventDefault();
             break;
           case "x":
@@ -2563,6 +2822,18 @@
         createRipple(e.clientX, e.clientY);
       });
 
+      document.getElementById("font-slider").addEventListener("input", (e) => {
+        const newSize = parseInt(e.target.value, 10);
+        scriptFontSize = newSize;
+        document.getElementById("font-size-label").textContent = `${newSize}px`;
+      });
+
+      document.getElementById("font-slider").addEventListener("change", () => {
+        // Regenerate images when user finishes sliding
+        regenerateImages();
+      });
+
+      let resizeTimeout;
       // Handle window resize events
       window.addEventListener("resize", () => {
         rippleCanvas.width = window.innerWidth;
@@ -2584,19 +2855,30 @@
             revealRadius[index] = maxRadius[index];
           }
 
-          if (image.complete) {
+          if (image.complete || image instanceof HTMLCanvasElement) {
             paint(index);
           }
         });
         calculateStarts();
+
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          regenerateImages();
+        }, 200);
       });
 
       window.addEventListener("load", () => {
-        autoplayToggle(null);
-
-        //clickedRegion(null, 12, false);
-        //clickedRegion(null, 13, false);
-        //toggleSound(null);
+        // Use farby.gif for mask
+        const maskImage = new Image();
+        maskImage.onload = () => {
+          processedMaskCanvas = maskImage;
+          regenerateImages().then(() => {
+            // Generate dynamic images now that the mask is processed
+            setAllButtonStyles();
+            autoplayToggle(null);
+          });
+        };
+        maskImage.src = "img/farby.gif";
       });
     </script>
   </body>
