@@ -1209,7 +1209,7 @@
       // Audio Context and State
       let audioCtx;
       let audioEnabled = false;
-      const baseAnimationDelay = 100;
+      const baseAnimationDelay = 10;
       let animationDelayMultiplier = 30;
       const regionOscillators = new Array(14).fill(null);
       const regionGains = new Array(14).fill(null);
@@ -1695,90 +1695,93 @@
             }
 
             // Generate combined "Origins" image (Index 13) replacing origins.png
-            // We combine all generated region images (0-11) masked by their SVG polygons
-            const combinedCanvas = document.createElement("canvas");
-            combinedCanvas.width = window.innerWidth;
-            combinedCanvas.height = window.innerHeight;
-            const ctxComb = combinedCanvas.getContext("2d");
+            // We combine all generated region images (0-11) masked by their mask images
+            const regionCodes = [
+              "ara",
+              "arm",
+              "chi",
+              "eth",
+              "geo",
+              "gre",
+              "heb",
+              "jap",
+              "kor",
+              "lat",
+              "cyr",
+              "san",
+            ];
+            const maskPromises = regionCodes.map((code) => {
+              return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = `img/mask_${code}.png`;
+              });
+            });
 
-            const scratchCanvas = document.createElement("canvas");
-            scratchCanvas.width = window.innerWidth;
-            scratchCanvas.height = window.innerHeight;
-            const sCtx = scratchCanvas.getContext("2d");
+            Promise.all(maskPromises).then((masks) => {
+              const combinedCanvas = document.createElement("canvas");
+              combinedCanvas.width = window.innerWidth;
+              combinedCanvas.height = window.innerHeight;
+              const ctxComb = combinedCanvas.getContext("2d");
 
-            const scale = zoomedDims.w / WIDTH;
-            const allPolys = Array.from(
-              document.querySelectorAll("svg polygon"),
-            );
+              const scratchCanvas = document.createElement("canvas");
+              scratchCanvas.width = window.innerWidth;
+              scratchCanvas.height = window.innerHeight;
+              const sCtx = scratchCanvas.getContext("2d");
 
-            for (let i = 0; i < 12; i++) {
-              // Find polygons for this region by checking the onclick handler index
-              const regex = new RegExp(
-                `clickedRegion\\s*\\(\\s*event\\s*,\\s*${i}\\s*,`,
-              );
-              const targetPolys = allPolys.filter((p) =>
-                regex.test(p.getAttribute("onclick")),
-              );
+              for (let i = 0; i < 12; i++) {
+                const mask = masks[i];
+                if (mask && images[i]) {
+                  sCtx.clearRect(
+                    0,
+                    0,
+                    scratchCanvas.width,
+                    scratchCanvas.height,
+                  );
 
-              if (targetPolys.length > 0) {
-                sCtx.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+                  // 1. Draw mask image
+                  sCtx.globalCompositeOperation = "source-over";
+                  sCtx.drawImage(
+                    mask,
+                    zoomedDims.x,
+                    zoomedDims.y,
+                    zoomedDims.w,
+                    zoomedDims.h,
+                  );
 
-                // 1. Draw mask (polygons) in white
-                sCtx.globalCompositeOperation = "source-over";
-                sCtx.fillStyle = "#ffffff";
-                sCtx.beginPath();
-                targetPolys.forEach((poly) => {
-                  const points = poly
-                    .getAttribute("points")
-                    .trim()
-                    .split(/\s+/);
-                  if (points.length > 0) {
-                    const p0 = points[0].split(",");
-                    sCtx.moveTo(
-                      p0[0] * scale + zoomedDims.x,
-                      p0[1] * scale + zoomedDims.y,
-                    );
-                    for (let k = 1; k < points.length; k++) {
-                      const pk = points[k].split(",");
-                      sCtx.lineTo(
-                        pk[0] * scale + zoomedDims.x,
-                        pk[1] * scale + zoomedDims.y,
-                      );
-                    }
-                  }
-                });
-                sCtx.fill();
+                  // 2. Composite with the generated text texture (source-in keeps intersection)
+                  sCtx.globalCompositeOperation = "source-in";
+                  sCtx.drawImage(images[i], 0, 0);
 
-                // 2. Composite with the generated text texture (source-in keeps intersection)
-                sCtx.globalCompositeOperation = "source-in";
-                if (images[i]) sCtx.drawImage(images[i], 0, 0);
-
-                // 3. Add result to main combined canvas
-                ctxComb.globalCompositeOperation = "source-over";
-                ctxComb.drawImage(scratchCanvas, 0, 0);
+                  // 3. Add result to main combined canvas
+                  ctxComb.globalCompositeOperation = "source-over";
+                  ctxComb.drawImage(scratchCanvas, 0, 0);
+                }
               }
-            }
 
-            // Replace image 13 (origins.png) with our generated canvas
-            const oldOrigins = images[13];
-            combinedCanvas.style.cssText = oldOrigins.style.cssText;
-            if (!combinedCanvas.style.zIndex) combinedCanvas.style.zIndex = "1";
-            combinedCanvas.id = "canvasColours"; // Preserve ID convention
+              // Replace image 13 (origins.png) with our generated canvas
+              const oldOrigins = images[13];
+              combinedCanvas.style.cssText = oldOrigins.style.cssText;
+              if (!combinedCanvas.style.zIndex)
+                combinedCanvas.style.zIndex = "1";
+              combinedCanvas.id = "canvasColours"; // Preserve ID convention
 
-            images[13] = combinedCanvas;
-            imageFilenames[13] = null; // Prevent it from being reset to the static png
+              images[13] = combinedCanvas;
+              imageFilenames[13] = null; // Prevent it from being reset to the static png
 
-            showToast("Images ready!", 1200);
-            resolve();
+              showToast("Images ready!", 1200);
+              resolve();
 
-            if (forceRepaint) {
-              for (let i = 0; i < 14; i++) {
-                paint(i, 1, true);
+              if (forceRepaint) {
+                for (let i = 0; i < 14; i++) {
+                  paint(i, 1, true);
+                }
               }
-            }
 
-            setAllButtonStyles();
-            updateButtonBorderColors();
+              setAllButtonStyles();
+              updateButtonBorderColors();
+            });
           }, 20); // Small delay to allow toast to render
         });
       }
@@ -2556,10 +2559,7 @@
           });
         }
 
-        paint(
-          index,
-          animationDelay,
-        );
+        paint(index, animationDelay);
       }
 
       function startAnimationLoop(justOnePaint) {
@@ -3245,8 +3245,9 @@
           regenerateImages(false).then(() => {
             changeColorMode("predefined");
             // Generate dynamic images now that the mask is processed
-
-            autoplayToggle(null);
+            clickedRegion(null, 12, 100);
+            clickedRegion(null, 13, 100);
+            //autoplayToggle(null);
           });
         };
         maskImage.src = "img/regions.png";
