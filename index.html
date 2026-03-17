@@ -76,6 +76,7 @@
         padding: 0;
         overflow: hidden;
         background: #ffffff;
+        touch-action: none;
       }
       canvas {
         display: block;
@@ -322,7 +323,7 @@
             toggleStopAll(event, true);
             return false;
           "
-          >PAUSE/RESUME [SPACE]</a
+          >PAUSE [SPACE]</a
         >
         <select
           id="color-mode-select"
@@ -339,8 +340,8 @@
           title="SELECT COLOUR MODE (Shortcut: L cycles)"
           onchange="changeColorMode(this.value)"
         >
+          <option value="predefined">NICE COLOUR [L]</option>
           <option value="random">RANDOM COLOUR [L]</option>
-          <option value="predefined">PREDEFINED COLOUR [L]</option>
           <option value="blue">BLUE [L]</option>
         </select>
 
@@ -359,7 +360,7 @@
           title="SELECT ORIGIN MODE (Shortcut: R cycles)"
           onchange="changeOriginMode(this.value)"
         >
-          <option value="predefined">PREDEFINED ORIGINS [R]</option>
+          <option value="predefined">REAL ORIGINS [R]</option>
           <option value="random">RANDOM ORIGINS [R]</option>
           <option value="center">CENTER ORIGINS [R]</option>
         </select>
@@ -379,9 +380,9 @@
             type="range"
             id="speed-slider"
             min="0"
-            max="10"
+            max="100"
             step="1"
-            value="5"
+            value="71"
             title="ADJUST ANIMATION SPEED"
           />
           <span
@@ -412,9 +413,10 @@
           <input
             type="range"
             id="font-slider"
-            min="4"
-            max="24"
-            value="10"
+            min="10"
+            max="40"
+            value="16"
+            step="1"
             title="ADJUST SCRIPT FONT SIZE"
           />
           <span
@@ -1047,7 +1049,7 @@
         as signs expand or shrink. You can even listen to Ode of Joy, while
         signs perform a show. The map is based on the scripts' historical and
         modern origins, but the animations are purely artistic and not meant to
-        be historically accurate. 
+        be historically accurate.
       </p>
       <h3>Interaction</h3>
       <ul style="padding-left: 20px; margin-bottom: 15px">
@@ -1141,9 +1143,7 @@
           all animations and audio.
         </li>
 
-        <li>
-          <strong>REPLANT:</strong> Regenerates all script images.
-        </li>
+        <li><strong>REPLANT:</strong> Regenerates all script images.</li>
 
         <li>
           <strong>PAUSE/RESUME:</strong> Pauses/resumes all running animations
@@ -1209,6 +1209,8 @@
       // Audio Context and State
       let audioCtx;
       let audioEnabled = false;
+      const baseAnimationDelay = 100;
+      let animationDelayMultiplier = 30;
       const regionOscillators = new Array(14).fill(null);
       const regionGains = new Array(14).fill(null);
 
@@ -1229,9 +1231,9 @@
 
       let isAutoPlaying = false;
       let originMode = "predefined";
-      let slowMultiplier = 5.1;
+
       let colorMode = "random";
-      let scriptFontSize = 12;
+      let scriptFontSize = 16;
 
       // Masking for generated script images
       let processedMaskCanvas = null;
@@ -1572,16 +1574,17 @@
         }
 
         // Randomize font size based on script complexity
-        let minVar = -2;
-        let maxVar = 2;
+        const variation = Math.max(1, Math.round(scriptFontSize * 0.2));
+        let minVar = -variation;
+        let maxVar = variation;
 
         // Complex scripts (Chinese, Japanese, Korean, Ethiopian, Brahmic) prioritize larger sizes
         if ([2, 3, 7, 8, 11].includes(index)) {
           minVar = 0;
-          maxVar = 4;
+          maxVar = variation * 2;
         } else if ([1, 5, 6, 9, 10].includes(index)) {
           // Simple scripts (Latin, Hebrew, Greek, Cyrillic, Armenian) prioritize smaller sizes
-          minVar = -4;
+          minVar = -variation * 2;
           maxVar = 0;
         }
 
@@ -1649,11 +1652,11 @@
             : (image.style.zIndex = index + 10);
       });
 
-      function regenerateImages(forceRepaint = false) {
+      function regenerateImages(forceRepaint = false, forceColorUpdate = true) {
         return new Promise((resolve) => {
           showToast("Planting letters ...", 30000); // Show for up to 30s
           setTimeout(() => {
-            if (colorMode === "random") {
+            if (colorMode === "random" && forceColorUpdate) {
               for (let i = 0; i < 12; i++) {
                 // Randomize colors: Darker (L: 30-50%) and Saturated (S: 70-100%)
                 const h = Math.random() * 360;
@@ -1773,6 +1776,9 @@
                 paint(i, 1, true);
               }
             }
+
+            setAllButtonStyles();
+            updateButtonBorderColors();
           }, 20); // Small delay to allow toast to render
         });
       }
@@ -2258,15 +2264,8 @@
         for (let index = 0; index < indexEnd; index++) {
           let delayAnim = 100;
 
-          if (index > 11) {
-            delayAnim = 10;
-          } else {
-            delayAnim = 1000;
-          }
-
-          // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-          if (!isMelodyPlaying) {
-            delayAnim *= slowMultiplier;
+          if (!isMelodyPlaying && i < 12) {
+            delayAnim *= animationDelayMultiplier;
           }
 
           if (includingBordersAndColours && (index == 12 || index == 13)) {
@@ -2395,19 +2394,13 @@
           index = randomIndex;
         }
 
-        let speed = 100;
+        let animationDelay = baseAnimationDelay;
         if (duration) {
-          speed = (duration / 1000) * 60;
-        } else {
-          if (index > 11) {
-            speed = 10;
-          } else {
-            speed = 1000;
-          }
+          animationDelay = (duration / 1000) * 60;
         }
         // Apply slow mode multiplier (10x slower) - but NOT during melody playback
-        if (!isMelodyPlaying) {
-          speed *= slowMultiplier;
+        if (!isMelodyPlaying && index < 12) {
+          animationDelay *= animationDelayMultiplier;
         }
         if (e) e.stopPropagation();
         if (index > 11) {
@@ -2563,7 +2556,12 @@
           });
         }
 
-        paint(index, speed);
+        paint(
+          index,
+          index < 12
+            ? baseAnimationDelay * animationDelayMultiplier
+            : baseAnimationDelay,
+        );
       }
 
       function startAnimationLoop(justOnePaint) {
@@ -3129,29 +3127,17 @@
       document
         .getElementById("speed-slider")
         .addEventListener("change", (e) => {
-          const newMultiplier = 10.1 - parseFloat(e.target.value);
-          slowMultiplier = newMultiplier;
+          const newMultiplier = 101 - parseFloat(e.target.value);
+          animationDelayMultiplier = newMultiplier;
 
-          for (let i = 0; i < 12; i++) {
-            const baseSpeed = i > 11 ? 10 : 200;
-            const newSpeed = baseSpeed * slowMultiplier;
-
-            if (isFrozen[i]) {
-              isFrozen[i] = false;
-              paint(i, newSpeed);
-            } else if (isHidden[i]) {
-              clickedRegion(null, i, false);
-            } else if (isShown[i]) {
-              clickedRegion(null, i, false);
-            } else if (isRevealing[i]) {
-              isRevealing[i] = false;
-              isHiding[i] = true;
-              paint(i, newSpeed);
-            } else if (isHiding[i]) {
-              isHiding[i] = false;
-              isRevealing[i] = true;
-              paint(i, newSpeed);
-            }
+          for (let i = 0; i < 14; i++) {
+            paint(
+              i,
+              i > 11
+                ? baseAnimationDelay
+                : baseAnimationDelay * animationDelayMultiplier,
+              true,
+            );
           }
         });
 
@@ -3161,9 +3147,60 @@
         //document.getElementById("font-size-label").textContent = `${newSize}px`;
       });
 
+      // Touch pinch-to-zoom for font size
+      let initialPinchDistance = null;
+      let initialSliderValue = null;
+      const fontSlider = document.getElementById("font-slider");
+
+      window.addEventListener(
+        "touchstart",
+        (e) => {
+          if (e.touches.length === 2) {
+            initialPinchDistance = Math.hypot(
+              e.touches[0].pageX - e.touches[1].pageX,
+              e.touches[0].pageY - e.touches[1].pageY,
+            );
+            initialSliderValue = parseInt(fontSlider.value);
+          }
+        },
+        { passive: false },
+      );
+
+      window.addEventListener(
+        "touchmove",
+        (e) => {
+          if (e.touches.length === 2 && initialPinchDistance !== null) {
+            e.preventDefault(); // Prevent default browser zoom
+            const currentDistance = Math.hypot(
+              e.touches[0].pageX - e.touches[1].pageX,
+              e.touches[0].pageY - e.touches[1].pageY,
+            );
+            const diff = currentDistance - initialPinchDistance;
+            const sensitivity = 0.05; // Adjust sensitivity as needed
+            let newValue = initialSliderValue + diff * sensitivity;
+            newValue = Math.max(
+              fontSlider.min,
+              Math.min(fontSlider.max, newValue),
+            );
+            if (fontSlider.value != Math.round(newValue)) {
+              fontSlider.value = Math.round(newValue);
+              fontSlider.dispatchEvent(new Event("input"));
+            }
+          }
+        },
+        { passive: false },
+      );
+
+      window.addEventListener("touchend", (e) => {
+        if (initialPinchDistance !== null && e.touches.length < 2) {
+          initialPinchDistance = null;
+          fontSlider.dispatchEvent(new Event("change"));
+        }
+      });
+
       document.getElementById("font-slider").addEventListener("change", () => {
         // Regenerate images when user finishes sliding
-        regenerateImages(true);
+        regenerateImages(true, false);
       });
 
       let resizeTimeout;
@@ -3210,9 +3247,6 @@
           regenerateImages(false).then(() => {
             changeColorMode("predefined");
             // Generate dynamic images now that the mask is processed
-            setAllButtonStyles();
-
-            updateButtonBorderColors();
 
             autoplayToggle(null);
           });
