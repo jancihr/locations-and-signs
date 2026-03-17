@@ -28,6 +28,8 @@
       script complexity (e.g., larger fonts for Chinese, smaller for Latin).
     - Supports multiple color modes: randomized, predefined "cheerful" colors, or a
       uniform blue.
+    - Extended character support for Cyrillic (including Ukrainian, Mongolian).
+    - Intelligent filtering of unsupported characters.
 
   - DYNAMIC REVEAL ANIMATION:
     - Uses HTML <canvas> and the clipping API to create a circular reveal/hide effect.
@@ -58,6 +60,7 @@
   - RESPONSIVE DESIGN:
     - The canvas and SVG elements adapt to window resizing, regenerating images
       as needed.
+    - Correctly calculates map dimensions to ensure animations stay within bounds.
 
   ================================================================================
 -->
@@ -296,6 +299,18 @@
           "
           >CLEAR [C]</a
         >
+        <a
+          id="replant-link"
+          class="my-button"
+          style="background: #ffffff"
+          href="#"
+          title="REGENERATE IMAGES (Shortcut: E)"
+          onclick="
+            regenerateImages(true);
+            return false;
+          "
+          >REPLANT [E]</a
+        >
 
         <a
           id="stop-all-link"
@@ -363,10 +378,10 @@
           <input
             type="range"
             id="speed-slider"
-            min="20.5"
-            max="40"
-            step="0.5"
-            value="40"
+            min="0"
+            max="10"
+            step="1"
+            value="5"
             title="ADJUST ANIMATION SPEED"
           />
           <span
@@ -455,7 +470,12 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
           class="region-button"
-          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto; border-color: #009000"
+          style="
+            background: #7d7d7d;
+            flex-grow: 0;
+            flex: 0 0 auto;
+            border-color: #009000;
+          "
           href="#"
           onclick="
             clickedRegion(event, 0, false);
@@ -1027,7 +1047,7 @@
         as signs expand or shrink. You can even listen to Ode of Joy, while
         signs perform a show. The map is based on the scripts' historical and
         modern origins, but the animations are purely artistic and not meant to
-        be historically accurate.
+        be historically accurate. 
       </p>
       <h3>Interaction</h3>
       <ul style="padding-left: 20px; margin-bottom: 15px">
@@ -1035,7 +1055,7 @@
           <strong>Clicking on a map region:</strong> Starts the expansion
           animation for that region from the click point. In case of the random
           button in the menu selected, a random signs will start expanding from
-          the click position.
+          a random position within the map boundaries.
         </li>
       </ul>
       <h3>Menu Buttons</h3>
@@ -1097,11 +1117,11 @@
             </li>
             <li>
               <strong>RANDOM ORIGINS:</strong> Animations start from a random
-              point on the screen.
+              point within the visible map area.
             </li>
             <li>
               <strong>CENTER ORIGINS:</strong> All animations start from the
-              center of the screen.
+              center of the visible map.
             </li>
           </ul>
         </li>
@@ -1119,6 +1139,10 @@
         <li>
           <strong>CLEAR:</strong> Resets the map to its empty state, clearing
           all animations and audio.
+        </li>
+
+        <li>
+          <strong>REPLANT:</strong> Regenerates all script images.
         </li>
 
         <li>
@@ -1151,6 +1175,7 @@
         <li><strong>B:</strong> Toggle BORDERS</li>
         <li><strong>G:</strong> Toggle REGIONS</li>
         <li><strong>C:</strong> CLEAR</li>
+        <li><strong>E:</strong> REPLANT</li>
         <li><strong>SPACE:</strong> PAUSE/RESUME</li>
 
         <li><strong>1..9,0,O,P :</strong> Start/stop regions</li>
@@ -1204,7 +1229,7 @@
 
       let isAutoPlaying = false;
       let originMode = "predefined";
-      let slowMultiplier = 0.5;
+      let slowMultiplier = 5.1;
       let colorMode = "random";
       let scriptFontSize = 12;
 
@@ -1349,13 +1374,31 @@
           [0x0561, 0x0587],
         ], // 1 ARMENIAN (Upper, Lower)
         [0x4e00, 0x9fa5], // 2 CHINESE (Common Ideographs)
-        [0x1200, 0x135a], // 3 ETHIOPIAN (Syllables)
+        [
+          [0x1200, 0x1248],
+          [0x124a, 0x124d],
+          [0x1250, 0x1256],
+          [0x1258, 0x1258],
+          [0x125a, 0x125d],
+          [0x1260, 0x1288],
+          [0x128a, 0x128d],
+          [0x1290, 0x12b0],
+          [0x12b2, 0x12b5],
+          [0x12b8, 0x12be],
+          [0x12c0, 0x12c0],
+          [0x12c2, 0x12c5],
+          [0x12c8, 0x12d6],
+          [0x12d8, 0x1310],
+          [0x1312, 0x1315],
+          [0x1318, 0x135a],
+        ], // 3 ETHIOPIAN (Syllables - No gaps)
         [
           [0x10a0, 0x10c5],
           [0x10d0, 0x10fa],
         ], // 4 GEORGIAN (Asomtavruli, Mkhedruli)
         [
-          [0x0391, 0x03a9],
+          [0x0391, 0x03a1],
+          [0x03a3, 0x03a9],
           [0x03b1, 0x03c9],
         ], // 5 GREEK (Upper, Lower)
         [0x05d0, 0x05ea], // 6 HEBREW (Letters)
@@ -1372,17 +1415,30 @@
           [0x00f8, 0x017f],
         ], // 9 LATIN (Upper, Lower, Ext A)
         [
-          [0x0410, 0x042f],
-          [0x0430, 0x044f],
-        ], // 10 CYRILLIC (Upper, Lower)
+          [0x0400, 0x0481],
+          [0x048a, 0x04ff],
+        ], // 10 CYRILLIC (Expanded: +Ukrainian, Mongolian)
         [
           [0x0905, 0x0939],
-          [0x0985, 0x0994],
-          [0x0b85, 0x0b94],
-          [0x0c05, 0x0c39],
-          [0x0c85, 0x0cb9],
+          [0x0985, 0x098c],
+          [0x098f, 0x0990],
+          [0x0993, 0x0994],
+          [0x0b85, 0x0b8a],
+          [0x0b8e, 0x0b90],
+          [0x0b92, 0x0b94],
+          [0x0c05, 0x0c0c],
+          [0x0c0e, 0x0c10],
+          [0x0c12, 0x0c28],
+          [0x0c2a, 0x0c33],
+          [0x0c35, 0x0c39],
+          [0x0c85, 0x0c8c],
+          [0x0c8e, 0x0c90],
+          [0x0c92, 0x0ca8],
+          [0x0caa, 0x0cb3],
+          [0x0cb5, 0x0cb9],
           [0x0e01, 0x0e3a],
-          [0x0f40, 0x0f6c],
+          [0x0f40, 0x0f47],
+          [0x0f49, 0x0f6c],
         ], // 11 BRAHMIC (Letters only)
       ];
 
@@ -1402,11 +1458,9 @@
         "#F4C430", // 11 BRAHMIC (Šafranová)
       ];
 
-
-
       // Cheerful colors for predefined mode
       const cheerfulColors = [
-    "#009000", // 0 ARABIC (Islamská zelená)
+        "#009000", // 0 ARABIC (Islamská zelená)
         "#FBCEB1", // 1 ARMENIAN (Marhuľová)
         "#EE204D", // 2 CHINESE (Cisárska červená)
         "#50C878", // 3 ETHIOPIAN (Smaragdová zelená)
@@ -1438,7 +1492,7 @@
       }
 
       function getRegionFillColor(regionIndex) {
-        if (regionIndex >= 12) return "#1b00b3";
+        if (regionIndex >= 12) return "yellow";
         return colorMode !== "blue" ? regionColors[regionIndex] : "#1b00b3";
       }
 
@@ -1467,18 +1521,38 @@
       }
       function updateButtonBorderColors() {
         const regionButtons = [
-          document.getElementById("ara-link"), document.getElementById("arm-link"), document.getElementById("chi-link"), document.getElementById("eth-link"),
-          document.getElementById("geo-link"), document.getElementById("gre-link"), document.getElementById("heb-link"), document.getElementById("jap-link"),
-          document.getElementById("kor-link"), document.getElementById("lat-link"), document.getElementById("cyr-link"), document.getElementById("san-link")
+          document.getElementById("ara-link"),
+          document.getElementById("arm-link"),
+          document.getElementById("chi-link"),
+          document.getElementById("eth-link"),
+          document.getElementById("geo-link"),
+          document.getElementById("gre-link"),
+          document.getElementById("heb-link"),
+          document.getElementById("jap-link"),
+          document.getElementById("kor-link"),
+          document.getElementById("lat-link"),
+          document.getElementById("cyr-link"),
+          document.getElementById("san-link"),
         ];
 
         for (let i = 0; i < regionButtons.length; i++) {
-            regionButtons[i].style.borderColor = colorMode=="blue"?"blue":regionColors[i];
+          regionButtons[i].style.borderColor =
+            colorMode == "blue" ? "blue" : regionColors[i];
         }
-    }
+      }
 
       const WIDTH = 2320;
       const HEIGHT = 1474;
+      let zoomedDims = { x: 0, y: 0, w: 0, h: 0 };
+
+      function updateZoomedDims() {
+        zoomedDims = getCoverDimensions(
+          window.innerWidth,
+          window.innerHeight,
+          WIDTH,
+          HEIGHT,
+        );
+      }
 
       function generateRegionImage(index, isBlueMode, mask, w, h) {
         const tempCanvas = document.createElement("canvas");
@@ -1575,7 +1649,7 @@
             : (image.style.zIndex = index + 10);
       });
 
-      function regenerateImages() {
+      function regenerateImages(forceRepaint = false) {
         return new Promise((resolve) => {
           showToast("Planting letters ...", 30000); // Show for up to 30s
           setTimeout(() => {
@@ -1629,19 +1703,19 @@
             scratchCanvas.height = window.innerHeight;
             const sCtx = scratchCanvas.getContext("2d");
 
-            const dim = getCoverDimensions(
-              window.innerWidth,
-              window.innerHeight,
-              WIDTH,
-              HEIGHT,
+            const scale = zoomedDims.w / WIDTH;
+            const allPolys = Array.from(
+              document.querySelectorAll("svg polygon"),
             );
-            const scale = dim.w / WIDTH;
-            const allPolys = Array.from(document.querySelectorAll("svg polygon"));
 
             for (let i = 0; i < 12; i++) {
               // Find polygons for this region by checking the onclick handler index
-              const regex = new RegExp(`clickedRegion\\s*\\(\\s*event\\s*,\\s*${i}\\s*,`);
-              const targetPolys = allPolys.filter((p) => regex.test(p.getAttribute("onclick")));
+              const regex = new RegExp(
+                `clickedRegion\\s*\\(\\s*event\\s*,\\s*${i}\\s*,`,
+              );
+              const targetPolys = allPolys.filter((p) =>
+                regex.test(p.getAttribute("onclick")),
+              );
 
               if (targetPolys.length > 0) {
                 sCtx.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
@@ -1651,13 +1725,22 @@
                 sCtx.fillStyle = "#ffffff";
                 sCtx.beginPath();
                 targetPolys.forEach((poly) => {
-                  const points = poly.getAttribute("points").trim().split(/\s+/);
+                  const points = poly
+                    .getAttribute("points")
+                    .trim()
+                    .split(/\s+/);
                   if (points.length > 0) {
                     const p0 = points[0].split(",");
-                    sCtx.moveTo(p0[0] * scale + dim.x, p0[1] * scale + dim.y);
+                    sCtx.moveTo(
+                      p0[0] * scale + zoomedDims.x,
+                      p0[1] * scale + zoomedDims.y,
+                    );
                     for (let k = 1; k < points.length; k++) {
                       const pk = points[k].split(",");
-                      sCtx.lineTo(pk[0] * scale + dim.x, pk[1] * scale + dim.y);
+                      sCtx.lineTo(
+                        pk[0] * scale + zoomedDims.x,
+                        pk[1] * scale + zoomedDims.y,
+                      );
                     }
                   }
                 });
@@ -1684,6 +1767,12 @@
 
             showToast("Images ready!", 1200);
             resolve();
+
+            if (forceRepaint) {
+              for (let i = 0; i < 14; i++) {
+                paint(i, 1, true);
+              }
+            }
           }, 20); // Small delay to allow toast to render
         });
       }
@@ -2076,17 +2165,15 @@
       // Recalculates default starting coordinates based on current window size
       function calculateStarts() {
         // Get the dimensions of the scaled SVG map within the window
-        const dim = getCoverDimensions(
-          window.innerWidth,
-          window.innerHeight,
-          WIDTH,
-          HEIGHT,
-        );
-        const scale = dim.w / WIDTH; // Uniform scale factor
+        const scale = zoomedDims.w / WIDTH; // Uniform scale factor
 
         for (let index = 0; index < clickX.length; index++) {
-          clickX[index] = Math.round(imageOriginalX[index] * scale + dim.x);
-          clickY[index] = Math.round(imageOriginalY[index] * scale + dim.y);
+          clickX[index] = Math.round(
+            imageOriginalX[index] * scale + zoomedDims.x,
+          );
+          clickY[index] = Math.round(
+            imageOriginalY[index] * scale + zoomedDims.y,
+          );
         }
       }
 
@@ -2217,8 +2304,12 @@
         for (let index = 0; index < 12; index++) {
           if (!isHiding[index] && !isRevealing[index]) {
             if (randomizeStarts) {
-              clickX[index] = Math.round(Math.random() * canvas[index].width);
-              clickY[index] = Math.round(Math.random() * canvas[index].height);
+              clickX[index] = Math.round(
+                zoomedDims.x + Math.random() * zoomedDims.w,
+              );
+              clickY[index] = Math.round(
+                zoomedDims.y + Math.random() * zoomedDims.h,
+              );
             }
             isHidden[index] = false;
             isShown[index] = false;
@@ -2240,8 +2331,12 @@
             );
           } else if (isRevealing[index]) {
             if (randomizeStarts && isFrozen[index]) {
-              clickX[index] = Math.round(Math.random() * canvas[index].width);
-              clickY[index] = Math.round(Math.random() * canvas[index].height);
+              clickX[index] = Math.round(
+                zoomedDims.x + Math.random() * zoomedDims.w,
+              );
+              clickY[index] = Math.round(
+                zoomedDims.y + Math.random() * zoomedDims.h,
+              );
             }
 
             if (!isFrozen[index]) {
@@ -2252,8 +2347,12 @@
             if (isFrozen[index]) stopTone(index);
           } else if (isHiding[index]) {
             if (randomizeStarts && isFrozen[index]) {
-              clickX[index] = Math.round(Math.random() * canvas[index].width);
-              clickY[index] = Math.round(Math.random() * canvas[index].height);
+              clickX[index] = Math.round(
+                zoomedDims.x + Math.random() * zoomedDims.w,
+              );
+              clickY[index] = Math.round(
+                zoomedDims.y + Math.random() * zoomedDims.h,
+              );
             }
 
             if (!isFrozen[index]) {
@@ -2320,23 +2419,25 @@
         } else {
           if (isHidden[index]) {
             if (originMode === "random") {
-              clickX[index] = Math.round(Math.random() * window.innerWidth);
-              clickY[index] = Math.round(Math.random() * window.innerHeight);
+              clickX[index] = Math.round(
+                zoomedDims.x + Math.random() * zoomedDims.w,
+              );
+              clickY[index] = Math.round(
+                zoomedDims.y + Math.random() * zoomedDims.h,
+              );
             } else if (originMode === "center") {
-              clickX[index] = Math.round(window.innerWidth / 2);
-              clickY[index] = Math.round(window.innerHeight / 2);
+              clickX[index] = Math.round(zoomedDims.x + zoomedDims.w / 2);
+              clickY[index] = Math.round(zoomedDims.y + zoomedDims.h / 2);
             } else {
               // "predefined"
               // Calculate position relative to the scaled SVG map
-              const dim = getCoverDimensions(
-                window.innerWidth,
-                window.innerHeight,
-                WIDTH,
-                HEIGHT,
+              const scale = zoomedDims.w / WIDTH;
+              clickX[index] = Math.round(
+                imageOriginalX[index] * scale + zoomedDims.x,
               );
-              const scale = dim.w / WIDTH;
-              clickX[index] = Math.round(imageOriginalX[index] * scale + dim.x);
-              clickY[index] = Math.round(imageOriginalY[index] * scale + dim.y);
+              clickY[index] = Math.round(
+                imageOriginalY[index] * scale + zoomedDims.y,
+              );
             }
           }
         }
@@ -2465,7 +2566,11 @@
         paint(index, speed);
       }
 
-      function startAnimationLoop() {
+      function startAnimationLoop(justOnePaint) {
+        if (justOnePaint) {
+          processAnimations(performance.now(), true);
+          return;
+        }
         if (!animationLoopRunning) {
           animationLoopRunning = true;
           lastAnimationTime = performance.now();
@@ -2473,22 +2578,26 @@
         }
       }
 
-      function processAnimations(timestamp) {
-        if (!animationLoopRunning) {
+      function processAnimations(timestamp, justOnePaint = false) {
+        if (!animationLoopRunning && !justOnePaint) {
           return;
         }
-        requestAnimationFrame(processAnimations);
+        if (!justOnePaint) requestAnimationFrame(processAnimations);
 
         const elapsed = timestamp - lastAnimationTime;
-        if (elapsed < FRAME_INTERVAL) {
+        if (elapsed < FRAME_INTERVAL && !justOnePaint) {
           return;
         }
-        lastAnimationTime = timestamp - (elapsed % FRAME_INTERVAL);
+        if (!justOnePaint)
+          lastAnimationTime = timestamp - (elapsed % FRAME_INTERVAL);
 
         let active = false;
         for (let i = 0; i < 14; i++) {
-          if ((isRevealing[i] || isHiding[i]) && !isFrozen[i]) {
-            paint(i);
+          if (
+            (isRevealing[i] || isHiding[i]) &&
+            (!isFrozen[i] || justOnePaint)
+          ) {
+            if (!justOnePaint) paint(i);
             active = true;
           }
         }
@@ -2500,7 +2609,7 @@
 
       // Main animation loop for a specific region
       // Uses requestAnimationFrame for smooth rendering
-      function paint(region, speed) {
+      function paint(region, speed, justOnePaint = false) {
         const frameRateCorrection = 60 / TARGET_FPS;
 
         if (speed !== undefined) {
@@ -2508,7 +2617,7 @@
         }
         const currentSpeed = regionSpeeds[region];
 
-        if (!isFrozen[region]) {
+        if (!isFrozen[region] || justOnePaint) {
           //console.log("Drawing region:", region);
 
           //if (image[region].complete) {
@@ -2583,7 +2692,7 @@
               if (revealRadius[region] < maxRadius[region]) {
                 updateTone(region, revealRadius[region], maxRadius[region]);
               }
-              startAnimationLoop();
+              if (!justOnePaint) startAnimationLoop();
             } else {
               if (region < 14) {
                 const fillColor = getRegionFillColor(region);
@@ -2597,10 +2706,10 @@
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = true;
-              startAnimationLoop();
+              if (justOnePaint) return;
+              startAnimationLoop(justOnePaint);
             }
-
-          if (isHiding[region])
+          else if (isHiding[region])
             if (revealRadius[region] > 0) {
               const pct = Math.min(
                 100,
@@ -2624,7 +2733,7 @@
               if (revealRadius[region] > 0) {
                 updateTone(region, revealRadius[region], maxRadius[region]);
               }
-              startAnimationLoop();
+              if (!justOnePaint) startAnimationLoop();
             } else {
               //console.log("Region hidden:", region);
               revealRadius[region] = 0;
@@ -2640,8 +2749,11 @@
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = false;
-              startAnimationLoop();
+              if (justOnePaint) return;
+              startAnimationLoop(justOnePaint);
             }
+        } else {
+          if (justOnePaint) startAnimationLoop(justOnePaint);
         }
       }
 
@@ -2652,13 +2764,16 @@
         for (let i = 0; i < 14; i++) {
           if (imageFilenames[i]) images[i].src = "img/" + imageFilenames[i];
         }
-        regenerateImages().then(() => {
+        regenerateImages(true).then(() => {
           setAllButtonStyles();
           updateButtonBorderColors();
-          startFrozenVisibleRegions(null, true);
+
+          for (let i = 0; i < 14; i++) {
+            paint(i, 1, true);
+          }
+          //startFrozenVisibleRegions(null, true);
         });
       }
-
 
       function cycleColorMode(e) {
         if (e) e.preventDefault();
@@ -2962,6 +3077,10 @@
             showToast("Cleared");
             e.preventDefault();
             break;
+          case "e":
+            regenerateImages(true);
+            e.preventDefault();
+            break;
           case "i":
             toggleHelp(null);
             showToast(helpIsVisible ? "Info: CLOSED" : "Info: OPEN");
@@ -3010,7 +3129,7 @@
       document
         .getElementById("speed-slider")
         .addEventListener("change", (e) => {
-          const newMultiplier = 40.5 - parseFloat(e.target.value);
+          const newMultiplier = 10.1 - parseFloat(e.target.value);
           slowMultiplier = newMultiplier;
 
           for (let i = 0; i < 12; i++) {
@@ -3044,12 +3163,13 @@
 
       document.getElementById("font-slider").addEventListener("change", () => {
         // Regenerate images when user finishes sliding
-        regenerateImages();
+        regenerateImages(true);
       });
 
       let resizeTimeout;
       // Handle window resize events
       window.addEventListener("resize", () => {
+        updateZoomedDims();
         rippleCanvas.width = window.innerWidth;
         rippleCanvas.height = window.innerHeight;
         images.forEach((image, index) => {
@@ -3077,16 +3197,18 @@
 
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-          regenerateImages();
+          regenerateImages(true);
         }, 200);
       });
 
       window.addEventListener("load", () => {
+        updateZoomedDims();
         // Use farby.gif for mask
         const maskImage = new Image();
         maskImage.onload = () => {
           processedMaskCanvas = maskImage;
-          regenerateImages().then(() => { changeColorMode("predefined");
+          regenerateImages(false).then(() => {
+            changeColorMode("predefined");
             // Generate dynamic images now that the mask is processed
             setAllButtonStyles();
 
@@ -3098,8 +3220,5 @@
         maskImage.src = "img/farby.gif";
       });
     </script>
-
   </body>
-
-
 </html>
