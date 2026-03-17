@@ -1046,7 +1046,7 @@
         trigger animations to reveal layers of typography for different scripts.
         For fun, signs spread around the world from their home origin or
         randomly as you choose. You can turn on the sound to hear harmonic tones
-        as signs expand or shrink. You can even listen to Ode of Joy, while
+        as signs expand or shrink. You can even listen to Ode to Joy, while
         signs perform a show. The map is based on the scripts' historical and
         modern origins, but the animations are purely artistic and not meant to
         be historically accurate.
@@ -1929,7 +1929,7 @@
         { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
         { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
         { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3 (G Major)
+        { regions: [8, 4, 6], duration: 800, delay: 800 }, // D4 + G3 + B3 (G Major)
 
         // Phrase 2
         { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3 (C Major)
@@ -1948,7 +1948,7 @@
         { regions: [11, 0, 2], duration: 400, delay: 400 }, // G4 + C3 + E3
         { regions: [10, 3, 6], duration: 400, delay: 400 }, // F4 + F3 + B3
         { regions: [9, 0, 4], duration: 400, delay: 400 }, // E4 + C3 + G3
-        { regions: [8, 4, 6], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [8, 4, 6], duration: 800, delay: 800 }, // D4 + G3 + B3
 
         // Phrase 4
         { regions: [7, 0, 2], duration: 400, delay: 400 }, // C4 + C3 + E3
@@ -2558,9 +2558,7 @@
 
         paint(
           index,
-          index < 12
-            ? baseAnimationDelay * animationDelayMultiplier
-            : baseAnimationDelay,
+          animationDelay,
         );
       }
 
@@ -3251,7 +3249,7 @@
             autoplayToggle(null);
           });
         };
-        maskImage.src = "img/farby.gif";
+        maskImage.src = "img/regions.png";
       });
     </script>
   </body>
