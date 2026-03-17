@@ -455,7 +455,7 @@
           title="(CLICK TO START/STOP REGION ANIMATION) (Shortcut: 1)"
           id="ara-link"
           class="region-button"
-          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto"
+          style="background: #7d7d7d; flex-grow: 0; flex: 0 0 auto; border-color: #009000"
           href="#"
           onclick="
             clickedRegion(event, 0, false);
@@ -973,13 +973,13 @@
 
     <canvas
       id="canvasBorders"
-      style="position: absolute; left: 0; top: 0; z-index: 1"
+      style="position: absolute; left: 0; top: 0; z-index: 140"
     >
     </canvas>
 
     <canvas
       id="canvasColours"
-      style="position: absolute; left: 0; top: 0; z-index: 2"
+      style="position: absolute; left: 0; top: 0; z-index: 130"
     >
     </canvas>
 
@@ -1388,34 +1388,36 @@
 
       // Distinct colors for regions 0-11
       const regionColors = [
-        "#007F0E", // 0 ARABIC (Green)
-        "#FF0000", // 1 ARMENIAN (Red)
-        "#FF4500", // 2 CHINESE (OrangeRed)
-        "#FFD700", // 3 ETHIOPIAN (Gold)
-        "#8B0000", // 4 GEORGIAN (DarkRed)
-        "#00BFFF", // 5 GREEK (DeepSkyBlue)
-        "#0000FF", // 6 HEBREW (Blue)
-        "#FF69B4", // 7 JAPANESE (HotPink)
-        "#191970", // 8 KOREAN (MidnightBlue)
-        "#000000", // 9 LATIN (Black)
-        "#A52A2A", // 10 CYRILLIC (Brown)
-        "#FF8C00", // 11 BRAHMIC (DarkOrange)
+        "#009000", // 0 ARABIC (Islamská zelená)
+        "#FBCEB1", // 1 ARMENIAN (Marhuľová)
+        "#EE204D", // 2 CHINESE (Cisárska červená)
+        "#50C878", // 3 ETHIOPIAN (Smaragdová zelená)
+        "#800020", // 4 GEORGIAN (Vínová)
+        "#00CED1", // 5 GREEK (Tyrkysová)
+        "#007FFF", // 6 HEBREW (Nebeská modrá)
+        "#FFB7C5", // 7 JAPANESE (Čerešňová ružová)
+        "#003472", // 8 KOREAN (Indigo)
+        "#4169E1", // 9 LATIN (Kráľovská modrá)
+        "#E34234", // 10 CYRILLIC (Hlboká červená)
+        "#F4C430", // 11 BRAHMIC (Šafranová)
       ];
+
+
 
       // Cheerful colors for predefined mode
       const cheerfulColors = [
-        "#00E676", // 0 ARABIC (Bright Green)
-        "#FF9800", // 1 ARMENIAN (Orange)
-        "#FF0000", // 2 CHINESE (Red)
-        "#FFD700", // 3 ETHIOPIAN (Gold)
-        "#FF1744", // 4 GEORGIAN (Red Accent)
-        "#00B0FF", // 5 GREEK (Light Blue)
-        "#2979FF", // 6 HEBREW (Blue)
-        "#FF4081", // 7 JAPANESE (Pink)
-        "#304FFE", // 8 KOREAN (Indigo)
-        "#00BCD4", // 9 LATIN (Cyan)
-        "#D50000", // 10 CYRILLIC (Red)
-        "#FF6D00", // 11 BRAHMIC (Orange)
+    "#009000", // 0 ARABIC (Islamská zelená)
+        "#FBCEB1", // 1 ARMENIAN (Marhuľová)
+        "#EE204D", // 2 CHINESE (Cisárska červená)
+        "#50C878", // 3 ETHIOPIAN (Smaragdová zelená)
+        "#800020", // 4 GEORGIAN (Vínová)
+        "#00CED1", // 5 GREEK (Tyrkysová)
+        "#007FFF", // 6 HEBREW (Nebeská modrá)
+        "#FFB7C5", // 7 JAPANESE (Čerešňová ružová)
+        "#003472", // 8 KOREAN (Indigo)
+        "#4169E1", // 9 LATIN (Kráľovská modrá)
+        "#E34234", // 10 CYRILLIC (Hlboká červená)
+        "#F4C430", // 11 BRAHMIC (Šafranová)
       ];
 
       function adjustButtonTextColor(button, bgColor) {
@@ -1463,6 +1465,17 @@
           adjustButtonTextColor(button, bgColor); // Text will be black on white
         }
       }
+      function updateButtonBorderColors() {
+        const regionButtons = [
+          document.getElementById("ara-link"), document.getElementById("arm-link"), document.getElementById("chi-link"), document.getElementById("eth-link"),
+          document.getElementById("geo-link"), document.getElementById("gre-link"), document.getElementById("heb-link"), document.getElementById("jap-link"),
+          document.getElementById("kor-link"), document.getElementById("lat-link"), document.getElementById("cyr-link"), document.getElementById("san-link")
+        ];
+
+        for (let i = 0; i < regionButtons.length; i++) {
+            regionButtons[i].style.borderColor = colorMode=="blue"?"blue":regionColors[i];
+        }
+    }
 
       const WIDTH = 2320;
       const HEIGHT = 1474;
@@ -2641,9 +2654,11 @@
         }
         regenerateImages().then(() => {
           setAllButtonStyles();
+          updateButtonBorderColors();
           startFrozenVisibleRegions(null, true);
         });
       }
+
 
       function cycleColorMode(e) {
         if (e) e.preventDefault();
@@ -3071,14 +3086,20 @@
         const maskImage = new Image();
         maskImage.onload = () => {
           processedMaskCanvas = maskImage;
-          regenerateImages().then(() => {
+          regenerateImages().then(() => { changeColorMode("predefined");
             // Generate dynamic images now that the mask is processed
             setAllButtonStyles();
+
+            updateButtonBorderColors();
+
             autoplayToggle(null);
           });
         };
         maskImage.src = "img/farby.gif";
       });
     </script>
+
   </body>
+
+
 </html>

@@ -1,0 +1,14 @@
+
+Here are  colours of regions: 
+LATIN	Kráľovská modrá (Royal Blue)	#4169E1	Stabilita, profesionalita a dôvera spojená so západnou typografiou.
+BRAHMIC	Šafranová (Saffron)	#F4C430	Posvätná farba v Indii, symbolizuje očistu a svetlo.
+CHINESE	Cisárska červená (Imperial Red)	#EE204D	Farba šťastia, prosperity a osláv.
+KOREAN	Indigo / Kórejská modrá	#003472	Často sa spája s eleganciou a tradičným odevom hanbok.
+JAPANESE	Čerešňová ružová (Sakura)	#FFB7C5	Symbolizuje pominuteľnú krásu a nový začiatok.
+CYRILLIC	Hlboká červená (Vermilion)	#E34234	Historicky spojená s energiou a pojmom „krásny“ (v staroslovienčine).
+ETHIOPIAN	Smaragdová zelená	#50C878	Reprezentuje úrodnosť zeme a nádej (súčasť pan-afrických farieb).
+ARABIC	Islamská zelená	#009000	Farba raja a mieru, hlboko zakorenená v kultúre.
+HEBREW	Nebeská modrá (Techelet)	#007FFF	Duchovná farba spojená s oblohou a čistotou.
+GREEK	Tyrkysová / Egejská modrá	#00CED1	Odkazuje na more a klasickú antickú estetiku.
+GEORGIAN	Vínová (Burgundy)	#800020	Gruzínsko je kolískou vína; farba symbolizuje tradíciu a pôdu.
+ARMENIAN	Marhuľová (Apricot)	#FBCEB1	Národný symbol (Prunus armeniaca), predstavuje teplo a dušu národa.
