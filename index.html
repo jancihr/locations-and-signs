@@ -188,6 +188,13 @@
       #gear-toggle:hover {
         border-color: #1eff00;
       }
+
+      #borderImage {
+        position: absolute;
+        left: 0;
+        top: 0;
+  
+      }
     </style>
   </head>
   <body>
@@ -415,7 +422,7 @@
             id="font-slider"
             min="10"
             max="40"
-            value="16"
+            value="20"
             step="1"
             title="ADJUST SCRIPT FONT SIZE"
           />
@@ -435,11 +442,11 @@
         <a
           id="borders-link"
           class="region-button"
-          style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
+          style="background: yellow; flex-grow: 0; flex: 0 0 auto"
           href="#"
           title="SHOW/HIDE ALPHABET BORDERS (Shortcut: B)"
           onclick="
-            clickedRegion(event, 12, false);
+            toggleBorderImage(event);
             return false;
           "
           >BORDERS [B]</a
@@ -932,76 +939,75 @@
       </g>
     </svg>
 
+
+    <img
+      style="position: absolute; left: 0; top: 0; z-index: 299" src="img/borders.svg" id="borderImage"></img>
+    <canvas id="canvasBorders" style="z-index: 8"> </canvas>
+
     <canvas
-      id="canvas0"
+      id="canvasColours"
+      style="position: absolute; left: 0; top: 0; z-index: 9"
+    >
+    </canvas>
+
+    <canvas
+      id="canvas_ara"
       style="position: absolute; left: 0; top: 0; z-index: 10"
     >
     </canvas>
     <canvas
-      id="canvas1"
+      id="canvas_arm"
+      style="position: absolute; left: 0; top: 0; z-index: 11"
+    >
+    </canvas>
+    <canvas
+      id="canvas_chi"
+      style="position: absolute; left: 0; top: 0; z-index: 12"
+    >
+    </canvas>
+    <canvas
+      id="canvas_eth"
+      style="position: absolute; left: 0; top: 0; z-index: 13"
+    >
+    </canvas>
+    <canvas
+      id="canvas_geo"
+      style="position: absolute; left: 0; top: 0; z-index: 14"
+    >
+    </canvas>
+    <canvas
+      id="canvas_gre"
+      style="position: absolute; left: 0; top: 0; z-index: 15"
+    >
+    </canvas>
+    <canvas
+      id="canvas_heb"
+      style="position: absolute; left: 0; top: 0; z-index: 16"
+    >
+    </canvas>
+    <canvas
+      id="canvas_jap"
+      style="position: absolute; left: 0; top: 0; z-index: 17"
+    >
+    </canvas>
+    <canvas
+      id="canvas_kor"
+      style="position: absolute; left: 0; top: 0; z-index: 18"
+    >
+    </canvas>
+    <canvas
+      id="canvas_lat"
+      style="position: absolute; left: 0; top: 0; z-index: 19"
+    >
+    </canvas>
+    <canvas
+      id="canvas_cyr"
       style="position: absolute; left: 0; top: 0; z-index: 20"
     >
     </canvas>
     <canvas
-      id="canvas2"
-      style="position: absolute; left: 0; top: 0; z-index: 30"
-    >
-    </canvas>
-    <canvas
-      id="canvas3"
-      style="position: absolute; left: 0; top: 0; z-index: 40"
-    >
-    </canvas>
-    <canvas
-      id="canvas4"
-      style="position: absolute; left: 0; top: 0; z-index: 50"
-    >
-    </canvas>
-    <canvas
-      id="canvas5"
-      style="position: absolute; left: 0; top: 0; z-index: 60"
-    >
-    </canvas>
-    <canvas
-      id="canvas6"
-      style="position: absolute; left: 0; top: 0; z-index: 70"
-    >
-    </canvas>
-    <canvas
-      id="canvas7"
-      style="position: absolute; left: 0; top: 0; z-index: 80"
-    >
-    </canvas>
-    <canvas
-      id="canvas8"
-      style="position: absolute; left: 0; top: 0; z-index: 90"
-    >
-    </canvas>
-    <canvas
-      id="canvas9"
-      style="position: absolute; left: 0; top: 0; z-index: 100"
-    >
-    </canvas>
-    <canvas
-      id="canvas10"
-      style="position: absolute; left: 0; top: 0; z-index: 110"
-    >
-    </canvas>
-    <canvas
-      id="canvas11"
-      style="position: absolute; left: 0; top: 0; z-index: 120"
-    >
-    </canvas>
-
-    <canvas
-      id="canvasBorders"
-      style="position: absolute; left: 0; top: 0; z-index: 140"
-    >
-    </canvas>
-
-    <canvas
-      id="canvasColours"
-      style="position: absolute; left: 0; top: 0; z-index: 130"
+      id="canvas_san"
+      style="position: absolute; left: 0; top: 0; z-index: 21"
     >
     </canvas>
 
@@ -1233,7 +1239,7 @@
       let originMode = "predefined";
 
       let colorMode = "random";
-      let scriptFontSize = 16;
+      let scriptFontSize = 20;
 
       // Masking for generated script images
       let processedMaskCanvas = null;
@@ -1270,18 +1276,18 @@
 
       // DOM Elements: Canvas layers for each region
       const canvas = [
-        document.getElementById("canvas0"),
-        document.getElementById("canvas1"),
-        document.getElementById("canvas2"),
-        document.getElementById("canvas3"),
-        document.getElementById("canvas4"),
-        document.getElementById("canvas5"),
-        document.getElementById("canvas6"),
-        document.getElementById("canvas7"),
-        document.getElementById("canvas8"),
-        document.getElementById("canvas9"),
-        document.getElementById("canvas10"),
-        document.getElementById("canvas11"),
+        document.getElementById("canvas_ara"),
+        document.getElementById("canvas_arm"),
+        document.getElementById("canvas_chi"),
+        document.getElementById("canvas_eth"),
+        document.getElementById("canvas_geo"),
+        document.getElementById("canvas_gre"),
+        document.getElementById("canvas_heb"),
+        document.getElementById("canvas_jap"),
+        document.getElementById("canvas_kor"),
+        document.getElementById("canvas_lat"),
+        document.getElementById("canvas_cyr"),
+        document.getElementById("canvas_san"),
         document.getElementById("canvasBorders"),
         document.getElementById("canvasColours"),
       ];
@@ -1361,7 +1367,7 @@
         null,
         null,
         null,
-        "borders.png",
+        "borders.svg",
         "regions.png",
       ];
 
@@ -1554,6 +1560,13 @@
           WIDTH,
           HEIGHT,
         );
+        const borderImage = document.getElementById("borderImage");
+        if (borderImage) {
+          borderImage.style.width = zoomedDims.w + "px";
+          borderImage.style.height = zoomedDims.h + "px";
+          borderImage.style.left = zoomedDims.x + "px";
+          borderImage.style.top = zoomedDims.y + "px";
+        }
       }
 
       function generateRegionImage(index, isBlueMode, mask, w, h) {
@@ -1593,13 +1606,13 @@
         const actualFontSize = Math.max(4, scriptFontSize + sizeVariation);
 
         tCtx.fillStyle = fillStyle;
-        tCtx.font = `${actualFontSize}px monospace`;
+        tCtx.font = `${actualFontSize}px sans-serif`;
         tCtx.textAlign = "left";
         tCtx.textBaseline = "top";
 
         const rangeData = regionCharRanges[index];
 
-        const charWidth = tCtx.measureText("M").width;
+        const charWidth = tCtx.measureText("i").width;
         const stepY = actualFontSize;
         const charsPerLine = Math.ceil(w / charWidth) + 1;
 
@@ -1631,26 +1644,7 @@
         return tempCanvas;
       }
 
-      // Initialize images
-      imageFilenames.forEach((name, i) => {
-        if (name) {
-          // Load static asset
-          images[i].src = "img/" + name;
-        }
-        // Dynamic images will be generated on window.load
-      });
-
       // Set styles for images (z-index layering)
-      images.forEach((image, index) => {
-        image.style.position = "absolute";
-        image.style.left = "0";
-        image.style.top = "0";
-        index == 13
-          ? (image.style.zIndex = 1)
-          : index == 12
-            ? (image.style.zIndex = 100)
-            : (image.style.zIndex = index + 10);
-      });
 
       function regenerateImages(forceRepaint = false, forceColorUpdate = true) {
         return new Promise((resolve) => {
@@ -1764,7 +1758,7 @@
               const oldOrigins = images[13];
               combinedCanvas.style.cssText = oldOrigins.style.cssText;
               if (!combinedCanvas.style.zIndex)
-                combinedCanvas.style.zIndex = "1";
+                combinedCanvas.style.zIndex = "9";
               combinedCanvas.id = "canvasColours"; // Preserve ID convention
 
               images[13] = combinedCanvas;
@@ -2267,7 +2261,7 @@
         for (let index = 0; index < indexEnd; index++) {
           let delayAnim = 100;
 
-          if (!isMelodyPlaying && i < 12) {
+          if (!isMelodyPlaying && index < 12) {
             delayAnim *= animationDelayMultiplier;
           }
 
@@ -2440,27 +2434,34 @@
 
         //change z-index of canvases so active one is on top
 
-        if (isHidden[index]) {
-          const regions = [];
-          for (let i = 0; i < canvas.length - 2; i++) {
+        if ((isHidden[index] || getclick)&& index < 12) {
+           const regions = [];
+          for (let i = 0; i < 12; i++) {
             regions.push({
               id: i,
               zIndex: parseInt(canvas[i].style.zIndex),
             });
           }
-          regions.sort((a, b) => a.zIndex - b.zIndex);
 
+          regions.sort((a, b) => a.zIndex - b.zIndex);
+          //console.log("sorted regions:",regions);
           const sortedIds = regions
             .map((r) => r.id)
             .filter((id) => id !== index);
           sortedIds.push(index);
 
           sortedIds.forEach((id, pos) => {
-            canvas[id].style.zIndex = 10 + pos;
+            if (id < 12) {
+              canvas[id].style.zIndex = 10 + pos;
+            }
           });
 
-          canvas[index].style.zIndex = 30;
+         // console.log("index currently put up:",index);
+          if (index < 12) {
+            canvas[index].style.zIndex = 30;
+          }
         }
+        
         if (isHidden[index]) {
           isHidden[index] = false;
           isRevealing[index] = true;
@@ -2497,7 +2498,8 @@
             ),
         );
 
-        if (true) {
+
+    
           let startR = 0;
           let isGrowing = true;
 
@@ -2523,29 +2525,9 @@
               growing: isGrowing,
             });
           }
-        }
+        
 
         if (getclick) {
-          const regions = [];
-          for (let i = 0; i < canvas.length - 2; i++) {
-            regions.push({
-              id: i,
-              zIndex: parseInt(canvas[i].style.zIndex),
-            });
-          }
-          regions.sort((a, b) => a.zIndex - b.zIndex);
-
-          const sortedIds = regions
-            .map((r) => r.id)
-            .filter((id) => id !== index);
-          sortedIds.push(index);
-
-          sortedIds.forEach((id, pos) => {
-            canvas[id].style.zIndex = 10 + pos;
-          });
-
-          canvas[index].style.zIndex = 30;
-
           isRevealing[index] = true;
           isHiding[index] = false;
           isFrozen[index] = false;
@@ -2924,6 +2906,22 @@
         changeOriginMode(nextMode);
         showToast("Origin Mode: " + nextMode.toUpperCase().replace("_", " "));
       }
+      
+      function toggleBorderImage(e) {
+        if (e) e.preventDefault();
+        const borderImage = document.getElementById("borderImage");
+        const link = document.getElementById("borders-link");
+        
+        if (borderImage.style.display === "none") {
+          borderImage.style.display = "block";
+          link.style.background = "#ffff00";
+          showToast("BORDERS SHOWN");
+        } else {
+          borderImage.style.display = "none";
+          link.style.background = "#ffffff";
+          showToast("BORDERS HIDDEN");
+        }
+      }
 
       function toggleMenu(e) {
         if (e) e.preventDefault();
@@ -3083,10 +3081,7 @@
             e.preventDefault();
             break;
           case "b":
-            clickedRegion(null, 12, false);
-            showToast(
-              isHiding[12] ? "BORDERS ARE HIDING" : "BORDERS ARE BEING SHOWIN",
-            );
+            toggleBorderImage(null);
             e.preventDefault();
             break;
           case "g":
@@ -3245,7 +3240,6 @@
           regenerateImages(false).then(() => {
             changeColorMode("predefined");
             // Generate dynamic images now that the mask is processed
-            clickedRegion(null, 12, 100);
             clickedRegion(null, 13, 100);
             //autoplayToggle(null);
           });
