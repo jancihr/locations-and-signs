@@ -45,12 +45,17 @@
 
   - COMPREHENSIVE CONTROL MENU:
     - AUTOPLAY: Automatically reveals and hides random regions at random intervals.
-    - ORIGIN CONTROL ('HOME' vs 'RANDOM'): Toggles the starting point of animations
-      between a predefined "home" coordinate for each region and a random point.
-    - COLOUR MODE: A dropdown to select between RANDOM, PREDEFINED, and BLUE
-      color schemes.
-    - FONT SIZE SLIDER: Allows real-time adjustment of the base font size for
-      generated scripts.
+    - JOY: Play Ode to Joy, No 9. by Beethoven.
+    - SOUND: Toggles audio feedback.
+    - CLEAR: Resets the map to its empty state.
+    - REPLANT: Regenerates all script images.
+    - PAUSE: Pauses/resumes all running animations.
+    - COLOUR MODE: Selects the color palette (COLOUR, RANDOM, INK).
+    - ORIGIN MODE: Selects the starting point (HOME, ANYWHERE, CENTER).
+    - FONT FAMILY: Selects the font family for generated scripts.
+    - SPEED SLIDER: Adjusts the animation speed.
+    - FONT SIZE SLIDER: Adjusts the base font size for generated scripts.
+    - BORDERS/REGIONS: Toggle layers for boundaries and colored overlays.
     - REGION-SPECIFIC BUTTONS: Allow direct toggling of each language layer.
 
   - STATE MANAGEMENT:
@@ -1119,49 +1124,69 @@
         </li>
 
         <li>
-          <strong>SPEED SLIDER:</strong> Adjusts the animation speed. Drag right
-          for normal speed (1.0x), left for slower.
+          <strong>CLEAR:</strong> Resets the map to its empty state, clearing
+          all animations and audio.
         </li>
+
+        <li><strong>REPLANT:</strong> Regenerates all script images.</li>
+
         <li>
-          <strong>COLOUR DROPDOWN:</strong> Selects the color palette for the
-          scripts.
-          <ul style="padding-left: 20px; margin-top: 5px; margin-bottom: 5px">
-            <li>
-              <strong>RANDOM COLOUR:</strong> Each script gets a new random,
-              vibrant color when images are generated.
-            </li>
-            <li>
-              <strong>PREDEFINED COLOUR:</strong> Uses a curated set of cheerful
-              colors for each region.
-            </li>
-            <li>
-              <strong>BLUE:</strong> All scripts are rendered in shades of blue.
-            </li>
-          </ul>
-        </li>
-        <li>
-          <strong>FONT SLIDER:</strong> Adjusts the base font size used to
-          generate the script images. Images are regenerated when you release
-          the slider.
+          <strong>PAUSE:</strong> Pauses/resumes all running animations
+          and audio.
         </li>
 
         <li>
-          <strong>ORIGINS DROPDOWN:</strong> Selects the starting point for
+          <strong>COLOUR:</strong> Selects the color palette for the
+          scripts.
+          <ul style="padding-left: 20px; margin-top: 5px; margin-bottom: 5px">
+            <li>
+              <strong>COLOUR:</strong> Uses a curated set of cheerful
+              colors for each region.
+            </li>
+            <li>
+              <strong>RANDOM:</strong> Each script gets a new random,
+              vibrant color when images are generated.
+            </li>
+            <li>
+              <strong>INK:</strong> All scripts are rendered in shades of blue.
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>ORIGIN MODE:</strong> Selects the starting point for
           animations triggered from the menu.
           <ul style="padding-left: 20px; margin-top: 5px; margin-bottom: 5px">
             <li>
-              <strong>PREDEFINED ORIGINS:</strong> Animations start from their
+              <strong>HOME:</strong> Animations start from their
               script's historical/geographical origin point.
             </li>
             <li>
-              <strong>RANDOM ORIGINS:</strong> Animations start from a random
+              <strong>ANYWHERE:</strong> Animations start from a random
               point within the visible map area.
             </li>
             <li>
-              <strong>CENTER ORIGINS:</strong> All animations start from the
+              <strong>CENTER:</strong> All animations start from the
               center of the visible map.
             </li>
           </ul>
+        </li>
+
+        <li>
+          <strong>FONT FAMILY:</strong> Selects the font family (Sans Serif,
+          Serif, Monospace, Cursive, Fantasy) used to generate the script
+          images.
+        </li>
+
+        <li>
+          <strong>SPEED:</strong> Adjusts the animation speed. Drag right
+          for normal speed (1.0x), left for slower.
+        </li>
+
+        <li>
+          <strong>FONT SIZE:</strong> Adjusts the base font size used to
+          generate the script images. Images are regenerated when you release
+          the slider.
         </li>
 
         <li>
@@ -1172,18 +1197,6 @@
         <li>
           <strong>REGIONS:</strong> Toggles a colored overlay for each script
           region.
-        </li>
-
-        <li>
-          <strong>CLEAR:</strong> Resets the map to its empty state, clearing
-          all animations and audio.
-        </li>
-
-        <li><strong>REPLANT:</strong> Regenerates all script images.</li>
-
-        <li>
-          <strong>PAUSE/RESUME:</strong> Pauses/resumes all running animations
-          and audio.
         </li>
 
         <li>
