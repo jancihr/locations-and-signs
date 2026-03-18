@@ -1767,14 +1767,20 @@
               showToast("Images ready!", 1200);
               resolve();
 
+              setAllButtonStyles();
+              updateButtonBorderColors();
+
               if (forceRepaint) {
                 for (let i = 0; i < 14; i++) {
                   paint(i, 1, true);
+                  // Manually restore button style for fully shown regions (paint only handles animating ones)
+                  if (i < 12 && isShown[i]) {
+                    const fillColor = getRegionFillColor(i);
+                    links[i].style.background = fillColor;
+                    adjustButtonTextColor(links[i], fillColor);
+                  }
                 }
               }
-
-              setAllButtonStyles();
-              updateButtonBorderColors();
             });
           }, 20); // Small delay to allow toast to render
         });
