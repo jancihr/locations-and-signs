@@ -400,11 +400,11 @@
           title="SELECT FONT FAMILY"
           onchange="changeFontFamily(this.value)"
         >
-          <option value="sans-serif">SANS SERIF</option>
-          <option value="serif">SERIF</option>
-          <option value="monospace">MONOSPACE</option>
-          <option value="cursive">CURSIVE</option>
-          <option value="fantasy">FANTASY</option>
+          <option value="sans-serif">SANS SERIF [F]</option>
+          <option value="serif">SERIF [F]</option>
+          <option value="monospace">MONOSPACE [F]</option>
+          <option value="cursive">CURSIVE [F]</option>
+          <option value="fantasy">FANTASY [F]</option>
         </select>
         <div
           class="my-button-no-border"
@@ -1220,6 +1220,7 @@
           <strong>R:</strong> Cycle through ORIGIN modes (Predefined, Random,
           Center)
         </li>
+        <li><strong>F:</strong> Cycle FONT FAMILY</li>
 
         <li><strong>B:</strong> Toggle BORDERS</li>
         <li><strong>G:</strong> Toggle REGIONS</li>
@@ -2959,7 +2960,24 @@
 
       function changeFontFamily(family) {
         scriptFontFamily = family;
+        const select = document.getElementById("font-family-select");
+        if (select) select.value = family;
         regenerateImages(true, false);
+      }
+
+      function cycleFontFamily(e) {
+        if (e) e.preventDefault();
+        const families = [
+          "sans-serif",
+          "serif",
+          "monospace",
+          "cursive",
+          "fantasy",
+        ];
+        const currentIndex = families.indexOf(scriptFontFamily);
+        const nextFamily = families[(currentIndex + 1) % families.length];
+        changeFontFamily(nextFamily);
+        showToast("Font Family: " + nextFamily.toUpperCase());
       }
       
       function toggleBorderImage(e) {
@@ -3104,6 +3122,10 @@
             break;
           case "r":
             cycleOriginMode(null);
+            e.preventDefault();
+            break;
+          case "f":
+            cycleFontFamily(null);
             e.preventDefault();
             break;
           case "l":
