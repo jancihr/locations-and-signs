@@ -102,6 +102,15 @@
         border: #000000 2px solid;
       }
 
+      .my-button-no-border {
+        flex-grow: 0;
+        overflow-wrap: break-word;
+        border-radius: 3px;
+        padding: 3px 3px;
+        margin: 0px;
+        border: #000000 opx solid;
+      }
+
       .my-button:hover {
         border-color: #1eff00;
       }
@@ -347,9 +356,9 @@
           title="SELECT COLOUR MODE (Shortcut: L cycles)"
           onchange="changeColorMode(this.value)"
         >
-          <option value="predefined">NICE COLOUR [L]</option>
-          <option value="random">RANDOM COLOUR [L]</option>
-          <option value="blue">BLUE [L]</option>
+          <option value="predefined">COLOUR [L]</option>
+          <option value="random">RANDOM [L]</option>
+          <option value="blue">INK [L]</option>
         </select>
 
         <select
@@ -367,12 +376,33 @@
           title="SELECT ORIGIN MODE (Shortcut: R cycles)"
           onchange="changeOriginMode(this.value)"
         >
-          <option value="predefined">REAL ORIGINS [R]</option>
-          <option value="random">RANDOM ORIGINS [R]</option>
-          <option value="center">CENTER ORIGINS [R]</option>
+          <option value="predefined">HOME [R]</option>
+          <option value="random">ANYWHERE [R]</option>
+          <option value="center">CENTER [R]</option>
+        </select>
+        <select
+          id="font-family-select"
+          class="my-button"
+          style="
+            background: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            height: 28px;
+            padding: 0 5px;
+            cursor: pointer;
+          "
+          title="SELECT FONT FAMILY"
+          onchange="changeFontFamily(this.value)"
+        >
+          <option value="sans-serif">SANS SERIF</option>
+          <option value="serif">SERIF</option>
+          <option value="monospace">MONOSPACE</option>
+          <option value="cursive">CURSIVE</option>
+          <option value="fantasy">FANTASY</option>
         </select>
         <div
-          class="my-button"
+          class="my-button-no-border"
           style="padding: 3px 5px; display: flex; align-items: center; gap: 5px"
         >
           <span
@@ -406,7 +436,7 @@
         </div>
 
         <div
-          class="my-button"
+          class="my-button-no-border"
           style="padding: 3px 5px; display: flex; align-items: center; gap: 5px"
         >
           <span
@@ -1240,6 +1270,7 @@
 
       let colorMode = "random";
       let scriptFontSize = 20;
+      let scriptFontFamily = "sans-serif";
 
       // Masking for generated script images
       let processedMaskCanvas = null;
@@ -1606,7 +1637,7 @@
         const actualFontSize = Math.max(4, scriptFontSize + sizeVariation);
 
         tCtx.fillStyle = fillStyle;
-        tCtx.font = `${actualFontSize}px sans-serif`;
+        tCtx.font = `${actualFontSize}px ${scriptFontFamily}`;
         tCtx.textAlign = "left";
         tCtx.textBaseline = "top";
 
@@ -2911,6 +2942,11 @@
         const nextMode = modes[(currentIndex + 1) % modes.length];
         changeOriginMode(nextMode);
         showToast("Origin Mode: " + nextMode.toUpperCase().replace("_", " "));
+      }
+
+      function changeFontFamily(family) {
+        scriptFontFamily = family;
+        regenerateImages(true, false);
       }
       
       function toggleBorderImage(e) {
