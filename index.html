@@ -378,9 +378,9 @@
           title="SELECT ORIGIN MODE (Shortcut: R cycles)"
           onchange="changeOriginMode(this.value)"
         >
+          <option value="center">CENTER [R]</option>
           <option value="predefined">HOME [R]</option>
           <option value="random">ANYWHERE [R]</option>
-          <option value="center">CENTER [R]</option>
         </select>
         <select
           id="font-family-select"
@@ -470,8 +470,6 @@
             >LARGE</span
           >
         </div>
-
-       
       </div>
 
       <div
@@ -484,7 +482,7 @@
           align-content: center;
         "
       >
-       <a
+        <a
           id="borders-link"
           class="region-button"
           style="background: #ffffff; flex-grow: 0; flex: 0 0 auto"
@@ -1202,7 +1200,7 @@
         164.81, // 11: BRAHMIC (E3)
 
         87.31, // 12: BORDERS (F2)
-        98.00, // 13: REGIONS (G2)
+        98.0, // 13: REGIONS (G2)
       ];
 
       const defaultFrequencies = [...baseFrequencies];
@@ -1790,25 +1788,22 @@
         // Ode to Joy with Harmonies
         // Phrase 1
         { regions: [7, 0, 10, 5], duration: 400, delay: 400 }, // E4 + C3 + G3 + C4
-        { regions: [7, 11, 5], duration: 400, delay: 400 },    // E4 + E3 + C4
+        { regions: [7, 11, 5], duration: 400, delay: 400 }, // E4 + E3 + C4
         { regions: [8, 4, 10], duration: 400, delay: 400 }, // F4 + B3 + G3 + G2
-        { regions: [9, 0, 10, 5], duration: 400, delay: 400 },  // G4 + C3 + G3 + C4
+        { regions: [9, 0, 10, 5], duration: 400, delay: 400 }, // G4 + C3 + G3 + C4
 
-        { regions: [9, 0, 11, 5], duration: 400, delay: 400 },  // G4 + C3 + E3 + C4
+        { regions: [9, 0, 11, 5], duration: 400, delay: 400 }, // G4 + C3 + E3 + C4
         { regions: [8, 4, 10], duration: 400, delay: 400 }, // F4 + B3 + G3 + G2
-        { regions: [7, 0, 10, 5], duration: 400, delay: 400 },  // E4 + C3 + G3 + C4
+        { regions: [7, 0, 10, 5], duration: 400, delay: 400 }, // E4 + C3 + G3 + C4
         { regions: [6, 10, 4], duration: 400, delay: 400 }, // D4 + G3 + B3 + G2
 
-    
-
-
         { regions: [5, 0, 11, 10], duration: 400, delay: 400 }, // C4 + C3 + E3 + G3
-        { regions: [5, 0, 11, 10], duration: 400, delay: 400 },     // C4 + C3 + E3
-        { regions: [6, 10, 4], duration: 400, delay: 400 },     // D4 + G3 + B3
-        { regions: [7, 0, 5, 11], duration: 400, delay: 400 },  // E4 + C3 + C4 + E3
+        { regions: [5, 0, 11, 10], duration: 400, delay: 400 }, // C4 + C3 + E3
+        { regions: [6, 10, 4], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [7, 0, 5, 11], duration: 400, delay: 400 }, // E4 + C3 + C4 + E3
 
-        { regions: [7, 0, 10, 5], duration: 600, delay: 600 },  // E4(dot) + C3 + G3 + C4
-        { regions: [6, 4], duration: 200, delay: 200 },         // D4 + B3
+        { regions: [7, 0, 10, 5], duration: 600, delay: 600 }, // E4(dot) + C3 + G3 + C4
+        { regions: [6, 4], duration: 200, delay: 200 }, // D4 + B3
         { regions: [6, 10, 4], duration: 800, delay: 800 }, // D4(long) + G3 + B3 + G2
 
         //  (Repeat)
@@ -1832,24 +1827,24 @@
         { regions: [5, 0, 11, 10], duration: 800, delay: 800 },
 
         // Bridge
-        { regions: [6, 10, 4], duration: 400, delay: 400 },     // D4 + G3 + B3
-        { regions: [6, 10, 4], duration: 400, delay: 400 },    // D4 + G3 + G2
-        { regions: [7, 0, 11, 5], duration: 400, delay: 400 },  // E4 + C3 + E3 + C4
-        { regions: [5, 0, 10], duration: 400, delay: 400 },     // C4 + C3 + G3
+        { regions: [6, 10, 4], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [6, 10, 4], duration: 400, delay: 400 }, // D4 + G3 + G2
+        { regions: [7, 0, 11, 5], duration: 400, delay: 400 }, // E4 + C3 + E3 + C4
+        { regions: [5, 0, 10], duration: 400, delay: 400 }, // C4 + C3 + G3
 
-        { regions: [6, 10, 4], duration: 400, delay: 400 },     // D4 + G3 + B3
-        { regions: [7, 0, 11], duration: 200, delay: 200 },     // E4 + C3 + E3
-        { regions: [8, 2], duration: 200, delay: 200 },     // F4 + F3 + A4
-        { regions: [7, 0, 11, 5], duration: 400, delay: 400 },  // E4 + C3 + E3 + C4
-        { regions: [5, 0, 10], duration: 400, delay: 400 },     // C4 + C3 + G3
+        { regions: [6, 10, 4], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [7, 0, 11], duration: 200, delay: 200 }, // E4 + C3 + E3
+        { regions: [8, 2], duration: 200, delay: 200 }, // F4 + F3 + A4
+        { regions: [7, 0, 11, 5], duration: 400, delay: 400 }, // E4 + C3 + E3 + C4
+        { regions: [5, 0, 10], duration: 400, delay: 400 }, // C4 + C3 + G3
 
-        { regions: [6, 10, 4], duration: 400, delay: 400 },     // D4 + G3 + B3
-        { regions: [7, 0, 11], duration: 200, delay: 200 },     // E4 + C3 + E3
-        { regions: [8, 2], duration: 200, delay: 200 },     // F4 + F3 + A4
-        { regions: [7, 0, 11, 5], duration: 400, delay: 400 },  // E4 + C3 + E3 + C4
-        { regions: [6, 10, 4], duration: 400, delay: 400 },     // D4 + G3 + B3
+        { regions: [6, 10, 4], duration: 400, delay: 400 }, // D4 + G3 + B3
+        { regions: [7, 0, 11], duration: 200, delay: 200 }, // E4 + C3 + E3
+        { regions: [8, 2], duration: 200, delay: 200 }, // F4 + F3 + A4
+        { regions: [7, 0, 11, 5], duration: 400, delay: 400 }, // E4 + C3 + E3 + C4
+        { regions: [6, 10, 4], duration: 400, delay: 400 }, // D4 + G3 + B3
 
-        { regions: [5, 0, 11], duration: 400, delay: 400 },     // C4 + C3 + E3
+        { regions: [5, 0, 11], duration: 400, delay: 400 }, // C4 + C3 + E3
         { regions: [6, 10, 4], duration: 400, delay: 400 }, // D4 + G3 + B3 + G2
         { regions: [10, 1, 4], duration: 800, delay: 800 }, // G3 + D3 + B3 + G2 (Low G)
 
@@ -2713,7 +2708,10 @@
             clickedRegion(null, index, false);
           }
         });
-        autoPlayTimeout = setTimeout(autoPlay, Math.floor(Math.random() * 2501) + 500);
+        autoPlayTimeout = setTimeout(
+          autoPlay,
+          Math.floor(Math.random() * 2501) + 500,
+        );
       }
 
       function playMelody() {
