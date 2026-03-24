@@ -1051,6 +1051,8 @@
         <li><strong>C:</strong> CLEAR</li>
         <li><strong>E:</strong> REPLANT</li>
         <li><strong>SPACE:</strong> PAUSE/RESUME</li>
+        <li><strong>ARROWS UP/DOWN:</strong> Change FONT SIZE</li>
+        <li><strong>ARROWS LEFT/RIGHT:</strong> Change SPEED</li>
 
         <li><strong>1..9,0,O,P :</strong> Start/stop regions</li>
       </ul>
@@ -1117,6 +1119,7 @@
       let _toastTimer = null;
       let helpIsVisible = false;
       let autoPlayTimeout;
+      let fontResizeTimeout;
 
       // State Management: Parallel arrays for 14 regions
       // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
@@ -2998,6 +3001,44 @@
             toggleMelody(null);
             showToast(isMelodyPlaying ? "Melody: PLAYING" : "Melody: STOPPED");
             e.preventDefault();
+            break;
+          case "arrowup":
+          case "arrowdown":
+            {
+              const slider = document.getElementById("font-slider");
+              const step = 5;
+              let val = parseInt(slider.value);
+              if (k.toLowerCase() === "arrowup") val += step;
+              else val -= step;
+              val = Math.max(slider.min, Math.min(slider.max, val));
+              if (slider.value != val) {
+                slider.value = val;
+                slider.dispatchEvent(new Event("input"));
+                showToast(`Font Size: ${val}`);
+                clearTimeout(fontResizeTimeout);
+                fontResizeTimeout = setTimeout(() => {
+                  regenerateImages(true, false);
+                }, 500);
+              }
+              e.preventDefault();
+            }
+            break;
+          case "arrowleft":
+          case "arrowright":
+            {
+              const slider = document.getElementById("speed-slider");
+              const step = 10;
+              let val = parseInt(slider.value);
+              if (k.toLowerCase() === "arrowright") val += step;
+              else val -= step;
+              val = Math.max(slider.min, Math.min(slider.max, val));
+              if (slider.value != val) {
+                slider.value = val;
+                slider.dispatchEvent(new Event("change"));
+                showToast(`Speed: ${val}`);
+              }
+              e.preventDefault();
+            }
             break;
           default:
             break;
