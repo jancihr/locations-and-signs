@@ -156,7 +156,7 @@
       }
       /* Hover state */
       .my-region:hover {
-        fill: #ffea007a; /* Color change on hover */
+        fill: #0000001f; /* Color change on hover */
       }
       /* Toast notifications */
       #toast {
@@ -1466,8 +1466,7 @@
           maxVar = 0;
         }
 
-        const sizeVariation =
-          Math.floor(Math.random() * (maxVar - minVar + 1)) + minVar;
+        const sizeVariation = scriptFontFamily=="monospace"?0:(Math.floor(Math.random() * (maxVar - minVar + 1)) + minVar);
         const actualFontSize = Math.max(4, scriptFontSize + sizeVariation);
 
         tCtx.fillStyle = fillStyle;
