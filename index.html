@@ -344,6 +344,25 @@
           >PAUSE [SPACE]</a
         >
         <select
+          id="language-select"
+          class="my-button"
+          style="
+            background: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            height: 28px;
+            padding: 0 5px;
+            cursor: pointer;
+          "
+          title="SELECT LANGUAGE"
+          onchange="changeLanguage(this.value)"
+        >
+          <option value="sk">SK [D]</option>
+          <option value="de">DE [D]</option>
+          <option value="en">EN [D]</option>
+        </select>
+        <select
           id="color-mode-select"
           class="my-button"
           style="
@@ -1121,6 +1140,620 @@
       let autoPlayTimeout;
       let fontResizeTimeout;
 
+      const STORAGE_LANGUAGE_KEY = "signs-and-locations-language";
+      const supportedLanguages = ["sk", "de", "en"];
+
+      function getInitialLanguage() {
+        try {
+          const savedLanguage = localStorage.getItem(STORAGE_LANGUAGE_KEY);
+          if (supportedLanguages.includes(savedLanguage)) return savedLanguage;
+        } catch (e) {}
+
+        const browserLanguage = (navigator.language || "").slice(0, 2);
+        return supportedLanguages.includes(browserLanguage)
+          ? browserLanguage
+          : "sk";
+      }
+
+      let currentLanguage = getInitialLanguage();
+
+      const translations = {
+        sk: {
+          pageTitle: "ZNAKY A MIESTA",
+          titles: {
+            menu: "ZOBRAZIŤ/SKRYŤ MENU (Skratka: M)",
+            info: "ZOBRAZIŤ/SKRYŤ INFORMÁCIE (Skratka: I)",
+            autoplay: "NÁHODNE SPÚŠŤAŤ VŠETKY REGIÓNY (Skratka: A)",
+            melody: "PREHRAŤ MELÓDIU (Skratka: J)",
+            sound: "ZAPNÚŤ/VYPNÚŤ ZVUK (Skratka: S)",
+            clear: "VYČISTIŤ VŠETKY REGIÓNY (Skratka: C)",
+            replant: "ZNOVU VYGENEROVAŤ OBRAZY (Skratka: E)",
+            pause: "POZASTAVIŤ/OBNOVIŤ ANIMÁCIE (Skratka: medzerník)",
+            language: "VYBRAŤ JAZYK (Skratka: D prepína)",
+            color: "VYBRAŤ FAREBNÝ REŽIM (Skratka: L prepína)",
+            origin: "VYBRAŤ PÔVOD ANIMÁCIE (Skratka: R prepína)",
+            font: "VYBRAŤ RODINU PÍSMA",
+            speed: "UPRAVIŤ RÝCHLOSŤ ANIMÁCIE",
+            fontSize: "UPRAVIŤ VEĽKOSŤ PÍSMA",
+            borders: "ZOBRAZIŤ/SKRYŤ HRANICE PÍSIEM (Skratka: B)",
+            regions: "ZOBRAZIŤ/SKRYŤ PÍSMA V ICH REGIÓNOCH (Skratka: G)",
+            region: "KLIKNUTÍM SPUSTÍTE/ZASTAVÍTE ANIMÁCIU REGIÓNU",
+            gear: "ZOBRAZIŤ MENU",
+          },
+          buttons: {
+            menu: "MENU [M]",
+            info: "INFO [I]",
+            autoplay: "AUTORUN [A]",
+            melody: "JOY [J]",
+            sound: "ZVUK [S]",
+            clear: "VYČISTIŤ [C]",
+            replant: "OBNOVIŤ [E]",
+            pause: "PAUZA [SPACE]",
+            borders: "HRANICE [B]",
+            regions: "REGIÓNY [G]",
+            slow: "POMALY",
+            fast: "RÝCHLO",
+            small: "MALÉ",
+            large: "VEĽKÉ",
+          },
+          colorModes: {
+            predefined: "FARBY [L]",
+            random: "NÁHODNE [L]",
+            blue: "ATRAMENT [L]",
+          },
+          originModes: {
+            center: "STRED [R]",
+            predefined: "DOMOV [R]",
+            random: "KDEKOĽVEK [R]",
+          },
+          fontFamilies: {
+            "sans-serif": "BEZPÄTKOVÉ [F]",
+            serif: "PÄTKOVÉ [F]",
+            monospace: "NEPROPORČNÉ [F]",
+            cursive: "PÍSANÉ [F]",
+            fantasy: "DEKORATÍVNE [F]",
+          },
+          regionNames: [
+            "ARABSKÉ",
+            "ARMÉNSKE",
+            "BRAHMICKÉ",
+            "ČÍNSKE",
+            "CYRILIKA",
+            "ETIÓPSKE",
+            "GRUZÍNSKE",
+            "GRÉCKE",
+            "HEBREJSKÉ",
+            "JAPONSKÉ",
+            "KÓREJSKÉ",
+            "LATINSKÉ",
+          ],
+          toasts: {
+            planting: "Sadím písmená, počkaj ...",
+            imagesReady: "Obrazy sú pripravené. Klikni na ľubovoľný región.",
+            colorModeLoading: (mode) =>
+              `Farebný režim: ${mode}. Načítavam, počkaj ...`,
+            originMode: (mode) => `Pôvod animácie: ${mode}`,
+            fontFamily: (family) => `Rodina písma: ${family}`,
+            autoplay: (on) => `Autoplay: ${on ? "ZAP" : "VYP"}`,
+            sound: (on) => `Zvuk: ${on ? "ZAP" : "VYP"}`,
+            menu: (shown) => `Menu: ${shown ? "zobrazené" : "skryté"}`,
+            animations: "Animácie zapnuté/vypnuté",
+            cleared: "Vyčistené",
+            info: (open) => `Info: ${open ? "OTVORENÉ" : "ZATVORENÉ"}`,
+            borders: (hiding) =>
+              `Hranice sa ${hiding ? "skrývajú" : "zobrazujú"}`,
+            regions: (hiding) =>
+              `Regióny sa ${hiding ? "skrývajú" : "zobrazujú"}`,
+            melody: (playing) => `Melódia: ${playing ? "HRÁ" : "STOP"}`,
+            fontSize: (value) => `Veľkosť písma: ${value}`,
+            speed: (value) => `Rýchlosť: ${value}`,
+            language: "Jazyk: slovenčina",
+          },
+          helpHtml: `
+      <h1 style="text-align: center; margin-top: 0">ZNAKY A MIESTA</h1>
+      <h2 style="text-align: center; margin-top: 0">od Zorky a Jančiho</h2>
+      <p>
+        Toto je interaktívna mapa svetových systémov písma. Animácie odhaľujú
+        vrstvy typografie pre rôzne písma a regióny. Znaky sa môžu šíriť zo
+        svojho domovského pôvodu alebo z náhodného miesta. Zvuk pridáva
+        harmonické tóny pri rozširovaní a zmenšovaní. Mapa vychádza z
+        historických a moderných pôvodov písiem, ale animácie sú umelecké a
+        nemajú byť historicky presné.
+      </p>
+      <h3>Interakcia</h3>
+      <ul style="padding-left: 20px; margin-bottom: 15px">
+        <li style="margin-bottom: 10px">
+          <strong>Kliknutie na región mapy:</strong> Spustí rozširovanie daného
+          regiónu z miesta kliknutia. Pri náhodnom režime v menu sa znaky
+          spustia z náhodnej pozície v hraniciach mapy.
+        </li>
+      </ul>
+      <h3>Tlačidlá menu</h3>
+      <ul style="padding-left: 20px">
+        <li><strong>MENU:</strong> Zobrazí alebo skryje ďalšie ovládanie.</li>
+        <li><strong>INFO:</strong> Zobrazí alebo skryje tento popis.</li>
+        <li><strong>AUTORUN:</strong> Spustí automatické prehrávanie, kde sa regióny náhodne aktivujú. Počas animácií ich vie pozastaviť a obnoviť.</li>
+        <li><strong>JOY:</strong> Prehrá Beethovenovu Ódu na radosť. Výška tónu sa mení podľa rozširovania a zmenšovania regiónov.</li>
+        <li><strong>ZVUK:</strong> Zapne alebo vypne zvukové odozvy.</li>
+        <li><strong>VYČISTIŤ:</strong> Vráti mapu do prázdneho stavu.</li>
+        <li><strong>OBNOVIŤ:</strong> Znovu vygeneruje obrazové vrstvy písiem.</li>
+        <li><strong>PAUZA:</strong> Pozastaví alebo obnoví bežiace animácie a zvuk.</li>
+        <li><strong>FARBY:</strong> Prepína paletu písiem: farby, náhodné farby alebo modrý atrament.</li>
+        <li><strong>PÔVOD:</strong> Vyberá štart animácie: domovský pôvod, náhodné miesto alebo stred mapy.</li>
+        <li><strong>RODINA PÍSMA:</strong> Vyberá štýl fontu pre generované znaky.</li>
+        <li><strong>RÝCHLOSŤ:</strong> Upravuje rýchlosť animácií.</li>
+        <li><strong>VEĽKOSŤ PÍSMA:</strong> Upravuje základnú veľkosť generovaných znakov.</li>
+        <li><strong>HRANICE:</strong> Zobrazí hranice regiónov písiem.</li>
+        <li><strong>REGIÓNY:</strong> Zobrazí farebnú vrstvu regiónov písiem.</li>
+      </ul>
+      <h3>Klávesové skratky</h3>
+      <ul style="padding-left: 20px">
+        <li><strong>M:</strong> MENU</li>
+        <li><strong>I:</strong> INFO</li>
+        <li><strong>A:</strong> AUTORUN</li>
+        <li><strong>J:</strong> Óda na radosť</li>
+        <li><strong>S:</strong> ZVUK</li>
+        <li><strong>L:</strong> Prepína farebné režimy</li>
+        <li><strong>R:</strong> Prepína pôvod animácie</li>
+        <li><strong>F:</strong> Prepína rodinu písma</li>
+        <li><strong>D:</strong> Prepína jazyk</li>
+        <li><strong>B:</strong> HRANICE</li>
+        <li><strong>G:</strong> REGIÓNY</li>
+        <li><strong>C:</strong> VYČISTIŤ</li>
+        <li><strong>E:</strong> OBNOVIŤ</li>
+        <li><strong>SPACE:</strong> PAUZA/POKRAČOVAŤ</li>
+        <li><strong>ŠÍPKY HORE/DOLE:</strong> Zmena veľkosti písma</li>
+        <li><strong>ŠÍPKY VĽAVO/VPRAVO:</strong> Zmena rýchlosti</li>
+        <li><strong>1..9,0,O,P:</strong> Spustenie/zastavenie regiónov</li>
+      </ul>
+      <div style="text-align: center; margin-top: 20px">
+        <a href="#" class="my-button" onclick="hideHelp(event); return false;" style="background: #ffffff">ZAVRIEŤ</a>
+      </div>`,
+        },
+        de: {
+          pageTitle: "ZEICHEN UND ORTE",
+          titles: {
+            menu: "MENÜ EIN-/AUSBLENDEN (Tastenkürzel: M)",
+            info: "INFO ANZEIGEN/AUSBLENDEN (Tastenkürzel: I)",
+            autoplay: "ALLE REGIONEN ZUFÄLLIG STARTEN (Tastenkürzel: A)",
+            melody: "MELODIE ABSPIELEN (Tastenkürzel: J)",
+            sound: "TON EIN-/AUSSCHALTEN (Tastenkürzel: S)",
+            clear: "ALLE REGIONEN LÖSCHEN (Tastenkürzel: C)",
+            replant: "BILDER NEU GENERIEREN (Tastenkürzel: E)",
+            pause: "ANIMATIONEN PAUSIEREN/FORTSETZEN (Tastenkürzel: Leertaste)",
+            language: "SPRACHE WÄHLEN (Tastenkürzel: D wechselt)",
+            color: "FARBMODUS WÄHLEN (Tastenkürzel: L wechselt)",
+            origin: "STARTPUNKT WÄHLEN (Tastenkürzel: R wechselt)",
+            font: "SCHRIFTFAMILIE WÄHLEN",
+            speed: "ANIMATIONSGESCHWINDIGKEIT ANPASSEN",
+            fontSize: "SCHRIFTGRÖSSE ANPASSEN",
+            borders: "SCHRIFTGRENZEN EIN-/AUSBLENDEN (Tastenkürzel: B)",
+            regions: "SCHRIFTEN IN IHREN REGIONEN EIN-/AUSBLENDEN (Tastenkürzel: G)",
+            region: "KLICKEN, UM DIE REGION-ANIMATION ZU STARTEN/STOPPEN",
+            gear: "MENÜ ANZEIGEN",
+          },
+          buttons: {
+            menu: "MENÜ [M]",
+            info: "INFO [I]",
+            autoplay: "AUTORUN [A]",
+            melody: "JOY [J]",
+            sound: "TON [S]",
+            clear: "LÖSCHEN [C]",
+            replant: "NEU [E]",
+            pause: "PAUSE [SPACE]",
+            borders: "GRENZEN [B]",
+            regions: "REGIONEN [G]",
+            slow: "LANGSAM",
+            fast: "SCHNELL",
+            small: "KLEIN",
+            large: "GROSS",
+          },
+          colorModes: {
+            predefined: "FARBE [L]",
+            random: "ZUFALL [L]",
+            blue: "TINTE [L]",
+          },
+          originModes: {
+            center: "MITTE [R]",
+            predefined: "HEIMAT [R]",
+            random: "IRGENDWO [R]",
+          },
+          fontFamilies: {
+            "sans-serif": "SANS SERIF [F]",
+            serif: "SERIF [F]",
+            monospace: "MONOSPACE [F]",
+            cursive: "KURSIV [F]",
+            fantasy: "FANTASIE [F]",
+          },
+          regionNames: [
+            "ARABISCH",
+            "ARMENISCH",
+            "BRAHMISCH",
+            "CHINESISCH",
+            "KYRILLISCH",
+            "ÄTHIOPISCH",
+            "GEORGISCH",
+            "GRIECHISCH",
+            "HEBRÄISCH",
+            "JAPANISCH",
+            "KOREANISCH",
+            "LATEINISCH",
+          ],
+          toasts: {
+            planting: "Buchstaben werden gepflanzt, bitte warten ...",
+            imagesReady: "Bilder bereit. Klicke auf eine Region.",
+            colorModeLoading: (mode) =>
+              `Farbmodus: ${mode}. Laden, bitte warten ...`,
+            originMode: (mode) => `Startpunkt: ${mode}`,
+            fontFamily: (family) => `Schriftfamilie: ${family}`,
+            autoplay: (on) => `Autoplay: ${on ? "AN" : "AUS"}`,
+            sound: (on) => `Ton: ${on ? "AN" : "AUS"}`,
+            menu: (shown) => `Menü: ${shown ? "sichtbar" : "versteckt"}`,
+            animations: "Animationen an/aus",
+            cleared: "Gelöscht",
+            info: (open) => `Info: ${open ? "OFFEN" : "GESCHLOSSEN"}`,
+            borders: (hiding) =>
+              `Grenzen werden ${hiding ? "ausgeblendet" : "eingeblendet"}`,
+            regions: (hiding) =>
+              `Regionen werden ${hiding ? "ausgeblendet" : "eingeblendet"}`,
+            melody: (playing) => `Melodie: ${playing ? "SPIELT" : "STOPP"}`,
+            fontSize: (value) => `Schriftgröße: ${value}`,
+            speed: (value) => `Geschwindigkeit: ${value}`,
+            language: "Sprache: Deutsch",
+          },
+          helpHtml: `
+      <h1 style="text-align: center; margin-top: 0">ZEICHEN UND ORTE</h1>
+      <h2 style="text-align: center; margin-top: 0">von Zorka und Janči</h2>
+      <p>
+        Dies ist eine interaktive Karte der weltweiten Schriftsysteme. Die
+        Animationen zeigen typografische Ebenen für verschiedene Schriften und
+        Regionen. Zeichen können von ihrem Ursprungsort oder von einem
+        zufälligen Punkt aus wachsen. Ton fügt harmonische Klänge hinzu, während
+        Regionen wachsen oder schrumpfen. Die Karte bezieht sich auf
+        historische und moderne Ursprünge der Schriften, die Animationen sind
+        jedoch künstlerisch und nicht historisch exakt gemeint.
+      </p>
+      <h3>Interaktion</h3>
+      <ul style="padding-left: 20px; margin-bottom: 15px">
+        <li style="margin-bottom: 10px">
+          <strong>Klick auf eine Kartenregion:</strong> Startet die Animation
+          dieser Region vom Klickpunkt aus. Im Zufallsmodus startet eine
+          Schrift von einer zufälligen Position innerhalb der Kartengrenzen.
+        </li>
+      </ul>
+      <h3>Menütasten</h3>
+      <ul style="padding-left: 20px">
+        <li><strong>MENÜ:</strong> Blendet weitere Bedienelemente ein oder aus.</li>
+        <li><strong>INFO:</strong> Zeigt oder verbirgt diese Beschreibung.</li>
+        <li><strong>AUTORUN:</strong> Aktiviert die automatische Wiedergabe mit zufällig gestarteten Regionen.</li>
+        <li><strong>JOY:</strong> Spielt Beethovens Ode an die Freude. Die Tonhöhe verändert sich mit den Regionen.</li>
+        <li><strong>TON:</strong> Schaltet die Klangrückmeldung ein oder aus.</li>
+        <li><strong>LÖSCHEN:</strong> Setzt die Karte in den leeren Zustand zurück.</li>
+        <li><strong>NEU:</strong> Generiert alle Schriftbilder neu.</li>
+        <li><strong>PAUSE:</strong> Pausiert oder setzt Animationen und Ton fort.</li>
+        <li><strong>FARBE:</strong> Wechselt zwischen Farbpalette, Zufallsfarben und blauer Tinte.</li>
+        <li><strong>STARTPUNKT:</strong> Wählt Heimat, Zufall oder Kartenmitte als Start der Animation.</li>
+        <li><strong>SCHRIFTFAMILIE:</strong> Wählt den Fontstil für die generierten Zeichen.</li>
+        <li><strong>GESCHWINDIGKEIT:</strong> Passt die Animationsgeschwindigkeit an.</li>
+        <li><strong>SCHRIFTGRÖSSE:</strong> Passt die Grundgröße der Zeichen an.</li>
+        <li><strong>GRENZEN:</strong> Zeigt die Grenzen der Schriftregionen.</li>
+        <li><strong>REGIONEN:</strong> Zeigt eine farbige Ebene der Schriftregionen.</li>
+      </ul>
+      <h3>Tastenkürzel</h3>
+      <ul style="padding-left: 20px">
+        <li><strong>M:</strong> MENÜ</li>
+        <li><strong>I:</strong> INFO</li>
+        <li><strong>A:</strong> AUTORUN</li>
+        <li><strong>J:</strong> Ode an die Freude</li>
+        <li><strong>S:</strong> TON</li>
+        <li><strong>L:</strong> Farbmodus wechseln</li>
+        <li><strong>R:</strong> Startpunkt wechseln</li>
+        <li><strong>F:</strong> Schriftfamilie wechseln</li>
+        <li><strong>D:</strong> Sprache wechseln</li>
+        <li><strong>B:</strong> GRENZEN</li>
+        <li><strong>G:</strong> REGIONEN</li>
+        <li><strong>C:</strong> LÖSCHEN</li>
+        <li><strong>E:</strong> NEU GENERIEREN</li>
+        <li><strong>SPACE:</strong> PAUSE/FORTSETZEN</li>
+        <li><strong>PFEILE HOCH/RUNTER:</strong> Schriftgröße ändern</li>
+        <li><strong>PFEILE LINKS/RECHTS:</strong> Geschwindigkeit ändern</li>
+        <li><strong>1..9,0,O,P:</strong> Regionen starten/stoppen</li>
+      </ul>
+      <div style="text-align: center; margin-top: 20px">
+        <a href="#" class="my-button" onclick="hideHelp(event); return false;" style="background: #ffffff">SCHLIESSEN</a>
+      </div>`,
+        },
+        en: {
+          pageTitle: "SIGNS AND LOCATIONS",
+          titles: {
+            menu: "SHOW/HIDE MENU (Shortcut: M)",
+            info: "TOGGLE INFO SCREEN (Shortcut: I)",
+            autoplay: "AUTOCLICK RANDOMLY ALL REGIONS (Shortcut: A)",
+            melody: "PLAY MELODY (Shortcut: J)",
+            sound: "TOGGLE SOUND (Shortcut: S)",
+            clear: "CLEAR ALL REGIONS (Shortcut: C)",
+            replant: "REGENERATE IMAGES (Shortcut: E)",
+            pause: "PAUSE/RESUME ANIMATIONS (Shortcut: Space)",
+            language: "SELECT LANGUAGE (Shortcut: D cycles)",
+            color: "SELECT COLOUR MODE (Shortcut: L cycles)",
+            origin: "SELECT ORIGIN MODE (Shortcut: R cycles)",
+            font: "SELECT FONT FAMILY",
+            speed: "ADJUST ANIMATION SPEED",
+            fontSize: "ADJUST SCRIPT FONT SIZE",
+            borders: "SHOW/HIDE ALPHABET BORDERS (Shortcut: B)",
+            regions: "SHOW/HIDE ALPHABET IN THEIR REGIONS (Shortcut: G)",
+            region: "CLICK TO START/STOP REGION ANIMATION",
+            gear: "SHOW MENU",
+          },
+          buttons: {
+            menu: "MENU [M]",
+            info: "INFO [I]",
+            autoplay: "AUTORUN [A]",
+            melody: "JOY [J]",
+            sound: "SOUND [S]",
+            clear: "CLEAR [C]",
+            replant: "REPLANT [E]",
+            pause: "PAUSE [SPACE]",
+            borders: "BORDERS [B]",
+            regions: "REGIONS [G]",
+            slow: "SLOW",
+            fast: "FAST",
+            small: "SMALL",
+            large: "LARGE",
+          },
+          colorModes: {
+            predefined: "COLOUR [L]",
+            random: "RANDOM [L]",
+            blue: "INK [L]",
+          },
+          originModes: {
+            center: "CENTER [R]",
+            predefined: "HOME [R]",
+            random: "ANYWHERE [R]",
+          },
+          fontFamilies: {
+            "sans-serif": "SANS SERIF [F]",
+            serif: "SERIF [F]",
+            monospace: "MONOSPACE [F]",
+            cursive: "CURSIVE [F]",
+            fantasy: "FANTASY [F]",
+          },
+          regionNames: [
+            "ARABIC",
+            "ARMENIAN",
+            "BRAHMIC",
+            "CHINESE",
+            "CYRILLIC",
+            "ETHIOPIAN",
+            "GEORGIAN",
+            "GREEK",
+            "HEBREW",
+            "JAPANESE",
+            "KOREAN",
+            "LATIN",
+          ],
+          toasts: {
+            planting: "Planting letters, wait ...",
+            imagesReady: "Images ready! Click on any region.",
+            colorModeLoading: (mode) =>
+              `Colour Mode: ${mode} loading. Wait...`,
+            originMode: (mode) => `Origin Mode: ${mode}`,
+            fontFamily: (family) => `Font Family: ${family}`,
+            autoplay: (on) => `Autoplay: ${on ? "ON" : "OFF"}`,
+            sound: (on) => `Sound: ${on ? "ON" : "OFF"}`,
+            menu: (shown) => `Menu ${shown ? "shown" : "hidden"}`,
+            animations: "Animations on/off",
+            cleared: "Cleared",
+            info: (open) => `Info: ${open ? "OPEN" : "CLOSED"}`,
+            borders: (hiding) =>
+              `BORDERS ARE ${hiding ? "HIDING" : "SHOWING"}`,
+            regions: (hiding) =>
+              `REGIONS ARE ${hiding ? "HIDING" : "SHOWING"}`,
+            melody: (playing) => `Melody: ${playing ? "PLAYING" : "STOPPED"}`,
+            fontSize: (value) => `Font Size: ${value}`,
+            speed: (value) => `Speed: ${value}`,
+            language: "Language: English",
+          },
+          helpHtml: `
+      <h1 style="text-align: center; margin-top: 0">SIGNS AND LOCATIONS</h1>
+      <h2 style="text-align: center; margin-top: 0">by Zorka and Janči</h2>
+
+      <p>
+        This is an interactive map of world writing systems (signs). You can
+        trigger animations to reveal layers of typography for different scripts.
+        For fun, signs spread around the world from their home origin or
+        randomly as you choose. You can turn on the sound to hear harmonic tones
+        as signs expand or shrink. You can even listen to Ode to Joy, while
+        signs perform a show. The map is based on the scripts' historical and
+        modern origins, but the animations are purely artistic and not meant to
+        be historically accurate.
+      </p>
+      <h3>Interaction</h3>
+      <ul style="padding-left: 20px; margin-bottom: 15px">
+        <li style="margin-bottom: 10px">
+          <strong>Clicking on a map region:</strong> Starts the expansion
+          animation for that region from the click point. In case of the random
+          button in the menu selected, signs will start expanding from a random
+          position within the map boundaries.
+        </li>
+      </ul>
+      <h3>Menu Buttons</h3>
+      <ul style="padding-left: 20px">
+        <li><strong>MENU:</strong> Shows or hides more control buttons.</li>
+        <li><strong>INFO:</strong> Shows or hides this description.</li>
+        <li><strong>AUTORUN:</strong> Toggles automatic playback, where regions are randomly activated. When animations are running, this button freezes/unfreezes them.</li>
+        <li><strong>JOY:</strong> Plays Ode to Joy by Beethoven. The pitch changes as regions expand and contract.</li>
+        <li><strong>SOUND:</strong> Toggles sound on/off.</li>
+        <li><strong>CLEAR:</strong> Resets the map to its empty state.</li>
+        <li><strong>REPLANT:</strong> Regenerates all script images.</li>
+        <li><strong>PAUSE:</strong> Pauses/resumes all running animations and audio.</li>
+        <li><strong>COLOUR:</strong> Selects the script palette: colour, random, or ink.</li>
+        <li><strong>ORIGIN MODE:</strong> Selects the animation start point: home, anywhere, or center.</li>
+        <li><strong>FONT FAMILY:</strong> Selects the font family used to generate the script images.</li>
+        <li><strong>SPEED:</strong> Adjusts the animation speed.</li>
+        <li><strong>FONT SIZE:</strong> Adjusts the base font size used to generate the script images.</li>
+        <li><strong>BORDERS:</strong> Toggles a layer showing the boundaries of the script regions.</li>
+        <li><strong>REGIONS:</strong> Toggles a colored overlay for each script region.</li>
+      </ul>
+      <h3>Keyboard Shortcuts</h3>
+      <ul style="padding-left: 20px">
+        <li><strong>M:</strong> Toggle MENU</li>
+        <li><strong>I:</strong> Toggle INFO</li>
+        <li><strong>A:</strong> Toggle AUTORUN</li>
+        <li><strong>J:</strong> Play Ode to Joy</li>
+        <li><strong>S:</strong> Toggle SOUND</li>
+        <li><strong>L:</strong> Cycle through colour modes</li>
+        <li><strong>R:</strong> Cycle through origin modes</li>
+        <li><strong>F:</strong> Cycle font family</li>
+        <li><strong>D:</strong> Cycle language</li>
+        <li><strong>B:</strong> Toggle BORDERS</li>
+        <li><strong>G:</strong> Toggle REGIONS</li>
+        <li><strong>C:</strong> CLEAR</li>
+        <li><strong>E:</strong> REPLANT</li>
+        <li><strong>SPACE:</strong> PAUSE/RESUME</li>
+        <li><strong>ARROWS UP/DOWN:</strong> Change font size</li>
+        <li><strong>ARROWS LEFT/RIGHT:</strong> Change speed</li>
+        <li><strong>1..9,0,O,P:</strong> Start/stop regions</li>
+      </ul>
+      <div style="text-align: center; margin-top: 20px">
+        <a href="#" class="my-button" onclick="hideHelp(event); return false;" style="background: #ffffff">CLOSE</a>
+      </div>`,
+        },
+      };
+
+      function translate(path) {
+        return path.split(".").reduce((value, key) => value && value[key], translations[currentLanguage]);
+      }
+
+      function setText(id, text) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = text;
+      }
+
+      function setTitle(id, title) {
+        const element = document.getElementById(id);
+        if (element) element.title = title;
+      }
+
+      function setSelectLabels(id, labels) {
+        const select = document.getElementById(id);
+        if (!select) return;
+        Array.from(select.options).forEach((option) => {
+          if (labels[option.value]) option.textContent = labels[option.value];
+        });
+      }
+
+      function getDisplayValue(group, value) {
+        const label = translate(group)?.[value] || value;
+        return label.replace(/\s*\[[^\]]+\]/g, "");
+      }
+
+      function getRegionButtonLabel(index) {
+        const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "O", "P"];
+        return `${translations[currentLanguage].regionNames[index]} [${keys[index]}]`;
+      }
+
+      function getRegionNameByRegionIndex(regionIndex) {
+        const displayOrderByRegionIndex = [0, 1, 3, 5, 6, 7, 8, 9, 10, 11, 4, 2];
+        const lang = translations[currentLanguage];
+        if (regionIndex < 12) return lang.regionNames[displayOrderByRegionIndex[regionIndex]];
+        if (regionIndex === 12) return lang.buttons.borders.replace(/\s*\[[^\]]+\]/g, "");
+        if (regionIndex === 13) return lang.buttons.regions.replace(/\s*\[[^\]]+\]/g, "");
+        return `Region ${regionIndex}`;
+      }
+
+      function applyLanguage() {
+        const lang = translations[currentLanguage];
+        document.documentElement.lang = currentLanguage;
+        document.title = lang.pageTitle;
+
+        const languageSelect = document.getElementById("language-select");
+        if (languageSelect) languageSelect.value = currentLanguage;
+
+        setText("menu-toggle-link", lang.buttons.menu);
+        setText("help-link", lang.buttons.info);
+        setText("autoplay-link", lang.buttons.autoplay);
+        setText("melody-link", lang.buttons.melody);
+        setText("sound-link", lang.buttons.sound);
+        setText("reset-link", lang.buttons.clear);
+        setText("replant-link", lang.buttons.replant);
+        setText("stop-all-link", lang.buttons.pause);
+        setText("borders-link", lang.buttons.borders);
+        setText("regions-link", lang.buttons.regions);
+
+        const speedSlider = document.getElementById("speed-slider");
+        const fontSlider = document.getElementById("font-slider");
+        if (speedSlider?.previousElementSibling) speedSlider.previousElementSibling.textContent = lang.buttons.slow;
+        setText("speed-label", lang.buttons.fast);
+        if (fontSlider?.previousElementSibling) fontSlider.previousElementSibling.textContent = lang.buttons.small;
+        setText("font-size-label", lang.buttons.large);
+
+        setTitle("menu-toggle-link", lang.titles.menu);
+        setTitle("help-link", lang.titles.info);
+        setTitle("autoplay-link", lang.titles.autoplay);
+        setTitle("melody-link", lang.titles.melody);
+        setTitle("sound-link", lang.titles.sound);
+        setTitle("reset-link", lang.titles.clear);
+        setTitle("replant-link", lang.titles.replant);
+        setTitle("stop-all-link", lang.titles.pause);
+        setTitle("language-select", lang.titles.language);
+        setTitle("color-mode-select", lang.titles.color);
+        setTitle("origin-mode-select", lang.titles.origin);
+        setTitle("font-family-select", lang.titles.font);
+        setTitle("speed-slider", lang.titles.speed);
+        setTitle("font-slider", lang.titles.fontSize);
+        setTitle("borders-link", lang.titles.borders);
+        setTitle("regions-link", lang.titles.regions);
+        setTitle("gear-toggle", lang.titles.gear);
+
+        setSelectLabels("color-mode-select", lang.colorModes);
+        setSelectLabels("origin-mode-select", lang.originModes);
+        setSelectLabels("font-family-select", lang.fontFamilies);
+
+        const regionIds = [
+          "ara-link",
+          "arm-link",
+          "san-link",
+          "chi-link",
+          "cyr-link",
+          "eth-link",
+          "geo-link",
+          "gre-link",
+          "heb-link",
+          "jap-link",
+          "kor-link",
+          "lat-link",
+        ];
+        regionIds.forEach((id, index) => {
+          setText(id, getRegionButtonLabel(index));
+          setTitle(id, `${lang.titles.region} (${index < 9 ? index + 1 : ["0", "O", "P"][index - 9]})`);
+        });
+
+        const helpPopup = document.getElementById("help-popup");
+        if (helpPopup) helpPopup.innerHTML = lang.helpHtml;
+      }
+
+      function changeLanguage(language) {
+        if (!supportedLanguages.includes(language)) return;
+        currentLanguage = language;
+        try {
+          localStorage.setItem(STORAGE_LANGUAGE_KEY, currentLanguage);
+        } catch (e) {}
+        applyLanguage();
+        showToast(translations[currentLanguage].toasts.language);
+      }
+
+      function cycleLanguage(e) {
+        if (e) e.preventDefault();
+        const currentIndex = supportedLanguages.indexOf(currentLanguage);
+        const nextLanguage =
+          supportedLanguages[(currentIndex + 1) % supportedLanguages.length];
+        changeLanguage(nextLanguage);
+      }
+
+      window.changeLanguage = changeLanguage;
+      window.cycleLanguage = cycleLanguage;
+
       // State Management: Parallel arrays for 14 regions
       // Indices 0-11: Scripts/Languages, 12: Borders, 13: Colours
 
@@ -1512,7 +2145,7 @@
 
       function regenerateImages(forceRepaint = false, forceColorUpdate = true) {
         return new Promise((resolve) => {
-          showToast("Planting letters, wait ...", 30000); // Show for up to 30s
+          showToast(translations[currentLanguage].toasts.planting, 30000); // Show for up to 30s
           setTimeout(() => {
             if (colorMode === "random" && forceColorUpdate) {
               for (let i = 0; i < 12; i++) {
@@ -1628,7 +2261,7 @@
               images[13] = combinedCanvas;
               imageFilenames[13] = null; // Prevent it from being reset to the static png
 
-              showToast("Images ready! Click on any region.", 1200);
+              showToast(translations[currentLanguage].toasts.imagesReady, 1200);
               resolve();
 
               setAllButtonStyles();
@@ -2632,9 +3265,9 @@
         const nextMode = modes[(currentIndex + 1) % modes.length];
         changeColorMode(nextMode);
         showToast(
-          "Colour Mode: " +
-            nextMode.toUpperCase().replace("_", " ") +
-            " loading. Wait...",
+          translations[currentLanguage].toasts.colorModeLoading(
+            getDisplayValue("colorModes", nextMode),
+          ),
         );
       }
 
@@ -2796,7 +3429,11 @@
         const currentIndex = modes.indexOf(originMode);
         const nextMode = modes[(currentIndex + 1) % modes.length];
         changeOriginMode(nextMode);
-        showToast("Origin Mode: " + nextMode.toUpperCase().replace("_", " "));
+        showToast(
+          translations[currentLanguage].toasts.originMode(
+            getDisplayValue("originModes", nextMode),
+          ),
+        );
       }
 
       function changeFontFamily(family) {
@@ -2818,7 +3455,11 @@
         const currentIndex = families.indexOf(scriptFontFamily);
         const nextFamily = families[(currentIndex + 1) % families.length];
         changeFontFamily(nextFamily);
-        showToast("Font Family: " + nextFamily.toUpperCase());
+        showToast(
+          translations[currentLanguage].toasts.fontFamily(
+            getDisplayValue("fontFamilies", nextFamily),
+          ),
+        );
       }
 
       function toggleMenu(e) {
@@ -2911,20 +3552,7 @@
         if (k in keyToRegion) {
           const regionIndex = keyToRegion[k];
           clickedRegion(null, regionIndex, false, null, true);
-          // show friendly name derived from imageOriginalCodes if available
-          let name = "";
-          try {
-            if (
-              typeof imageOriginalCodes !== "undefined" &&
-              imageOriginalCodes[regionIndex]
-            ) {
-              name = imageOriginalCodes[regionIndex]
-                .split(" ")
-                .slice(1)
-                .join(" ");
-            }
-          } catch (e) {}
-          showToast(name || `Region ${regionIndex}`);
+          showToast(getRegionNameByRegionIndex(regionIndex));
           e.preventDefault();
           return;
         }
@@ -2932,17 +3560,17 @@
         switch (k.toLowerCase()) {
           case "a":
             autoplayToggle(null);
-            showToast(isAutoPlaying ? "Autoplay: ON" : "Autoplay: OFF");
+            showToast(translations[currentLanguage].toasts.autoplay(isAutoPlaying));
             e.preventDefault();
             break;
           case "s":
             toggleSound(null);
-            showToast(audioEnabled ? "Sound: ON" : "Sound: OFF");
+            showToast(translations[currentLanguage].toasts.sound(audioEnabled));
             e.preventDefault();
             break;
           case "m":
             toggleMenu(null);
-            showToast(isMenuVisible ? "Menu shown" : "Menu hidden ");
+            showToast(translations[currentLanguage].toasts.menu(isMenuVisible));
             e.preventDefault();
             break;
           case "r":
@@ -2953,24 +3581,28 @@
             cycleFontFamily(null);
             e.preventDefault();
             break;
+          case "d":
+            cycleLanguage(null);
+            e.preventDefault();
+            break;
           case "l":
             cycleColorMode(null);
             e.preventDefault();
             break;
           case "x":
             toggleStopAll(null, true);
-            showToast("Animations on/off");
+            showToast(translations[currentLanguage].toasts.animations);
             e.preventDefault();
             break;
 
           case " ":
             toggleStopAll(null, true);
-            showToast("Animations on/off");
+            showToast(translations[currentLanguage].toasts.animations);
             e.preventDefault();
             break;
           case "c":
             resetRegions(null);
-            showToast("Cleared");
+            showToast(translations[currentLanguage].toasts.cleared);
             e.preventDefault();
             break;
           case "e":
@@ -2979,26 +3611,22 @@
             break;
           case "i":
             toggleHelp(null);
-            showToast(helpIsVisible ? "Info: CLOSED" : "Info: OPEN");
+            showToast(translations[currentLanguage].toasts.info(helpIsVisible));
             e.preventDefault();
             break;
           case "b":
             clickedRegion(null, 12, false);
-            showToast(
-              isHiding[12] ? "BORDERS ARE HIDING" : "BORDERS ARE SHOWING",
-            );
+            showToast(translations[currentLanguage].toasts.borders(isHiding[12]));
             e.preventDefault();
             break;
           case "g":
             clickedRegion(null, 13, false);
-            showToast(
-              isHiding[13] ? "REGIONS ARE HIDING" : "REGIONS ARE SHOWING",
-            );
+            showToast(translations[currentLanguage].toasts.regions(isHiding[13]));
             e.preventDefault();
             break;
           case "j":
             toggleMelody(null);
-            showToast(isMelodyPlaying ? "Melody: PLAYING" : "Melody: STOPPED");
+            showToast(translations[currentLanguage].toasts.melody(isMelodyPlaying));
             e.preventDefault();
             break;
           case "arrowup":
@@ -3013,7 +3641,7 @@
               if (slider.value != val) {
                 slider.value = val;
                 slider.dispatchEvent(new Event("input"));
-                showToast(`Font Size: ${val}`);
+                showToast(translations[currentLanguage].toasts.fontSize(val));
                 clearTimeout(fontResizeTimeout);
                 fontResizeTimeout = setTimeout(() => {
                   regenerateImages(true, false);
@@ -3034,7 +3662,7 @@
               if (slider.value != val) {
                 slider.value = val;
                 slider.dispatchEvent(new Event("change"));
-                showToast(`Speed: ${val}`);
+                showToast(translations[currentLanguage].toasts.speed(val));
               }
               e.preventDefault();
             }
@@ -3139,6 +3767,8 @@
         regenerateImages(true, false);
       });
 
+      applyLanguage();
+
       let resizeTimeout;
       // Handle window resize events
       window.addEventListener("resize", () => {
@@ -3174,6 +3804,7 @@
       });
 
       window.addEventListener("load", () => {
+        applyLanguage();
         updateZoomedDims();
         // Use farby.gif for mask
         const maskImage = new Image();
