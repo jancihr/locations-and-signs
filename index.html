@@ -158,6 +158,10 @@
       .my-region:hover {
         fill: #0000001f; /* Color change on hover */
       }
+      /* Disable hover when borders or regions are active */
+      svg.svg-regions-active .my-region:hover {
+        fill: transparent;
+      }
       /* Toast notifications */
       #toast {
         position: fixed;
@@ -2668,8 +2672,10 @@
             startFrozenVisibleRegions(e, false);
           } else {
             for (let i = 0; i < 12; i++) {
+              if ((isRevealing[i] || isHiding[i]) && !isFrozen[i]) {
               isFrozen[i] = true;
               stopTone(i);
+              }
             }
           }
         }
@@ -2745,6 +2751,10 @@
         if (isMelodyPlaying) {
           toggleMelody(e);
         }
+        
+        if (isAutoPlaying) {
+          autoplayToggle(e);
+        }
 
         for (let index = 0; index < 12; index++) {
           isFrozen[index] = false;
@@ -2757,7 +2767,7 @@
             isHidden[index] = false;
             isShown[index] = false;
             isFrozen[index] = false;
-            paint(index, 50);
+            paint(index, 30);
           }
         }
       }
@@ -2769,7 +2779,7 @@
         let indexEnd = includingBordersAndColours ? 14 : 12;
 
         for (let index = 0; index < indexEnd; index++) {
-          let delayAnim = 100;
+          let delayAnim = baseAnimationDelay;
 
           if (!isMelodyPlaying && index < 12) {
             delayAnim *= animationDelayMultiplier;
@@ -3067,6 +3077,21 @@
         }
       }
 
+      // Updates SVG class to hide region hover when borders or regions are visible
+      function updateSVGRegionHoverState() {
+        const svg = document.querySelector('svg');
+        if (!svg) return;
+        
+        const bordersActive = isShown[12];
+        const regionsActive = isShown[13];
+        
+        if (bordersActive || regionsActive) {
+          svg.classList.add('svg-regions-active');
+        } else {
+          svg.classList.remove('svg-regions-active');
+        }
+      }
+
       function processAnimations(timestamp, justOnePaint = false) {
         if (!animationLoopRunning && !justOnePaint) {
           return;
@@ -3195,6 +3220,7 @@
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = true;
+              updateSVGRegionHoverState();
               if (justOnePaint) return;
               startAnimationLoop(justOnePaint);
             }
@@ -3238,6 +3264,7 @@
               isHiding[region] = false;
               isRevealing[region] = false;
               isShown[region] = false;
+              updateSVGRegionHoverState();
               if (justOnePaint) return;
               startAnimationLoop(justOnePaint);
             }
