@@ -3836,10 +3836,17 @@
         // Use farby.gif for mask
         const maskImage = new Image();
         maskImage.onload = () => {
-          processedMaskCanvas = maskImage;
+          // Create a canvas from the mask image for more reliable masking across browsers
+          const maskCanvas = document.createElement("canvas");
+          maskCanvas.width = maskImage.width;
+          maskCanvas.height = maskImage.height;
+          const maskCtx = maskCanvas.getContext("2d");
+          maskCtx.drawImage(maskImage, 0, 0);
+          processedMaskCanvas = maskCanvas;
+
           regenerateImages(false).then(() => {
             changeColorMode("predefined");
-            // Generate dynamic images now that the mask is processed
+            // Generate dynamic images now that the mask is processed and ready
             //clickedRegion(null, 13, false, 100);
             //clickedRegion(null, 12, false, 100);
             toggleSound(event);
