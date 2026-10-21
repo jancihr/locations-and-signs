@@ -3362,6 +3362,7 @@
           }
         }
         indices.forEach((index) => {
+          if (!isFrozen[index] && !isRevealing[index] && !isHiding[index]){
           if (
             (images[index].complete ||
               images[index] instanceof HTMLCanvasElement) &&
@@ -3369,7 +3370,8 @@
           ) {
             clickedRegion(null, index, false);
           }
-        });
+      }
+    });
         autoPlayTimeout = setTimeout(
           autoPlay,
           Math.floor(Math.random() * 2501) + 500,
